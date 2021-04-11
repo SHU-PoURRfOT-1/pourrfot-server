@@ -21,11 +21,6 @@ class HelloControllerTest {
       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isBadRequest())
       .andExpect(content().string("abc"));
-
-    mockMvc.perform(get("/hello/abc").accept(MediaType.APPLICATION_JSON))
-      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-      .andExpect(status().isBadRequest())
-      .andExpect(content().string("empty"));
   }
 
 }

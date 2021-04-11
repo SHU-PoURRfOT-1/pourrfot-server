@@ -3,3 +3,6 @@ logging:
     root: INFO
 server:
   port: 9000
+spring:
+  application:
+    name: pourrfot-server
