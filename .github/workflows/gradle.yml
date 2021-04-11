@@ -32,7 +32,7 @@ jobs:
         id: buildAndPushImage
         uses: risfeng/docker-image-build-push-action@v1.0
         with:
-          registry_url: ${{ secrets.ALIYUN_DOCKER_REGISTRY_URL }}
+          registry_url: ${{ secrets.ALIYUN_DOCKER_REGISTRY_HOST }}
           namespaces: ${{ secrets.ALIYUN_DOCKER_REGISTRY_NAMESPACE }}
           repository_name: 'pourrfot-server'
           user_name: ${{ secrets.ALIYUN_DOCKER_REGISTRY_USERNAME }}
