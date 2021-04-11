@@ -1,5 +1,5 @@
 logging:
   level:
-    root: debug
+    root: INFO
 server:
   port: 9000
