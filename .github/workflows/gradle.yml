@@ -11,9 +11,9 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    outputs:
+      image_pull_url: ${{ steps.buildAndPushImage.outputs.image_pull_url }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -41,3 +41,17 @@ jobs:
           docker_file: '.'
       - name: Get pre step result output image_pull_url
         run: echo "The image pull url was ${{ steps.buildAndPushImage.outputs.image_pull_url }}"
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy on Aliyun LightHouse
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.ALIYUN_LIGHTHOUSE_HOST }}
+          username: ${{ secrets.ALIYUN_LIGHTHOUSE_USERNAME }}
+          key: ${{ secrets.ALIYUN_LIGHTHOUSE_KEY }}
+          script: |
+            whoami
+            ls -al
+            echo ${{needs.build.outputs.image_pull_url}}
