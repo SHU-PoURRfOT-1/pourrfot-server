@@ -14,7 +14,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      image_url: ${{ steps.result.outputs.image_url }}
+      image_url: ${{ steps.buildAndPushImage.outputs.image_pull_url }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -42,7 +42,7 @@ jobs:
           docker_file: '.'
       - name: Get pre step result output image_pull_url
         id: result
-        run: echo "The image pull url was ::set-output name=image_url::${{ steps.buildAndPushImage.outputs.image_pull_url }}"
+        run: echo "The image pull url was ${{ steps.buildAndPushImage.outputs.image_pull_url }}"
 
   deploy:
     needs: build
@@ -57,5 +57,7 @@ jobs:
           script: |
             whoami
             ls -al
+            echo ${{ needs.build.outputs.image_url }}
+            echo ${{needs.build.outputs.image_url}}
             echo "${{ needs.build.outputs.image_url }}"
             echo "${{needs.build.outputs.image_url}}"
