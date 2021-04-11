@@ -57,4 +57,5 @@ jobs:
           script: |
             whoami
             ls -al
-            echo ${{needs.build.outputs.image_url}}
+            echo "${{ needs.build.outputs.image_url }}"
+            echo "${{needs.build.outputs.image_url}}"
