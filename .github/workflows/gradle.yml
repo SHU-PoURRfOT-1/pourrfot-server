@@ -40,4 +40,4 @@ jobs:
           image_version: ${{ steps.echo-image-version.outputs.CUSTOM_IMAGE_VERSION }}
           docker_file: '.'
       - name: Get pre step result output image_pull_url
-        run: echo "The time was ${{ steps.buildAndPushImage.outputs.image_pull_url }}"
+        run: echo "The image pull url was ${{ steps.buildAndPushImage.outputs.image_pull_url }}"
