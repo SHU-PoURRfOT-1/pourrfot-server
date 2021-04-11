@@ -35,6 +35,7 @@ jobs:
         id: result
         run: echo "The image pull url was ${{ steps.buildAndPushImage.outputs.image_pull_url }}"
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to Aliyun LightHouse
