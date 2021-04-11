@@ -12,7 +12,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     env:
-      URL: ${{ secrets.ALIYUN_DOCKER_REGISTRY_HOST }}/${{ secrets.ALIYUN_DOCKER_REGISTRY_NAMESPACE }}/pourrfot-server:latest
+      IMAGE_URL: ${{ secrets.ALIYUN_DOCKER_REGISTRY_HOST }}/${{ secrets.ALIYUN_DOCKER_REGISTRY_NAMESPACE }}/pourrfot-server:latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Deploy to Aliyun LightHouse
@@ -24,5 +24,5 @@ jobs:
           script: |
             docker stop $(docker ps --filter name=pourrfot-server -q)
             docker rm -f $(docker ps -a --filter name=pourrfot-server -q)
-            docker pull ${{URL}}
+            docker pull ${{IMAGE_URL}}
             docker run -d -p 9000:9000 ${{URL}}
