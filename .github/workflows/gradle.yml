@@ -13,8 +13,6 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    outputs:
-      image_url: ${{ steps.buildAndPushImage.outputs.image_pull_url }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -22,9 +20,6 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-      - name: echo image version
-        id: echo-image-version
-        run: echo "::set-output name=CUSTOM_IMAGE_VERSION::`git --no-pager log -1 --format="%ad" --date=format:"%Y%m%d"`-`git describe --always`"
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
@@ -38,26 +33,8 @@ jobs:
           repository_name: 'pourrfot-server'
           user_name: ${{ secrets.ALIYUN_DOCKER_REGISTRY_USERNAME }}
           password: ${{ secrets.ALIYUN_DOCKER_REGISTRY_PASSWORD }}
-          image_version: ${{ steps.echo-image-version.outputs.CUSTOM_IMAGE_VERSION }}
+          image_version: latest
           docker_file: '.'
       - name: Get pre step result output image_pull_url
         id: result
         run: echo "The image pull url was ${{ steps.buildAndPushImage.outputs.image_pull_url }}"
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy on Aliyun LightHouse
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.ALIYUN_LIGHTHOUSE_HOST }}
-          username: ${{ secrets.ALIYUN_LIGHTHOUSE_USERNAME }}
-          key: ${{ secrets.ALIYUN_LIGHTHOUSE_KEY }}
-          script: |
-            whoami
-            ls -al
-            echo ${{ needs.build.outputs.image_url }}
-            echo ${{needs.build.outputs.image_url}}
-            echo "${{ needs.build.outputs.image_url }}"
-            echo "${{needs.build.outputs.image_url}}"
