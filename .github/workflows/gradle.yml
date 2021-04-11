@@ -23,7 +23,7 @@ jobs:
           distribution: 'adopt'
       - name: echo image version
         id: echo-image-version
-        run: echo `git --no-pager log -1 --format="%ad" --date=format:"%Y%m%d"`-`git describe --always`
+        run: echo "::set-output name=CUSTOM_IMAGE_VERSION::`git --no-pager log -1 --format="%ad" --date=format:"%Y%m%d"`-`git describe --always`"
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
@@ -37,7 +37,7 @@ jobs:
           repository_name: 'pourrfot-server'
           user_name: ${{ secrets.ALIYUN_DOCKER_REGISTRY_USERNAME }}
           password: ${{ secrets.ALIYUN_DOCKER_REGISTRY_PASSWORD }}
-          image_version: ${{ steps.echo-image-version.outputs }}
+          image_version: ${{ steps.echo-image-version.outputs.CUSTOM_IMAGE_VERSION }}
           docker_file: '.'
       - name: Get pre step result output image_pull_url
         run: echo "The time was ${{ steps.buildAndPushImage.outputs.image_pull_url }}"
