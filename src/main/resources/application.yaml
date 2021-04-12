@@ -3,6 +3,13 @@ logging:
     root: INFO
 server:
   port: 9000
+  servlet:
+    contextPath: /api
 spring:
   application:
     name: pourrfot-server
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
