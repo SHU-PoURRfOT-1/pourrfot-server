@@ -1,0 +1,8 @@
+# Do not modify the following config, it's a DB in a docker container running with test classes
+# for details: src/test/java/cn/edu/shu/pourrfot/server/CustomMySQLContainer.java
+spring:
+  datasource:
+    # https://www.testcontainers.org/modules/databases/jdbc/
+    url: jdbc:tc:mysql:8.0:///test
+    username: test
+    password: test

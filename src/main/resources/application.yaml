@@ -8,6 +8,13 @@ server:
 spring:
   application:
     name: pourrfot-server
+  # Do not modify the following config, please use environment variable or local profile to connect local DB
+  datasource:
+    # ignore the error if you install the plugin Spring Assistant
+    driver-class-name: "com.mysql.cj.jdbc.Driver"
+    url: "jdbc:mysql://localhost/pourrfot"
+    username: pourrfot
+    password: 123456
 management:
   endpoints:
     web:
