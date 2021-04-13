@@ -1,9 +1,9 @@
 # This workflow will build a Java project with Gradle
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
 
-name: Java CI with Gradle
+name: Java CI with Gradle and CD with ssh
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
 
@@ -49,4 +49,10 @@ jobs:
             docker stop $(docker ps --filter name=pourrfot-server -q)
             docker rm -f $(docker ps -a --filter name=pourrfot-server -q)
             docker pull $IMAGE_URL
-            docker run -d -p 9000:9000 --name pourrfot-server $IMAGE_URL
+            docker run \
+              -d \
+              -p 9000:9000 \
+              --name pourrfot-server \
+              --env SPRING_DATASOURCE_URL=${{ secrets.ALIYUN_RDS_CONNECTION_URL }} \
+              --env SPRING_DATASOURCE_PASSWORD=${{ secrets.ALIYUN_RDS_POURRFOT_PASSWORD }} \
+              $IMAGE_URL
