@@ -1,0 +1,27 @@
+name: Deploy Only Manually
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Aliyun LightHouse
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.ALIYUN_LIGHTHOUSE_HOST }}
+          username: ${{ secrets.ALIYUN_LIGHTHOUSE_USERNAME }}
+          key: ${{ secrets.ALIYUN_LIGHTHOUSE_KEY }}
+          script: |
+            export IMAGE_URL='${{ secrets.ALIYUN_DOCKER_REGISTRY_HOST }}/${{ secrets.ALIYUN_DOCKER_REGISTRY_NAMESPACE }}/pourrfot-server:latest'
+            docker stop $(docker ps --filter name=pourrfot-server -q)
+            docker rm -f $(docker ps -a --filter name=pourrfot-server -q)
+            docker pull $IMAGE_URL
+            docker run \
+              -d \
+              -p 9000:9000 \
+              --name pourrfot-server \
+              --env SPRING_DATASOURCE_URL=${{ secrets.ALIYUN_RDS_CONNECTION_URL }} \
+              --env SPRING_DATASOURCE_PASSWORD=${{ secrets.ALIYUN_RDS_POURRFOT_PASSWORD }} \
+              $IMAGE_URL
