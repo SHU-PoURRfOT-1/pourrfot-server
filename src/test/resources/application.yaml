@@ -2,6 +2,7 @@
 # for details: src/test/java/cn/edu/shu/pourrfot/server/CustomMySQLContainer.java
 spring:
   datasource:
-    url: jdbc:tc:mysql:8.0://localhost:3306/pourrfot
+    # https://www.testcontainers.org/modules/databases/jdbc/
+    url: jdbc:tc:mysql:8.0:///test
     username: test
     password: test

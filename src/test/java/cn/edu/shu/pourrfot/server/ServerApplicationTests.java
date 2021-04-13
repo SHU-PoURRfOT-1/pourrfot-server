@@ -1,12 +1,12 @@
 package cn.edu.shu.pourrfot.server;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.testcontainers.containers.MySQLContainer;
 
-@Slf4j
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @SpringBootTest
 class ServerApplicationTests {
 
@@ -15,10 +15,10 @@ class ServerApplicationTests {
 
   @Test
   void contextLoads() {
-    log.info(customMySQLContainer.getDockerImageName());
-    log.info(customMySQLContainer.getDatabaseName());
-    log.info(customMySQLContainer.getUsername());
-    log.info(customMySQLContainer.getPassword());
+    assertEquals("mysql:8.0", customMySQLContainer.getDockerImageName());
+    assertEquals("test", customMySQLContainer.getDatabaseName());
+    assertEquals("test", customMySQLContainer.getUsername());
+    assertEquals("test", customMySQLContainer.getPassword());
   }
 
 }
