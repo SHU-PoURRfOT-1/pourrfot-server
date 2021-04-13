@@ -1,0 +1,4 @@
+flyway.url=jdbc:mysql://localhost/pourrfot
+flyway.locations=./migration
+flyway.user=root
+flyway.password=123456
