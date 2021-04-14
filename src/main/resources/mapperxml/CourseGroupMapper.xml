@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.shu.pourrfot.server.repository.CourseGroupMapper">
+    <resultMap id="BaseResultMap" type="cn.edu.shu.pourrfot.server.model.CourseGroup">
+        <!--@mbg.generated-->
+        <!--@Table course_group-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="course_id" jdbcType="INTEGER" property="courseId"/>
+        <result column="group_name" jdbcType="VARCHAR" property="groupName"/>
+        <result column="profile_photo" jdbcType="VARCHAR" property="profilePhoto"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, create_time, update_time, course_id, group_name, profile_photo
+    </sql>
+</mapper>

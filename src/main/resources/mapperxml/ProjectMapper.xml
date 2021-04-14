@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.shu.pourrfot.server.repository.ProjectMapper">
+    <resultMap id="BaseResultMap" type="cn.edu.shu.pourrfot.server.model.Project">
+        <!--@mbg.generated-->
+        <!--@Table project-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="project_name" jdbcType="VARCHAR" property="projectName"/>
+        <result column="project_code" jdbcType="VARCHAR" property="projectCode"/>
+        <result column="owner_id" jdbcType="INTEGER" property="ownerId"/>
+        <result column="profile_photo" jdbcType="VARCHAR" property="profilePhoto"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, create_time, update_time, project_name, project_code, owner_id, profile_photo
+    </sql>
+</mapper>

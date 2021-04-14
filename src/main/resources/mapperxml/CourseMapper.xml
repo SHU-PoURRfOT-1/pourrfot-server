@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.shu.pourrfot.server.repository.CourseMapper">
+    <resultMap id="BaseResultMap" type="cn.edu.shu.pourrfot.server.model.Course">
+        <!--@mbg.generated-->
+        <!--@Table course-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="teacher_id" jdbcType="INTEGER" property="teacherId"/>
+        <result column="course_code" jdbcType="VARCHAR" property="courseCode"/>
+        <result column="course_name" jdbcType="VARCHAR" property="courseName"/>
+        <result column="class_time" jdbcType="VARCHAR" property="classTime"/>
+        <result column="class_location" jdbcType="VARCHAR" property="classLocation"/>
+        <result column="term" jdbcType="VARCHAR" property="term"/>
+        <result column="profile_photo" jdbcType="VARCHAR" property="profilePhoto"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, create_time, update_time, teacher_id, course_code, course_name, class_time, class_location,
+        term, profile_photo
+    </sql>
+</mapper>
