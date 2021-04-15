@@ -26,8 +26,11 @@ For more official docs, please read [this](./HELP.md).
 * adopt-openjdk **11** hotspot (version 11.0.10)
 * [MySQL](https://dev.mysql.com/doc/refman/8.0/en/) 8.0.X
 * [Flyway](https://flywaydb.org/download/community) 7.7.X
-
+* Docker
+ 
 _I suggest you to install this [IDEA plugin](https://github.com/1tontech/intellij-spring-assistant/issues/18#issuecomment-770574762) for Spring development._
+
+_If you havn't Docker, you can't run tests with `org.testcontainers:mysql` locally._
 
 ### Development Rules
 
