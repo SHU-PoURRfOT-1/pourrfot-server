@@ -9,7 +9,9 @@ on:
       - 'ci-cd/**'
       - 'docs/**'
   pull_request:
-    branches: [ main ]
+    branches-ignore:
+      - 'ci-cd/**'
+      - 'docs/**'
   workflow_dispatch:
 
 jobs:
