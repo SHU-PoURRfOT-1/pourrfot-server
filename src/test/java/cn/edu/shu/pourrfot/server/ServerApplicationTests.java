@@ -1,5 +1,6 @@
 package cn.edu.shu.pourrfot.server;
 
+import cn.edu.shu.pourrfot.server.config.CustomMySQLContainer;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

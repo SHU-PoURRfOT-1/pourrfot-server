@@ -1,4 +1,4 @@
-package cn.edu.shu.pourrfot.server;
+package cn.edu.shu.pourrfot.server.config;
 
 import org.testcontainers.containers.MySQLContainer;
 

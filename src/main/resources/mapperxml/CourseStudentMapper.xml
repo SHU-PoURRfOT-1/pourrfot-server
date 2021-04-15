@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.shu.pourrfot.server.repository.CourseStudentMapper">
+    <resultMap id="BaseResultMap" type="cn.edu.shu.pourrfot.server.model.CourseStudent">
+        <!--@mbg.generated-->
+        <!--@Table course_student-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="student_id" jdbcType="INTEGER" property="studentId"/>
+        <result column="course_id" jdbcType="INTEGER" property="courseId"/>
+        <result column="part_one_score" jdbcType="DECIMAL" property="partOneScore"/>
+        <result column="part_one_score_weight" jdbcType="DECIMAL" property="partOneScoreWeight"/>
+        <result column="part_two_score" jdbcType="DECIMAL" property="partTwoScore"/>
+        <result column="part_two_score_weight" jdbcType="DECIMAL" property="partTwoScoreWeight"/>
+        <result column="part_three_score" jdbcType="DECIMAL" property="partThreeScore"/>
+        <result column="part_three_score_weight" jdbcType="DECIMAL" property="partThreeScoreWeight"/>
+        <result column="part_four_score" jdbcType="DECIMAL" property="partFourScore"/>
+        <result column="part_four_score_weight" jdbcType="DECIMAL" property="partFourScoreWeight"/>
+        <result column="part_five_score" jdbcType="DECIMAL" property="partFiveScore"/>
+        <result column="part_five_score_weight" jdbcType="DECIMAL" property="partFiveScoreWeight"/>
+        <result column="total_score" jdbcType="DECIMAL" property="totalScore"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, create_time, update_time, student_id, course_id, part_one_score, part_one_score_weight,
+        part_two_score, part_two_score_weight, part_three_score, part_three_score_weight,
+        part_four_score, part_four_score_weight, part_five_score, part_five_score_weight,
+        total_score
+    </sql>
+</mapper>
