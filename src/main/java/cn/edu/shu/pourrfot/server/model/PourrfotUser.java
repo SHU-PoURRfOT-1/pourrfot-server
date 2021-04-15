@@ -1,9 +1,8 @@
 package cn.edu.shu.pourrfot.server.model;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import cn.edu.shu.pourrfot.server.enums.RoleEnum;
+import cn.edu.shu.pourrfot.server.enums.SexEnum;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -40,6 +39,7 @@ public class PourrfotUser {
   private Date createTime;
   @TableField(value = "update_time")
   @ApiModelProperty(value = "")
+  @Version
   private Date updateTime;
   @TableField(value = "username")
   @ApiModelProperty(value = "")
@@ -55,8 +55,8 @@ public class PourrfotUser {
   private Date birth;
   @TableField(value = "sex")
   @ApiModelProperty(value = "")
-  private Object sex;
+  private SexEnum sex;
   @TableField(value = "`role`")
   @ApiModelProperty(value = "")
-  private Object role;
+  private RoleEnum role;
 }

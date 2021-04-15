@@ -1,0 +1,37 @@
+###
+POST http://localhost:9000/api/courses
+Content-Type: application/json
+
+{
+    "classLocation": "classLocation",
+    "classTime": "classTime",
+    "courseCode": "courseCode1",
+    "courseName": "courseName",
+    "profilePhoto": "profilePhoto",
+    "teacherId": 1,
+    "term": "term"
+}
+
+###
+GET http://localhost:9000/api/courses
+
+###
+GET http://localhost:9000/api/courses/1
+
+###
+PUT http://localhost:9000/api/courses/1
+Content-Type: application/json
+
+{
+    "classLocation": "classLocation",
+    "classTime": "classTime",
+    "courseCode": "courseCode1",
+    "courseName": "courseName",
+    "profilePhoto": "profilePhoto",
+    "teacherId": 999,
+    "term": "term",
+    "id": 1
+}
+
+###
+DELETE http://localhost:9000/api/courses/1

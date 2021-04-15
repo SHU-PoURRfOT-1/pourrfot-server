@@ -1,22 +1,23 @@
 package cn.edu.shu.pourrfot.server.model;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
  * @author spencercjh
  */
 @ApiModel(value = "cn-edu-shu-pourrfot-server-model-Course")
+@Accessors(chain = true)
 @Data
 @Builder
 @AllArgsConstructor
@@ -41,15 +42,19 @@ public class Course {
   private Date createTime;
   @TableField(value = "update_time")
   @ApiModelProperty(value = "")
+  @Version
   private Date updateTime;
   @TableField(value = "teacher_id")
   @ApiModelProperty(value = "")
+  @NotNull
   private Integer teacherId;
   @TableField(value = "course_code")
   @ApiModelProperty(value = "")
+  @NotEmpty
   private String courseCode;
   @TableField(value = "course_name")
   @ApiModelProperty(value = "")
+  @NotEmpty
   private String courseName;
   @TableField(value = "class_time")
   @ApiModelProperty(value = "")
