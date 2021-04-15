@@ -15,7 +15,7 @@ jobs:
           key: ${{ secrets.ALIYUN_LIGHTHOUSE_KEY }}
           script: |
             export IMAGE_URL='${{ secrets.ALIYUN_DOCKER_REGISTRY_HOST }}/${{ secrets.ALIYUN_DOCKER_REGISTRY_NAMESPACE }}/pourrfot-server:latest'
-            sudo docker login --username=${{ secrets.ALIYUN_DOCKER_REGISTRY_USERNAME }} ${{ secrets.ALIYUN_DOCKER_REGISTRY_HOST }}
+            docker login --username=${{ secrets.ALIYUN_DOCKER_REGISTRY_USERNAME }} ${{ secrets.ALIYUN_DOCKER_REGISTRY_HOST }}
             docker stop $(docker ps --filter name=pourrfot-server -q)
             docker rm -f $(docker ps -a --filter name=pourrfot-server -q)
             docker pull $IMAGE_URL
