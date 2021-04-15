@@ -6,6 +6,9 @@ name: Java CI with Gradle and CD with ssh
 on:
   push:
     branches: [ main ]
+    branches-ignore:
+      - 'ci-cd/**'
+      - 'docs/**'
   pull_request:
     branches: [ main ]
   workflow_dispatch:
