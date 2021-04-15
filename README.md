@@ -18,6 +18,8 @@ Docs:
 - https://mp.baomidou.com/
 - https://www.baeldung.com/swagger-2-documentation-for-spring-rest-api
 
+For more official docs, please read [this](./HELP.md).
+
 #### Dev Environment
 
 * IntelliJ IDEA 2021.1 (Ultimate Edition)
