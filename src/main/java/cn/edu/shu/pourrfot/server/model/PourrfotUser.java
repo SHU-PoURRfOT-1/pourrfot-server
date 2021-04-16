@@ -31,6 +31,10 @@ public class PourrfotUser {
   public static final String COL_BIRTH = "birth";
   public static final String COL_SEX = "sex";
   public static final String COL_ROLE = "role";
+  public static final String COL_EMAIL = "email";
+  public static final String COL_TELEPHONE = "telephone";
+  public static final String COL_PASSWORD = "password";
+
   @TableId(value = "id", type = IdType.AUTO)
   @ApiModelProperty(value = "")
   private Integer id;
@@ -59,4 +63,13 @@ public class PourrfotUser {
   @TableField(value = "`role`")
   @ApiModelProperty(value = "")
   private RoleEnum role;
+  @TableField(value = "email")
+  @ApiModelProperty
+  private String email;
+  @TableField(value = "telephone")
+  @ApiModelProperty
+  private String telephone;
+  @TableField(value = "`password`")
+  @ApiModelProperty
+  private String password;
 }
