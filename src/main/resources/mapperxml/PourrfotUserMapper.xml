@@ -13,9 +13,13 @@
         <result column="birth" jdbcType="TIMESTAMP" property="birth"/>
         <result column="sex" jdbcType="OTHER" property="sex"/>
         <result column="role" jdbcType="OTHER" property="role"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="telephone" jdbcType="VARCHAR" property="telephone"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
-        id, create_time, update_time, username, nickname, profile_photo, birth, sex, `role`
+        id, create_time, update_time, username, nickname, profile_photo, birth, sex, `role`, email, telephone,
+        `password`
     </sql>
 </mapper>
