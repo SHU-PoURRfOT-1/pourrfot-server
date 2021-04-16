@@ -38,3 +38,9 @@ INSERT INTO pourrfot.course (id, create_time, update_time, teacher_id, course_co
                              class_location, term, profile_photo)
 VALUES (10, '2021-04-15 15:32:24', '2021-04-15 15:32:24', 7, '3ZSL08401', '操作系统结构与分析', '二[7-10](1-10周)', '嘉定校区1-411',
         '202002', '');
+INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role)
+VALUES (1, '2021-04-16 09:15:51', '2021-04-16 09:15:51', 'caomin', '曹旻', '', '1970-01-01 00:00:00', 'female',
+        'teacher');
+INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role)
+VALUES (2, '2021-04-16 09:18:07', '2021-04-16 09:18:07', 'chenyihai', '陈怡海', '', '1970-01-01 00:00:00', 'male',
+        'teacher');

@@ -7,13 +7,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
  * @author spencercjh
  */
 @ApiModel(value = "cn-edu-shu-pourrfot-server-model-CourseGroup")
+@Accessors(chain = true)
 @Data
 @Builder
 @AllArgsConstructor
@@ -38,6 +42,7 @@ public class CourseGroup {
   private Date updateTime;
   @TableField(value = "course_id")
   @ApiModelProperty(value = "")
+  @NotNull
   private Integer courseId;
   @TableField(value = "group_name")
   @ApiModelProperty(value = "")

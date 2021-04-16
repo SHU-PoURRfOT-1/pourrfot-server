@@ -20,7 +20,7 @@ public class CustomMySQLContainer extends MySQLContainer<CustomMySQLContainer> {
     if (container == null) {
       container = new CustomMySQLContainer();
     }
-    return container;
+    return container.withReuse(true);
   }
 
   @Override

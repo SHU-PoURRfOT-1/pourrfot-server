@@ -1,0 +1,39 @@
+###
+POST http://localhost:9000/api/courses/1/groups
+Content-Type: application/json
+
+{
+    "courseId": 1,
+    "profilePhoto": "profilePhoto"
+}
+
+###
+GET http://localhost:9000/api/courses/1/groups
+
+###
+GET http://localhost:9000/api/courses/1/groups?groupName="软件项目管理"
+
+###
+GET http://localhost:9000/api/courses/1/groups/1
+
+###
+PUT http://localhost:9000/api/courses/1/groups/1
+Content-Type: application/json
+
+{
+    "courseId": 1,
+    "groupName": "软件项目管理-第1小组",
+    "profilePhoto": "update"
+}
+
+### 400
+PUT http://localhost:9000/api/courses/1/groups/1
+Content-Type: application/json
+
+{
+    "courseId": 2,
+    "profilePhoto": "profilePhoto"
+}
+
+###
+DELETE http://localhost:9000/api/courses/1/groups/1

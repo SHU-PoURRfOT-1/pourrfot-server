@@ -8,9 +8,9 @@ import com.baomidou.mybatisplus.annotation.IEnum;
 @SuppressWarnings("AlibabaEnumConstantsMustHaveComment")
 public enum SexEnum implements IEnum<String> {
 
-  MALE("male"),
-  FEMALE("female"),
-  UNKNOWN("UNKNOWN");
+  male("male"),
+  female("female"),
+  unknown("unknown");
   private final String sex;
 
   SexEnum(String sex) {

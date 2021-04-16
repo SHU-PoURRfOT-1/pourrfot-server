@@ -8,10 +8,10 @@ import com.baomidou.mybatisplus.annotation.IEnum;
 
 @SuppressWarnings("AlibabaEnumConstantsMustHaveComment")
 public enum RoleEnum implements IEnum<String> {
-  STUDENT("student"),
-  TEACHER("teacher"),
-  ADMIN("admin"),
-  GUEST("guest");
+  student("student"),
+  teacher("teacher"),
+  admin("admin"),
+  guest("guest");
 
   private final String role;
 
