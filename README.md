@@ -27,10 +27,12 @@ For more official docs, please read [this](./HELP.md).
 * [MySQL](https://dev.mysql.com/doc/refman/8.0/en/) 8.0.X
 * [Flyway](https://flywaydb.org/download/community) 7.7.X
 * Docker
- 
-_I suggest you to install this [IDEA plugin](https://github.com/1tontech/intellij-spring-assistant/issues/18#issuecomment-770574762) for Spring development._
 
-_If you havn't Docker, you can't run tests with `org.testcontainers:mysql` locally._
+_I suggest you to install
+this [IDEA plugin](https://github.com/1tontech/intellij-spring-assistant/issues/18#issuecomment-770574762) for Spring
+development._
+
+_If you haven't Docker, you can't run tests with `org.testcontainers:mysql` locally._
 
 ### Development Rules
 
@@ -74,6 +76,11 @@ add these code as a field of the class.
 @ClassRule
 public static MySQLContainer<CustomMySQLContainer> customMySQLContainer=CustomMySQLContainer.getInstance();
 ```
+
+If you don't have Docker locally, you can comment out the field above temporarily, and add a test-scope profile
+named `application-local.yaml` to `src/test/resources`, and add an annotation `@ActiveProfiles(local)` to the test
+class. Then the specific test class can connect your local database instead of use the one in the container. **Please
+restore them after your local test passing.**
 
 Docs:
 
