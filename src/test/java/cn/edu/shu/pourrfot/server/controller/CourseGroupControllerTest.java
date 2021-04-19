@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @Slf4j
 class CourseGroupControllerTest {
   @ClassRule
@@ -38,35 +38,36 @@ class CourseGroupControllerTest {
   private ObjectMapper objectMapper;
   @Autowired
   private CourseMapper courseMapper;
+  private Course course;
 
   @BeforeEach
   void prepare() {
-    assertEquals(1, courseMapper.insert(new Course()
+    course = new Course()
       .setClassLocation("classLocation1")
       .setClassTime("classTime1")
       .setCourseCode("courseCode1")
       .setCourseName("courseName1")
       .setProfilePhoto("profilePhoto1")
       .setTeacherId(100)
-      .setTerm("term1")
-      .setId(1)));
+      .setTerm("term1");
+    assertEquals(1, courseMapper.insert(course));
   }
 
   @Transactional
   @Test
   void integrationTest() throws Exception {
     final CourseGroup[] newCourseGroups = new CourseGroup[]{new CourseGroup()
-      .setCourseId(1)
+      .setCourseId(course.getId())
       .setProfilePhoto("ProfilePhoto1"),
       new CourseGroup()
-        .setCourseId(1)
+        .setCourseId(course.getId())
         .setGroupName("hasGroupName")
         .setProfilePhoto("ProfilePhoto2")
     };
     final List<String> locations = new ArrayList<>(newCourseGroups.length);
     // POST create
     for (CourseGroup newCourseGroup : newCourseGroups) {
-      mockMvc.perform(post("/courses/1/groups")
+      mockMvc.perform(post(String.format("/courses/%d/groups", course.getId()))
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(newCourseGroup))
         .accept(MediaType.APPLICATION_JSON)
@@ -87,7 +88,7 @@ class CourseGroupControllerTest {
         .andDo(result -> log.info("Detail success: {}", result.getResponse().getContentAsString()));
     }
     // GET page
-    mockMvc.perform(get("/courses/1/groups")
+    mockMvc.perform(get(String.format("/courses/%d/groups", course.getId()))
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
@@ -95,7 +96,7 @@ class CourseGroupControllerTest {
       .andExpect(jsonPath("$.records").isArray())
       .andExpect(jsonPath("$.records", Matchers.hasSize(newCourseGroups.length)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/courses/1/groups")
+    mockMvc.perform(get(String.format("/courses/%d/groups", course.getId()))
       .param("groupName", "courseName1")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
