@@ -6,3 +6,10 @@ spring:
     url: jdbc:tc:mysql:8.0:///test
     username: test
     password: test
+pourrfot:
+  cas:
+    host: "http://localhost:9001/cas/api"
+  web:
+    host: "http://localhost:3000/pourrfot-web"
+  # Turn false when dev or test locally
+  protect: false
