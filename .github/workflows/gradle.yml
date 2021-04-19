@@ -8,6 +8,7 @@ on:
     branches-ignore:
       - 'ci-cd/**'
       - 'docs/**'
+      - 'dependabot/**'
   pull_request:
     branches-ignore:
       - 'ci-cd/**'
