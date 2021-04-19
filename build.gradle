@@ -32,6 +32,9 @@ dependencies {
     implementation 'com.baomidou:mybatis-plus-boot-starter:3.4.2'
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server:2.4.5'
+    // https://mvnrepository.com/artifact/org.bitbucket.b_c/jose4j
+    implementation group: 'org.bitbucket.b_c', name: 'jose4j', version: '0.7.6'
 
     runtimeOnly 'mysql:mysql-connector-java'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
