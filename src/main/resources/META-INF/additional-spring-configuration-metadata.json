@@ -1,0 +1,19 @@
+{
+    "properties": [
+        {
+            "name": "pourrfot.cas.host",
+            "type": "java.lang.String",
+            "description": "cas.host."
+        },
+        {
+            "name": "pourrfot.web.host",
+            "type": "java.lang.String",
+            "description": "pourrfot.web.host."
+        },
+        {
+            "name": "pourrfot.protect",
+            "type": "java.lang.String",
+            "description": "whether need to protect pourrfot-server."
+        }
+    ]
+}
