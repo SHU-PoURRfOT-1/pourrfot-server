@@ -39,7 +39,7 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok'
     testCompileOnly 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation group: 'org.testcontainers', name: 'mysql', version: '1.15.2'
+    testImplementation group: 'org.testcontainers', name: 'mysql', version: '1.15.3'
 }
 
 test {
