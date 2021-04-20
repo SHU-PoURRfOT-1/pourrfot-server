@@ -8,10 +8,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +27,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/courses")
 public class CourseController {
+  @Value("${server.servlet.contextPath}")
+  private String contextPath;
   @Autowired
   private CourseService courseService;
 
@@ -62,7 +64,7 @@ public class CourseController {
   @ResponseStatus(code = HttpStatus.CREATED)
   public ResponseEntity<Course> create(@NotNull @RequestBody @Validated Course course) {
     courseService.save(course);
-    return ResponseEntity.created(URI.create("/api/courses/" + course.getId())).body(course);
+    return ResponseEntity.created(URI.create(String.format("%s/courses/%d", contextPath, course.getId()))).body(course);
   }
 
   @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

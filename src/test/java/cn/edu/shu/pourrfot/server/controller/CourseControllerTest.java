@@ -39,7 +39,7 @@ class CourseControllerTest {
   private ObjectMapper objectMapper;
   @Autowired
   private PourrfotUserMapper pourrfotUserMapper;
-  private PourrfotUser[] teachers = new PourrfotUser[]{
+  private final PourrfotUser[] teachers = new PourrfotUser[]{
     PourrfotUser.builder()
       .username("username1")
       .nickname("nickname1")
