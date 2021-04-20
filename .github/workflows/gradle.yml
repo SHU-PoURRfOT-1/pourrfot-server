@@ -10,9 +10,7 @@ on:
       - 'docs/**'
       - 'dependabot/**'
   pull_request:
-    branches-ignore:
-      - 'ci-cd/**'
-      - 'docs/**'
+      branches: 'main'
   workflow_dispatch:
 
 jobs:
