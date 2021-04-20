@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/courses/{courseId}/groups")
 public class CourseGroupController {
+  @Value("${server.servlet.contextPath}")
+  private String contextPath;
   @Autowired
   private CourseGroupService courseGroupService;
 
@@ -55,7 +58,7 @@ public class CourseGroupController {
   public ResponseEntity<CourseGroup> create(@NotNull @RequestBody @Validated CourseGroup courseGroup) {
     courseGroupService.save(courseGroup);
     return ResponseEntity.created(
-      URI.create(String.format("/api/courses/%d/groups/%d", courseGroup.getCourseId(), courseGroup.getId())))
+      URI.create(String.format("%s/courses/%d/groups/%d", contextPath, courseGroup.getCourseId(), courseGroup.getId())))
       .body(courseGroup);
   }
 
@@ -63,7 +66,7 @@ public class CourseGroupController {
   public ResponseEntity<CourseGroup> update(@PathVariable @NotNull Integer courseId,
                                             @PathVariable @NotNull Integer id,
                                             @RequestBody @Validated @NotNull CourseGroup courseGroup) {
-    courseGroupService.updateById(courseGroup.setId(id));
+    courseGroupService.updateById(courseGroup.setId(id).setCourseId(courseId));
     return ResponseEntity.ok(courseGroup);
   }
 

@@ -67,7 +67,7 @@ public class CourseStudentController {
   public ResponseEntity<CourseStudent> update(@PathVariable @NotNull Integer courseId,
                                               @PathVariable @NotNull Integer id,
                                               @RequestBody @Validated @NotNull CourseStudent courseStudent) {
-    courseStudentService.updateById(courseStudent.setId(id));
+    courseStudentService.updateById(courseStudent.setId(id).setCourseId(courseId));
     return ResponseEntity.ok(courseStudent);
   }
 

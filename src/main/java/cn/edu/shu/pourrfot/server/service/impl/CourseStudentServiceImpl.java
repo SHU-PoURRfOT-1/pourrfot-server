@@ -68,20 +68,20 @@ public class CourseStudentServiceImpl extends ServiceImpl<CourseStudentMapper, C
     final Course foundCourse = courseMapper.selectById(entity.getCourseId());
     if (foundCourse == null) {
       final NotFoundException e = new NotFoundException("Can't create a course-student with a non-exist course");
-      log.error("Save course student entity failed with non-exist course: {}", entity, e);
+      log.error("Save/Update course student entity failed with non-exist course: {}", entity, e);
       throw e;
     }
     final PourrfotUser foundUser = pourrfotUserMapper.selectById(entity.getStudentId());
     if (foundUser == null || !foundUser.getRole().equals(RoleEnum.student)) {
       final NotFoundException e = new NotFoundException("Can't create a course-student with a non-exist student");
-      log.error("Save course student entity failed with non-exist student: {}", entity, e);
+      log.error("Save/Update course student entity failed with non-exist student: {}", entity, e);
       throw e;
     }
     if (entity.getGroupId() != null) {
       final CourseGroup foundGroup = courseGroupMapper.selectById(entity.getGroupId());
       if (foundGroup == null) {
         final NotFoundException e = new NotFoundException("Can't create a course-student with a non-exist group");
-        log.error("Save course student entity failed with non-exist group: {}", entity, e);
+        log.error("Save/Update course student entity failed with non-exist group: {}", entity, e);
         throw e;
       }
     }
