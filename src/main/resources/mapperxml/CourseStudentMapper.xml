@@ -8,24 +8,15 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="student_id" jdbcType="INTEGER" property="studentId"/>
+        <result column="student_name" jdbcType="VARCHAR" property="studentName"/>
         <result column="course_id" jdbcType="INTEGER" property="courseId"/>
-        <result column="part_one_score" jdbcType="DECIMAL" property="partOneScore"/>
-        <result column="part_one_score_weight" jdbcType="DECIMAL" property="partOneScoreWeight"/>
-        <result column="part_two_score" jdbcType="DECIMAL" property="partTwoScore"/>
-        <result column="part_two_score_weight" jdbcType="DECIMAL" property="partTwoScoreWeight"/>
-        <result column="part_three_score" jdbcType="DECIMAL" property="partThreeScore"/>
-        <result column="part_three_score_weight" jdbcType="DECIMAL" property="partThreeScoreWeight"/>
-        <result column="part_four_score" jdbcType="DECIMAL" property="partFourScore"/>
-        <result column="part_four_score_weight" jdbcType="DECIMAL" property="partFourScoreWeight"/>
-        <result column="part_five_score" jdbcType="DECIMAL" property="partFiveScore"/>
-        <result column="part_five_score_weight" jdbcType="DECIMAL" property="partFiveScoreWeight"/>
+        <result column="group_id" jdbcType="INTEGER" property="groupId"/>
         <result column="total_score" jdbcType="DECIMAL" property="totalScore"/>
+        <result column="score_structure" jdbcType="VARCHAR" property="scoreStructure"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
-        id, create_time, update_time, student_id, course_id, part_one_score, part_one_score_weight,
-        part_two_score, part_two_score_weight, part_three_score, part_three_score_weight,
-        part_four_score, part_four_score_weight, part_five_score, part_five_score_weight,
-        total_score
+        id, create_time, update_time, student_id, student_name, course_id, group_id, total_score, score_structure
     </sql>
 </mapper>

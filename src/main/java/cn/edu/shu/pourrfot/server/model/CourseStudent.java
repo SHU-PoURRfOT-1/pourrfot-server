@@ -1,14 +1,17 @@
 package cn.edu.shu.pourrfot.server.model;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author spencercjh
@@ -19,23 +22,17 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName(value = "course_student")
+@Accessors(chain = true)
 public class CourseStudent {
   public static final String COL_ID = "id";
   public static final String COL_CREATE_TIME = "create_time";
   public static final String COL_UPDATE_TIME = "update_time";
   public static final String COL_STUDENT_ID = "student_id";
+  public static final String COL_STUDENT_NAME = "student_name";
   public static final String COL_COURSE_ID = "course_id";
-  public static final String COL_PART_ONE_SCORE = "part_one_score";
-  public static final String COL_PART_ONE_SCORE_WEIGHT = "part_one_score_weight";
-  public static final String COL_PART_TWO_SCORE = "part_two_score";
-  public static final String COL_PART_TWO_SCORE_WEIGHT = "part_two_score_weight";
-  public static final String COL_PART_THREE_SCORE = "part_three_score";
-  public static final String COL_PART_THREE_SCORE_WEIGHT = "part_three_score_weight";
-  public static final String COL_PART_FOUR_SCORE = "part_four_score";
-  public static final String COL_PART_FOUR_SCORE_WEIGHT = "part_four_score_weight";
-  public static final String COL_PART_FIVE_SCORE = "part_five_score";
-  public static final String COL_PART_FIVE_SCORE_WEIGHT = "part_five_score_weight";
+  public static final String COL_GROUP_ID = "group_id";
   public static final String COL_TOTAL_SCORE = "total_score";
+  public static final String COL_SCORE_STRUCTURE = "score_structure";
   @TableId(value = "id", type = IdType.AUTO)
   @ApiModelProperty(value = "")
   private Integer id;
@@ -49,40 +46,19 @@ public class CourseStudent {
   @TableField(value = "student_id")
   @ApiModelProperty(value = "")
   private Integer studentId;
+  @TableField(value = "student_name")
+  @ApiModelProperty
+  private String studentName;
   @TableField(value = "course_id")
   @ApiModelProperty(value = "")
   private Integer courseId;
-  @TableField(value = "part_one_score")
-  @ApiModelProperty(value = "")
-  private Long partOneScore;
-  @TableField(value = "part_one_score_weight")
-  @ApiModelProperty(value = "")
-  private Long partOneScoreWeight;
-  @TableField(value = "part_two_score")
-  @ApiModelProperty(value = "")
-  private Long partTwoScore;
-  @TableField(value = "part_two_score_weight")
-  @ApiModelProperty(value = "")
-  private Long partTwoScoreWeight;
-  @TableField(value = "part_three_score")
-  @ApiModelProperty(value = "")
-  private Long partThreeScore;
-  @TableField(value = "part_three_score_weight")
-  @ApiModelProperty(value = "")
-  private Long partThreeScoreWeight;
-  @TableField(value = "part_four_score")
-  @ApiModelProperty(value = "")
-  private Long partFourScore;
-  @TableField(value = "part_four_score_weight")
-  @ApiModelProperty(value = "")
-  private Long partFourScoreWeight;
-  @TableField(value = "part_five_score")
-  @ApiModelProperty(value = "")
-  private Long partFiveScore;
-  @TableField(value = "part_five_score_weight")
-  @ApiModelProperty(value = "")
-  private Long partFiveScoreWeight;
+  @TableField(value = "group_id")
+  @ApiModelProperty
+  private Integer groupId;
   @TableField(value = "total_score")
   @ApiModelProperty(value = "")
   private Long totalScore;
+  @TableField(value = "score_structure", typeHandler = JacksonTypeHandler.class)
+  @ApiModelProperty
+  private List<ScoreItem> scoreStructure;
 }

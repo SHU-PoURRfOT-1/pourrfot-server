@@ -34,9 +34,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     if (!Boolean.parseBoolean(environment.getProperty("pourrfot.protect"))) {
+      http
+        .cors().disable()
+        .csrf().disable()
+        .authorizeRequests()
+        .antMatchers("/**")
+        .permitAll();
       return;
     }
     http.cors()
+      .and()
+      .csrf()
       .and()
       .addFilter(new JwtAuthorizationFilter(authenticationManager(), environment))
       .authorizeRequests()
