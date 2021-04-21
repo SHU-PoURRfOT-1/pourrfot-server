@@ -3,17 +3,19 @@ package cn.edu.shu.pourrfot.server.service.impl;
 import cn.edu.shu.pourrfot.server.config.CustomMySQLContainer;
 import cn.edu.shu.pourrfot.server.enums.RoleEnum;
 import cn.edu.shu.pourrfot.server.enums.SexEnum;
+import cn.edu.shu.pourrfot.server.exception.IllegalCRUDOperationException;
 import cn.edu.shu.pourrfot.server.exception.NotFoundException;
 import cn.edu.shu.pourrfot.server.model.PourrfotUser;
 import cn.edu.shu.pourrfot.server.model.Project;
+import cn.edu.shu.pourrfot.server.model.ProjectUser;
 import cn.edu.shu.pourrfot.server.repository.PourrfotUserMapper;
-import cn.edu.shu.pourrfot.server.service.ProjectService;
+import cn.edu.shu.pourrfot.server.repository.ProjectMapper;
+import cn.edu.shu.pourrfot.server.service.ProjectUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.MySQLContainer;
 
@@ -22,17 +24,24 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@ActiveProfiles("local")
 @Slf4j
-class ProjectServiceImplTest {
+class ProjectUserServiceImplTest {
   @ClassRule
   public static MySQLContainer<CustomMySQLContainer> customMySQLContainer = CustomMySQLContainer.getInstance();
-
   private final PourrfotUser owner = PourrfotUser.builder()
-    .username("teacher3")
-    .nickname("teacher3")
+    .username("teacher4")
+    .nickname("teacher4")
     .password("password")
     .role(RoleEnum.teacher)
+    .sex(SexEnum.male)
+    .createTime(new Date())
+    .updateTime(new Date())
+    .build();
+  private final PourrfotUser student = PourrfotUser.builder()
+    .username("student4")
+    .nickname("student4")
+    .password("password")
+    .role(RoleEnum.student)
     .sex(SexEnum.male)
     .createTime(new Date())
     .updateTime(new Date())
@@ -40,12 +49,14 @@ class ProjectServiceImplTest {
   private final Project project = Project.builder()
     .createTime(new Date())
     .updateTime(new Date())
-    .projectCode("projectCode1")
-    .projectName("projectName1")
-    .profilePhoto("profilePhoto1")
+    .projectCode("projectCode2")
+    .projectName("projectName2")
+    .profilePhoto("profilePhoto2")
     .build();
   @Autowired
-  private ProjectService projectService;
+  private ProjectUserService projectUserService;
+  @Autowired
+  private ProjectMapper projectMapper;
   @Autowired
   private PourrfotUserMapper pourrfotUserMapper;
 
@@ -53,10 +64,18 @@ class ProjectServiceImplTest {
   @Test
   void updateById() {
     assertEquals(1, pourrfotUserMapper.insert(owner));
+    assertEquals(1, pourrfotUserMapper.insert(student));
+    assertEquals(1, projectMapper.insert(project.setOwnerId(owner.getId())));
+    final ProjectUser projectUser = ProjectUser.builder()
+      .projectId(project.getId())
+      .userId(student.getId())
+      .roleName("participant")
+      .build();
 
-    assertThrows(NotFoundException.class, () -> projectService.updateById(project));
-    assertTrue(projectService.save(project.setOwnerId(owner.getId())));
-    assertTrue(projectService.updateById(project.setProjectName("UPDATE")));
-    assertThrows(NotFoundException.class, () -> projectService.updateById(project.setOwnerId(999)));
+    assertThrows(NotFoundException.class, () -> projectUserService.updateById(projectUser));
+    assertTrue(projectUserService.save(projectUser));
+
+    assertTrue(projectUserService.updateById(projectUser.setRoleName("UPDATE")));
+    assertThrows(IllegalCRUDOperationException.class, () -> projectUserService.updateById(projectUser.setUserId(999)));
   }
 }

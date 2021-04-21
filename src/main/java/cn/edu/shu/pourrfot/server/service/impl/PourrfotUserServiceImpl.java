@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -38,6 +39,7 @@ public class PourrfotUserServiceImpl extends ServiceImpl<PourrfotUserMapper, Pou
       .setUpdateTime(new Date(System.currentTimeMillis())));
   }
 
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public boolean updateById(PourrfotUser entity) {
     final PourrfotUser found = super.getById(entity.getId());
