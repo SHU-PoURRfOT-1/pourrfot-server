@@ -9,7 +9,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -21,6 +24,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName(value = "pourrfot_user")
+@Accessors(chain = true)
 public class PourrfotUser {
   public static final String COL_ID = "id";
   public static final String COL_CREATE_TIME = "create_time";
@@ -47,9 +51,11 @@ public class PourrfotUser {
   private Date updateTime;
   @TableField(value = "username")
   @ApiModelProperty(value = "")
+  @NotBlank
   private String username;
   @TableField(value = "nickname")
   @ApiModelProperty(value = "")
+  @NotBlank
   private String nickname;
   @TableField(value = "profile_photo")
   @ApiModelProperty(value = "")
@@ -59,9 +65,11 @@ public class PourrfotUser {
   private Date birth;
   @TableField(value = "sex")
   @ApiModelProperty(value = "")
+  @NotNull
   private SexEnum sex;
   @TableField(value = "`role`")
   @ApiModelProperty(value = "")
+  @NotNull
   private RoleEnum role;
   @TableField(value = "email")
   @ApiModelProperty

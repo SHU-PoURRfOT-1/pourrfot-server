@@ -2,14 +2,12 @@ package cn.edu.shu.pourrfot.server.controller;
 
 import cn.edu.shu.pourrfot.server.config.CustomMySQLContainer;
 import cn.edu.shu.pourrfot.server.enums.RoleEnum;
-import cn.edu.shu.pourrfot.server.model.Course;
+import cn.edu.shu.pourrfot.server.enums.SexEnum;
 import cn.edu.shu.pourrfot.server.model.PourrfotUser;
-import cn.edu.shu.pourrfot.server.repository.PourrfotUserMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matchers;
 import org.junit.ClassRule;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,68 +22,50 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc(addFilters = false)
 @Slf4j
-class CourseControllerTest {
+class PourrfotUserControllerTest {
   @ClassRule
   public static MySQLContainer<CustomMySQLContainer> customMySQLContainer = CustomMySQLContainer.getInstance();
-  private final PourrfotUser[] teachers = new PourrfotUser[]{
+  private final PourrfotUser[] users = new PourrfotUser[]{
     PourrfotUser.builder()
-      .username("username1")
-      .nickname("nickname1")
+      .username("teacher1")
+      .nickname("teacher1")
+      .password("password")
       .role(RoleEnum.teacher)
+      .sex(SexEnum.male)
       .build(),
     PourrfotUser.builder()
-      .username("username2")
-      .nickname("nickname2")
-      .role(RoleEnum.teacher)
-      .build()
+      .username("student1")
+      .nickname("student1")
+      .role(RoleEnum.student)
+      .sex(SexEnum.female)
+      .build(),
+    PourrfotUser.builder()
+      .username("admin1")
+      .nickname("admin1")
+      .sex(SexEnum.male)
+      .role(RoleEnum.admin)
+      .build(),
   };
   @Autowired
   private MockMvc mockMvc;
   @Autowired
   private ObjectMapper objectMapper;
-  @Autowired
-  private PourrfotUserMapper pourrfotUserMapper;
-
-  @BeforeEach
-  void setUp() {
-    for (PourrfotUser teacher : teachers) {
-      assertEquals(1, pourrfotUserMapper.insert(teacher));
-    }
-  }
 
   @Transactional
   @Test
   void integrationTest() throws Exception {
-    final Course[] newCourses = new Course[]{new Course()
-      .setClassLocation("classLocation1")
-      .setClassTime("classTime1")
-      .setCourseCode("courseCode1")
-      .setCourseName("courseName1")
-      .setProfilePhoto("profilePhoto1")
-      .setTeacherId(teachers[0].getId())
-      .setTerm("term1"),
-      new Course().setClassLocation("classLocation2")
-        .setClassTime("classTime2")
-        .setCourseCode("courseCode2")
-        .setCourseName("courseName2")
-        .setProfilePhoto("profilePhoto2")
-        .setTeacherId(teachers[1].getId())
-        .setTerm("term2")};
-    final List<String> locations = new ArrayList<>(newCourses.length);
-    // POST create
-    for (Course newCourse : newCourses) {
-      mockMvc.perform(post("/courses")
+    final List<String> locations = new ArrayList<>(users.length);
+    for (PourrfotUser user : users) {
+      mockMvc.perform(post("/users")
         .contentType(MediaType.APPLICATION_JSON)
-        .content(objectMapper.writeValueAsString(newCourse))
-        .accept(MediaType.APPLICATION_JSON)
-      )
+        .content(objectMapper.writeValueAsString(user))
+        .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isCreated())
         .andExpect(header().exists(HttpHeaders.LOCATION))
         .andDo(result -> locations.add(Objects.requireNonNull(result.getResponse()
@@ -98,28 +78,21 @@ class CourseControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.createTime").exists())
         .andExpect(jsonPath("$.updateTime").exists())
+        .andExpect(jsonPath("$.password").exists())
         .andDo(result -> log.info("Detail success: {}", result.getResponse().getContentAsString()));
     }
     // GET page
-    mockMvc.perform(get("/courses")
+    mockMvc.perform(get("/users")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.records").exists())
       .andExpect(jsonPath("$.records").isArray())
-      .andExpect(jsonPath("$.records", Matchers.hasSize(newCourses.length)))
+      .andExpect(jsonPath("$.records", Matchers.hasSize(users.length)))
+      .andExpect(jsonPath("$.records[0].password").value("******"))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/courses")
-      .param("teacherId", String.valueOf(teachers[0].getId()))
-      .contentType(MediaType.APPLICATION_JSON)
-      .accept(MediaType.APPLICATION_JSON))
-      .andExpect(status().isOk())
-      .andExpect(jsonPath("$.records").exists())
-      .andExpect(jsonPath("$.records").isArray())
-      .andExpect(jsonPath("$.records", Matchers.hasSize(1)))
-      .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/courses")
-      .param("term", "term1")
+    mockMvc.perform(get("/users")
+      .param("role", RoleEnum.student.getValue())
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
@@ -127,17 +100,17 @@ class CourseControllerTest {
       .andExpect(jsonPath("$.records").isArray())
       .andExpect(jsonPath("$.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/courses")
-      .param("courseName", "courseName1")
+    mockMvc.perform(get("/users")
+      .param("sex", SexEnum.male.getValue())
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.records").exists())
       .andExpect(jsonPath("$.records").isArray())
-      .andExpect(jsonPath("$.records", Matchers.hasSize(1)))
+      .andExpect(jsonPath("$.records", Matchers.hasSize(2)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/courses")
-      .param("courseCode", "courseCode1")
+    mockMvc.perform(get("/users")
+      .param("username", "student")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
@@ -148,12 +121,12 @@ class CourseControllerTest {
     // PUT update
     mockMvc.perform(put(locations.get(0))
       .contentType(MediaType.APPLICATION_JSON)
-      .content(objectMapper.writeValueAsString(newCourses[0].setTerm("TEST")))
+      .content(objectMapper.writeValueAsString(users[0].setNickname("UPDATE")))
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.createTime").exists())
       .andExpect(jsonPath("$.updateTime").exists())
-      .andExpect(jsonPath("$.term").value("TEST"))
+      .andExpect(jsonPath("$.nickname").value("UPDATE"))
       .andDo(result -> log.info("Update success: {}", result.getResponse().getContentAsString()));
     // DELETE Delete
     for (String location : locations) {
