@@ -7,7 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -19,6 +22,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName(value = "project_user")
+@Accessors(chain = true)
 public class ProjectUser {
   public static final String COL_ID = "id";
   public static final String COL_CREATE_TIME = "create_time";
@@ -38,14 +42,17 @@ public class ProjectUser {
   private Date updateTime;
   @TableField(value = "project_id")
   @ApiModelProperty(value = "")
+  @NotNull
   private Integer projectId;
   @TableField(value = "user_id")
   @ApiModelProperty(value = "")
+  @NotNull
   private Integer userId;
   /**
    * role in the project
    */
   @TableField(value = "role_name")
   @ApiModelProperty(value = "role in the project")
+  @NotBlank
   private String roleName;
 }
