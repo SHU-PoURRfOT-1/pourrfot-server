@@ -7,7 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 /**
@@ -19,6 +21,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName(value = "project")
+@Accessors(chain = true)
 public class Project {
   public static final String COL_ID = "id";
   public static final String COL_CREATE_TIME = "create_time";
@@ -39,9 +42,11 @@ public class Project {
   private Date updateTime;
   @TableField(value = "project_name")
   @ApiModelProperty(value = "")
+  @NotBlank
   private String projectName;
   @TableField(value = "project_code")
   @ApiModelProperty(value = "")
+  @NotBlank
   private String projectCode;
   @TableField(value = "owner_id")
   @ApiModelProperty(value = "")
