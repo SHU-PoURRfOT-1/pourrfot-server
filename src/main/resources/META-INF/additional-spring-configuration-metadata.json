@@ -14,6 +14,26 @@
             "name": "pourrfot.protect",
             "type": "java.lang.String",
             "description": "whether need to protect pourrfot-server."
+        },
+        {
+            "name": "aliyun.accessKeyId",
+            "type": "java.lang.String",
+            "description": "RAM access key id."
+        },
+        {
+            "name": "aliyun.accessKeySecret",
+            "type": "java.lang.String",
+            "description": "RAM access key secret."
+        },
+        {
+            "name": "aliyun.oss.endpoint",
+            "type": "java.lang.String",
+            "description": "OSS endpoint."
+        },
+        {
+            "name": "aliyun.oss.bucket",
+            "type": "java.lang.String",
+            "description": "Bucket name."
         }
     ]
 }

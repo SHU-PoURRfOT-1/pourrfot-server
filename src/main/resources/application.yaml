@@ -29,3 +29,9 @@ pourrfot:
     host: "http://localhost:3000/pourrfot-web"
   # Turn false when dev or test locally
   protect: false
+aliyun:
+  accessKeyId: id
+  accessKeySecret: secret
+  oss:
+    endpoint: endpoint
+    bucket: pourrfot

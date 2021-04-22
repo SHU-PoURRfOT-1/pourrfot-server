@@ -22,7 +22,6 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@ActiveProfiles("local")
 @Slf4j
 class ProjectServiceImplTest {
   @ClassRule
