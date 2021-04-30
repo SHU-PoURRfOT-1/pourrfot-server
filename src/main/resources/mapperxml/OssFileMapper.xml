@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.shu.pourrfot.server.repository.OssFileMapper">
+    <resultMap id="BaseResultMap" type="cn.edu.shu.pourrfot.server.model.OssFile">
+        <!--@mbg.generated-->
+        <!--@Table pourrfot.oss_file-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="metadata" jdbcType="VARCHAR" property="metadata"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="type" jdbcType="OTHER" property="type"/>
+        <result column="resource_id" jdbcType="INTEGER" property="resourceId"/>
+        <result column="directory" jdbcType="VARCHAR" property="directory"/>
+        <result column="oss_url" jdbcType="VARCHAR" property="ossUrl"/>
+        <result column="owner_id" jdbcType="INTEGER" property="ownerId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, create_time, update_time, `name`, metadata, `type`, resource_id, directory, oss_url,
+        owner_id
+    </sql>
+</mapper>
