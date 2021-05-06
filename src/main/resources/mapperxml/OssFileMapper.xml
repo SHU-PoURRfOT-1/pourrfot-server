@@ -10,15 +10,17 @@
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="metadata" jdbcType="VARCHAR" property="metadata"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
-        <result column="type" jdbcType="OTHER" property="type"/>
+        <result column="resource_type" jdbcType="OTHER" property="resourceType"/>
         <result column="resource_id" jdbcType="INTEGER" property="resourceId"/>
         <result column="directory" jdbcType="VARCHAR" property="directory"/>
+        <result column="oss_key" jdbcType="VARCHAR" property="ossKey"/>
         <result column="oss_url" jdbcType="VARCHAR" property="ossUrl"/>
+        <result column="origin_oss_url" jdbcType="VARCHAR" property="originOssUrl"/>
         <result column="owner_id" jdbcType="INTEGER" property="ownerId"/>
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
-        id, create_time, update_time, `name`, metadata, `type`, resource_id, directory, oss_url,
-        owner_id
+        id, create_time, update_time, `name`, metadata, resource_type, resource_id, `directory`, oss_key, oss_url,
+        origin_oss_url, owner_id
     </sql>
 </mapper>

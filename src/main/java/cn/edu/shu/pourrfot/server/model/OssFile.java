@@ -49,13 +49,15 @@ public class OssFile {
   private Date updateTime;
   @TableField(value = "`name`")
   @ApiModelProperty(value = "")
+  @NotBlank
   private String name;
   @ApiModelProperty(value = "")
   @TableField(value = "metadata", typeHandler = JacksonTypeHandler.class)
   private Map<String, Object> metadata;
-  @TableField(value = "`type`")
+  @TableField(value = "resource_type")
   @ApiModelProperty(value = "")
-  private ResourceTypeEnum type;
+  @NotNull
+  private ResourceTypeEnum resourceType;
   /**
    * course/project/transaction/message id
    */
@@ -63,19 +65,32 @@ public class OssFile {
   @ApiModelProperty(value = "course/project/transaction/message id")
   @NotNull
   private Integer resourceId;
+  /**
+   * Unix-like directory
+   */
   @TableField(value = "directory")
   @ApiModelProperty(value = "")
-  @NotBlank
   private String directory;
+  @TableField(value = "oss_key")
+  @ApiModelProperty(value = "")
+  private String ossKey;
+  /**
+   * symbol link location
+   */
   @TableField(value = "oss_url")
   @ApiModelProperty(value = "")
-  @NotBlank
   private String ossUrl;
+  /**
+   * origin file location
+   */
+  @TableField(value = "origin_oss_url")
+  @ApiModelProperty(value = "")
+  @NotBlank
+  private String originOssUrl;
   /**
    * uploader userid
    */
   @TableField(value = "owner_id")
   @ApiModelProperty(value = "uploader userid")
-  @NotNull
   private Integer ownerId;
 }
