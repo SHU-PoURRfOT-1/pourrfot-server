@@ -21,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 /**
@@ -48,7 +50,7 @@ public class OssFileController {
                                             @RequestParam(required = false) Integer ownerId) {
     QueryWrapper<OssFile> query = Wrappers.query(new OssFile());
     if (resourceType != null) {
-      query = query.eq(OssFile.COL_TYPE, resourceType);
+      query = query.eq(OssFile.COL_RESOURCE_TYPE, resourceType);
     }
     if (resourceId != null) {
       query = query.eq(OssFile.COL_RESOURCE_ID, resourceId);
@@ -85,14 +87,14 @@ public class OssFileController {
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.CREATED)
   public ResponseEntity<OssFile> create(@NotNull @RequestBody @Validated OssFile ossFile) {
-    ossFileService.save(ossFile);
+    // origin oss url in header#location is encoded. It needs to be decoded
+    ossFileService.save(ossFile.setOriginOssUrl(URLDecoder.decode(ossFile.getOriginOssUrl(), StandardCharsets.UTF_8)));
     return ResponseEntity.created(URI.create(String.format("%s/files/%d", contextPath, ossFile.getId()))).body(ossFile);
   }
 
   @PostMapping("/cache")
-  @ResponseStatus(code = HttpStatus.CREATED)
-  public ResponseEntity<String> uploadFile(@NotNull @RequestPart MultipartFile file,
-                                           @NotBlank @RequestPart(required = false) String fileName) {
+  public ResponseEntity<String> uploadFile(@NotNull @RequestParam MultipartFile file,
+                                           @NotBlank @RequestParam(required = false) String fileName) {
     final String ossUrl;
     try {
       ossUrl = ossFileService.uploadFileWithFilename(file, StringUtils.isBlank(fileName) ?

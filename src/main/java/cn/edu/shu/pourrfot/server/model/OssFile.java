@@ -24,7 +24,7 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "pourrfot.oss_file")
+@TableName(value = "pourrfot.oss_file", autoResultMap = true)
 @Accessors(chain = true)
 public class OssFile {
   public static final String COL_ID = "id";
@@ -32,11 +32,13 @@ public class OssFile {
   public static final String COL_UPDATE_TIME = "update_time";
   public static final String COL_NAME = "name";
   public static final String COL_METADATA = "metadata";
-  public static final String COL_TYPE = "type";
+  public static final String COL_RESOURCE_TYPE = "resource_type";
   public static final String COL_RESOURCE_ID = "resource_id";
   public static final String COL_DIRECTORY = "directory";
   public static final String COL_OSS_URL = "oss_url";
+  public static final String COL_ORIGIN_OSS_URL = "origin_oss_url";
   public static final String COL_OWNER_ID = "owner_id";
+
   @TableId(value = "id", type = IdType.AUTO)
   @ApiModelProperty(value = "")
   private Integer id;

@@ -73,7 +73,7 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
     // 2. check the cache file defined by oss url exist in OSS
     final String key = StringUtils.isNotBlank(entity.getOriginOssUrl()) ?
       OssFileService.getKeyFromOssUrl(entity.getOriginOssUrl()) : entity.getOssKey();
-    checkCacheFileExisted(entity, key);
+    checkCacheFileExisted(key);
     // 3. create a symbol link
     final String symbolLink = createSymbolLink(entity, key);
     // 4. save OssFile with new OSS info
@@ -85,19 +85,19 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
       .setUpdateTime(new Date(System.currentTimeMillis()))) == 1;
   }
 
-  private void checkCacheFileExisted(OssFile entity, String key) {
+  private void checkCacheFileExisted(String key) {
     boolean isCacheFileExist;
     try {
       isCacheFileExist = ossClient.doesObjectExist(ossBucket, key);
     } catch (Exception e) {
-      log.error("Check OSS object existed failed: {}", entity.getOssUrl(), e);
+      log.error("Check OSS object existed failed: {}", key, e);
       throw new OssFileServiceException(e);
     }
     if (!isCacheFileExist) {
-      log.error("OSS Cache file: {} doesn't exist", entity.getOssUrl());
-      throw new NotFoundException(String.format("OSS Cache file %s doesn't exist", entity.getOssUrl()));
+      log.error("OSS Cache file: {} doesn't exist", key);
+      throw new NotFoundException(String.format("OSS Cache file %s doesn't exist", key));
     }
-    log.info("Check OSS object existed: {}", entity.getOssUrl());
+    log.info("Check OSS object existed: {}", key);
   }
 
   private String createSymbolLink(OssFile entity, String key) {
@@ -110,10 +110,10 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
     try {
       ossClient.createSymlink(createSymlinkRequest);
     } catch (Exception e) {
-      log.error("Create OSS Symbol link: {} of {} failed", symbolLink, entity.getOssUrl(), e);
+      log.error("Create OSS Symbol link: {} of {} failed", symbolLink, entity.getOriginOssUrl(), e);
       throw new OssFileServiceException(e);
     }
-    log.info("Create OSS Symbol link: {} of {} success", symbolLink, entity.getOssUrl());
+    log.info("Create OSS Symbol link: {} of {} success", symbolLink, entity.getOriginOssUrl());
     return symbolLink;
   }
 
