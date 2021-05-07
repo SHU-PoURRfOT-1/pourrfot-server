@@ -68,7 +68,7 @@ class OssFileControllerTest {
     // upload file
     mockMvc.perform(MockMvcRequestBuilders.multipart("/files/cache")
       .file(file)
-      .param("fileName", "test.txt")
+      .param("filename", "test.txt")
       .with(request -> {
         request.setMethod(HttpMethod.POST.name());
         return request;

@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
@@ -81,10 +83,15 @@ public class OssFileController {
     if (found == null) {
       return ResponseEntity.notFound().build();
     }
-    // Simple handling the content type and other header
+    // Simple handling the content type
+    final Resource ossFileResource = ossService.getOssFileResource(found);
+    // process chinese filename
+    final String filename = URLEncoder.encode(found.getName(), StandardCharsets.UTF_8)
+      .replaceAll("\\+", "%20");
     return ResponseEntity.ok()
       .contentType(MediaType.APPLICATION_OCTET_STREAM)
-      .body(ossService.getOssFileResource(found));
+      .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+      .body(ossFileResource);
   }
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -97,11 +104,11 @@ public class OssFileController {
 
   @PostMapping("/cache")
   public ResponseEntity<String> uploadFile(@NotNull @RequestParam MultipartFile file,
-                                           @NotBlank @RequestParam(required = false) String fileName) {
+                                           @NotBlank @RequestParam(required = false) String filename) {
     final String ossUrl;
     try {
-      ossUrl = ossService.uploadFileWithFilename(file, StringUtils.isBlank(fileName) ?
-        file.getOriginalFilename() : fileName);
+      ossUrl = ossService.uploadFileWithFilename(file, StringUtils.isBlank(filename) ?
+        file.getOriginalFilename() : filename);
     } catch (Throwable t) {
       log.error("Upload file to OSS failed: {}", file.getName(), t);
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
