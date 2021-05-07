@@ -3,6 +3,7 @@ package cn.edu.shu.pourrfot.server.controller;
 import cn.edu.shu.pourrfot.server.enums.ResourceTypeEnum;
 import cn.edu.shu.pourrfot.server.model.OssFile;
 import cn.edu.shu.pourrfot.server.service.OssFileService;
+import cn.edu.shu.pourrfot.server.service.OssService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -37,6 +38,8 @@ import java.util.Optional;
 public class OssFileController {
   @Autowired
   private OssFileService ossFileService;
+  @Autowired
+  private OssService ossService;
   @Value("${server.servlet.contextPath}")
   private String contextPath;
 
@@ -81,7 +84,7 @@ public class OssFileController {
     // Simple handling the content type and other header
     return ResponseEntity.ok()
       .contentType(MediaType.APPLICATION_OCTET_STREAM)
-      .body(ossFileService.getOssFileResource(found));
+      .body(ossService.getOssFileResource(found));
   }
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -97,7 +100,7 @@ public class OssFileController {
                                            @NotBlank @RequestParam(required = false) String fileName) {
     final String ossUrl;
     try {
-      ossUrl = ossFileService.uploadFileWithFilename(file, StringUtils.isBlank(fileName) ?
+      ossUrl = ossService.uploadFileWithFilename(file, StringUtils.isBlank(fileName) ?
         file.getOriginalFilename() : fileName);
     } catch (Throwable t) {
       log.error("Upload file to OSS failed: {}", file.getName(), t);
