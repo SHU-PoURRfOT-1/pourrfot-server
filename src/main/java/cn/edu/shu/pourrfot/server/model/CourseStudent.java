@@ -21,7 +21,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "course_student")
+@TableName(value = "course_student", autoResultMap = true)
 @Accessors(chain = true)
 public class CourseStudent {
   public static final String COL_ID = "id";

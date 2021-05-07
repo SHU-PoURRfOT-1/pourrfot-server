@@ -6,6 +6,7 @@ spring:
     url: jdbc:tc:mysql:8.0:///test
     username: test
     password: test
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
 pourrfot:
   cas:
     host: "http://localhost:9001/cas/api"

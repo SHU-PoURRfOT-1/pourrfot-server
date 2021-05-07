@@ -16,7 +16,6 @@ public enum RoleEnum implements IEnum<String> {
   guest("guest");
 
   public static List<String> ALL_ROLE_VALUES = List.of(student.role, teacher.role, admin.role);
-  public static List<RoleEnum> ALL_ROLE = List.of(student, teacher, admin);
   private final String role;
 
   RoleEnum(String role) {

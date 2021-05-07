@@ -15,6 +15,10 @@ spring:
     url: "jdbc:mysql://localhost/pourrfot"
     username: pourrfot
     password: 123456
+  servlet:
+    multipart:
+      max-file-size: 1GB
+      max-request-size: 1GB
 management:
   endpoints:
     web:
@@ -29,3 +33,9 @@ pourrfot:
     host: "http://localhost:3000/pourrfot-web"
   # Turn false when dev or test locally
   protect: false
+aliyun:
+  accessKeyId: id
+  accessKeySecret: secret
+  oss:
+    endpoint: endpoint
+    bucket: pourrfot
