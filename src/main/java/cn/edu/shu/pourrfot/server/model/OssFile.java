@@ -24,7 +24,7 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "pourrfot.oss_file", autoResultMap = true)
+@TableName(value = "oss_file", autoResultMap = true)
 @Accessors(chain = true)
 public class OssFile {
   public static final String COL_ID = "id";
