@@ -4,10 +4,7 @@ import cn.edu.shu.pourrfot.server.enums.ResourceTypeEnum;
 import cn.edu.shu.pourrfot.server.exception.NotFoundException;
 import cn.edu.shu.pourrfot.server.exception.OssFileServiceException;
 import cn.edu.shu.pourrfot.server.model.OssFile;
-import cn.edu.shu.pourrfot.server.repository.CourseGroupMapper;
-import cn.edu.shu.pourrfot.server.repository.CourseMapper;
-import cn.edu.shu.pourrfot.server.repository.OssFileMapper;
-import cn.edu.shu.pourrfot.server.repository.ProjectMapper;
+import cn.edu.shu.pourrfot.server.repository.*;
 import cn.edu.shu.pourrfot.server.service.OssFileService;
 import cn.edu.shu.pourrfot.server.service.OssService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -35,6 +32,8 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
   private CourseGroupMapper courseGroupMapper;
   @Autowired
   private ProjectMapper projectMapper;
+  @Autowired
+  private StudentTransactionMapper studentTransactionMapper;
 
   /**
    * processes
@@ -86,9 +85,6 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
           throw new NotFoundException(message);
         }
         break;
-      case messages:
-        // TODO: check messages
-        break;
       case projects:
         if (projectMapper.selectById(resourceId) == null) {
           final String message = String.format("Not found the project: %s associated with the oss-file: %s",
@@ -98,9 +94,15 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
         }
         break;
       case transactions:
-        // TODO: check messages
+        if (studentTransactionMapper.selectById(resourceId) == null) {
+          final String message = String.format("Not found the student-transaction: %s associated with the oss-file: %s",
+            resourceId, name);
+          log.error(message);
+          throw new NotFoundException(message);
+        }
         break;
       default:
+        // TODO: check messages
         throw new IllegalArgumentException("Not Support oss-file resource type");
     }
   }
