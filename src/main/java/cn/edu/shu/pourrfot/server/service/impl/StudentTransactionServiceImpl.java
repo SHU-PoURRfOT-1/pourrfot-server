@@ -26,6 +26,11 @@ public class StudentTransactionServiceImpl extends ServiceImpl<StudentTransactio
   @Transactional(rollbackFor = Exception.class)
   @Override
   public boolean save(StudentTransaction entity) {
+    if (entity.getSender().equals(entity.getReceiver())) {
+      final IllegalCRUDOperationException e = new IllegalCRUDOperationException("Can't create a student-transaction with same sender and receiver");
+      log.warn("Can't create a student-transaction with same sender and receiver: {}", entity);
+      throw e;
+    }
     checkAssociatedResource(entity);
     return baseMapper.insert(entity
       .setCreateTime(new Date(System.currentTimeMillis()))
@@ -35,7 +40,7 @@ public class StudentTransactionServiceImpl extends ServiceImpl<StudentTransactio
   @Transactional(rollbackFor = Exception.class)
   @Override
   public boolean updateById(StudentTransaction entity) {
-    final StudentTransaction found = super.getById(entity.getId());
+    final StudentTransaction found = baseMapper.selectById(entity.getId());
     if (found == null) {
       final NotFoundException e = new NotFoundException("Can't update the student-transaction because the student-transaction doesn't exist");
       log.error("Can't update a non-existed student-transaction: {}", entity, e);

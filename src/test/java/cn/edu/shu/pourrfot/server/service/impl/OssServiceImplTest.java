@@ -1,9 +1,10 @@
-package cn.edu.shu.pourrfot.server.service;
+package cn.edu.shu.pourrfot.server.service.impl;
 
 import cn.edu.shu.pourrfot.server.enums.ResourceTypeEnum;
 import cn.edu.shu.pourrfot.server.exception.NotFoundException;
 import cn.edu.shu.pourrfot.server.exception.OssFileServiceException;
 import cn.edu.shu.pourrfot.server.model.OssFile;
+import cn.edu.shu.pourrfot.server.service.OssService;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.OSSObject;

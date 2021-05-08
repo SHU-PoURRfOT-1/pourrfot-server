@@ -20,7 +20,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URLDecoder;
@@ -104,7 +103,7 @@ public class OssFileController {
 
   @PostMapping("/cache")
   public ResponseEntity<String> uploadFile(@NotNull @RequestParam MultipartFile file,
-                                           @NotBlank @RequestParam(required = false) String filename) {
+                                           @RequestParam(required = false) String filename) {
     final String ossUrl;
     try {
       ossUrl = ossService.uploadFileWithFilename(file, StringUtils.isBlank(filename) ?
