@@ -1,5 +1,7 @@
 # pourrfot-server
 
+[![wakatime](https://wakatime.com/badge/github/SHU-PoURRfOT-1/pourrfot-server.svg)](https://wakatime.com/badge/github/SHU-PoURRfOT-1/pourrfot-server)
+
 [![codecov](https://codecov.io/gh/SHU-PoURRfOT-1/pourrfot-server/branch/main/graph/badge.svg?token=8YX7TV9X0V)](https://codecov.io/gh/SHU-PoURRfOT-1/pourrfot-server)
 
 [![Actions Status: Java CI with Gradle and CD with ssh](https://github.com/SHU-PoURRfOT-1/pourrfot-server/workflows/Java%20CI%20with%20Gradle%20and%20CD%20with%20ssh/badge.svg)](https://github.com/SHU-PoURRfOT-1/pourrfot-server/actions?query=workflow%3A"Java+CI+with+Gradle+and+CD+with+ssh")
