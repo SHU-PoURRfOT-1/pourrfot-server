@@ -1,8 +1,9 @@
-package cn.edu.shu.pourrfot.server.service;
+package cn.edu.shu.pourrfot.server.service.impl;
 
 import cn.edu.shu.pourrfot.server.exception.NotFoundException;
 import cn.edu.shu.pourrfot.server.exception.OssFileServiceException;
 import cn.edu.shu.pourrfot.server.model.OssFile;
+import cn.edu.shu.pourrfot.server.service.OssService;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.model.CreateSymlinkRequest;
 import com.aliyun.oss.model.OSSObject;
@@ -39,8 +40,8 @@ public class OssServiceImpl implements OssService {
     try {
       ossClient.putObject(ossBucket, key, file.getInputStream());
     } catch (Exception e) {
-      log.error("Upload file to OSS failed", e);
-      throw new OssFileServiceException(e);
+      log.error("Upload file: {} to OSS failed", key, e);
+      throw new OssFileServiceException(String.format("Upload file: %s to OSS failed", key), e);
     }
     return setupOssUrl(key);
   }
@@ -52,7 +53,7 @@ public class OssServiceImpl implements OssService {
       ossObject = ossClient.getObject(ossBucket, ossFile.getOssKey());
     } catch (Exception e) {
       log.error("Get OSS object: {} failed", ossFile.getOssUrl(), e);
-      throw new OssFileServiceException(e);
+      throw new OssFileServiceException(String.format("Get OSS object: %s failed", ossFile.getOssUrl()), e);
     }
     log.info("Downloading oss file: {}", ossFile.getOssUrl());
     return new InputStreamResource(ossObject.getObjectContent());
@@ -65,7 +66,7 @@ public class OssServiceImpl implements OssService {
       isCacheFileExist = ossClient.doesObjectExist(ossBucket, key);
     } catch (Exception e) {
       log.error("Check OSS object existed failed: {}", key, e);
-      throw new OssFileServiceException(e);
+      throw new OssFileServiceException(String.format("Check OSS object existed failed: %s", key), e);
     }
     if (!isCacheFileExist) {
       log.error("OSS Cache file: {} doesn't exist", key);
@@ -86,7 +87,7 @@ public class OssServiceImpl implements OssService {
       ossClient.createSymlink(createSymlinkRequest);
     } catch (Exception e) {
       log.error("Create OSS Symbol link: {} of {} failed", symbolLink, originKey, e);
-      throw new OssFileServiceException(e);
+      throw new OssFileServiceException(String.format("Create OSS Symbol link: %s of %s failed", symbolLink, originKey), e);
     }
     log.info("Create OSS Symbol link: {} of {} success", symbolLink, originKey);
     return symbolLink;
@@ -98,7 +99,7 @@ public class OssServiceImpl implements OssService {
       ossClient.deleteObject(ossBucket, key);
     } catch (Exception e) {
       log.error("Delete OSS object: {} failed", key, e);
-      throw new OssFileServiceException(e);
+      throw new OssFileServiceException(String.format("Delete OSS object: %s failed", key), e);
     }
     log.info("Delete OSS object: {} success", key);
     return true;

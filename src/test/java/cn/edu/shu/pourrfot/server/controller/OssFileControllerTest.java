@@ -71,7 +71,7 @@ class OssFileControllerTest {
   @Test
   void uploadFailed() throws Exception {
     given(ossService.uploadFileWithFilename(any(), anyString()))
-      .willThrow(new OssFileServiceException(new OSSException("mock")));
+      .willThrow(new OssFileServiceException("mock", new OSSException("mock")));
     // upload file
     mockMvc.perform(MockMvcRequestBuilders.multipart("/files/cache")
       .file(file)
@@ -101,6 +101,7 @@ class OssFileControllerTest {
       .ownerId(100)
       .resourceId(100)
       .resourceType(ResourceTypeEnum.courses)
+      .ossUrl("Not blank")
       .build();
     // upload file
     mockMvc.perform(MockMvcRequestBuilders.multipart("/files/cache")
