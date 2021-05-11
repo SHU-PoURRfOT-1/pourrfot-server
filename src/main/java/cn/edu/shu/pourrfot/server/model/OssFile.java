@@ -40,59 +40,59 @@ public class OssFile {
   public static final String COL_OWNER_ID = "owner_id";
 
   @TableId(value = "id", type = IdType.AUTO)
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private Integer id;
   @TableField(value = "create_time")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private Date createTime;
   @TableField(value = "update_time")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   @Version
   private Date updateTime;
   @TableField(value = "`name`")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(example = "test.txt", required = true)
   @NotBlank
   private String name;
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   @TableField(value = "metadata", typeHandler = JacksonTypeHandler.class)
   private Map<String, Object> metadata;
   @TableField(value = "resource_type")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true)
   @NotNull
   private ResourceTypeEnum resourceType;
   /**
    * course/project/transaction/message id
    */
   @TableField(value = "resource_id")
-  @ApiModelProperty(value = "course/project/transaction/message id")
+  @ApiModelProperty(value = "course/project/transaction/message id", required = true)
   @NotNull
   private Integer resourceId;
   /**
    * Unix-like directory
    */
   @TableField(value = "directory")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "SET BY SERVER")
   private String directory;
   @TableField(value = "oss_key")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "SET BY SERVER")
   private String ossKey;
   /**
    * symbol link location
    */
   @TableField(value = "oss_url")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "SET BY SERVER")
   private String ossUrl;
   /**
    * origin file location
    */
   @TableField(value = "origin_oss_url")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true)
   @NotBlank
   private String originOssUrl;
   /**
    * uploader userid
    */
   @TableField(value = "owner_id")
-  @ApiModelProperty(value = "uploader userid")
+  @ApiModelProperty(value = "uploader userid", required = true)
   private Integer ownerId;
 }

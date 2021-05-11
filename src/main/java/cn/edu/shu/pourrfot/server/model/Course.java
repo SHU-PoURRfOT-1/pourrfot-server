@@ -35,37 +35,37 @@ public class Course {
   public static final String COL_TERM = "term";
   public static final String COL_PROFILE_PHOTO = "profile_photo";
   @TableId(value = "id", type = IdType.AUTO)
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private Integer id;
   @TableField(value = "create_time")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private Date createTime;
   @TableField(value = "update_time")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   @Version
   private Date updateTime;
   @TableField(value = "teacher_id")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true)
   @NotNull
   private Integer teacherId;
   @TableField(value = "course_code")
-  @ApiModelProperty(value = "", notes = "Unique")
+  @ApiModelProperty(required = true, notes = "Unique")
   @NotEmpty
   private String courseCode;
   @TableField(value = "course_name")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true)
   @NotEmpty
   private String courseName;
   @TableField(value = "class_time")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private String classTime;
   @TableField(value = "class_location")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private String classLocation;
   @TableField(value = "term")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private String term;
   @TableField(value = "profile_photo")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private String profilePhoto;
 }

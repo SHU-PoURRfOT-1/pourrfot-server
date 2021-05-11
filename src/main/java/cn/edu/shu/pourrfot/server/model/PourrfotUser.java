@@ -40,35 +40,35 @@ public class PourrfotUser {
   public static final String COL_PASSWORD = "password";
 
   @TableId(value = "id", type = IdType.AUTO)
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private Integer id;
   @TableField(value = "create_time")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private Date createTime;
   @TableField(value = "update_time")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   @Version
   private Date updateTime;
   @TableField(value = "username")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true)
   @NotBlank
   private String username;
   @TableField(value = "nickname")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true)
   @NotBlank
   private String nickname;
   @TableField(value = "profile_photo")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private String profilePhoto;
   @TableField(value = "birth")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private Date birth;
   @TableField(value = "sex")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true)
   @NotNull
   private SexEnum sex;
   @TableField(value = "`role`")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true)
   @NotNull
   private RoleEnum role;
   @TableField(value = "email")

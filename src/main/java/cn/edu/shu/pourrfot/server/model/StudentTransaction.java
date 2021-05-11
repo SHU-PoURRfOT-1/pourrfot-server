@@ -36,35 +36,35 @@ public class StudentTransaction {
   public static final String COL_CONTENT = "content";
   public static final String COL_METADATA = "metadata";
   @TableId(value = "id", type = IdType.AUTO)
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private Integer id;
   @TableField(value = "create_time")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private Date createTime;
   @TableField(value = "update_time")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   @Version
   private Date updateTime;
   @TableField(value = "sender")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true)
   @NotNull
   private Integer sender;
   @TableField(value = "receiver")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true)
   @NotNull
   private Integer receiver;
   @TableField(value = "title")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true)
   @NotBlank
   private String title;
   @TableField(value = "urgent")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private Boolean urgent;
   @TableField(value = "content")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true)
   @NotBlank
   private String content;
   @TableField(value = "metadata", typeHandler = JacksonTypeHandler.class)
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private Map<String, Object> metadata;
 }
