@@ -45,4 +45,8 @@ public class Result<T> {
   public static <A> Result<A> of(HttpStatus httpStatus, String message, A data) {
     return new Result<>(httpStatus.value(), data, message);
   }
+
+  public static <A> Result<A> of(HttpStatus httpStatus, String message) {
+    return new Result<>(httpStatus.value(), null, message);
+  }
 }
