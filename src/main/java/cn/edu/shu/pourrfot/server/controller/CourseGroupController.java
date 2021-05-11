@@ -56,7 +56,7 @@ public class CourseGroupController {
                                                     @PathVariable @NotNull Integer id) {
     final CourseGroup found = courseGroupService.getById(id);
     return found != null ? ResponseEntity.ok(Result.normalOk("Get course-group detail success", found)) :
-      ResponseEntity.status(HttpStatus.NOT_FOUND).body(Result.notFound("Not found course-group with the specific id"));
+      ResponseEntity.status(HttpStatus.NOT_FOUND).body(Result.notFound("Can't found course-group with the specific id"));
   }
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)

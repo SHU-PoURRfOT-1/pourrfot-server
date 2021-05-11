@@ -57,7 +57,7 @@ public class CourseStudentController {
                                                       @PathVariable @NotNull Integer id) {
     final CourseStudent found = courseStudentService.getById(id);
     return found != null ? ResponseEntity.ok(Result.normalOk("Get course-student detail success", found)) :
-      ResponseEntity.status(HttpStatus.NOT_FOUND).body(Result.notFound("Not found course-student with the specific id"));
+      ResponseEntity.status(HttpStatus.NOT_FOUND).body(Result.notFound("Can't found course-student with the specific id"));
   }
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)

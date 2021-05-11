@@ -63,7 +63,7 @@ public class CourseController {
   public ResponseEntity<Result<Course>> detail(@PathVariable @NotNull Integer id) {
     final Course found = courseService.getById(id);
     return found == null ?
-      ResponseEntity.status(HttpStatus.NOT_FOUND).body(Result.notFound("Not found course with the specific id")) :
+      ResponseEntity.status(HttpStatus.NOT_FOUND).body(Result.notFound("Can't found course with the specific id")) :
       ResponseEntity.ok(Result.normalOk("Get course detail success", found));
   }
 

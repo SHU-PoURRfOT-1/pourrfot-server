@@ -80,7 +80,7 @@ class OssFileControllerTest {
         request.setMethod(HttpMethod.POST.name());
         return request;
       }))
-      .andExpect(status().isInternalServerError());
+      .andExpect(status().isServiceUnavailable());
   }
 
   @Test
@@ -125,44 +125,63 @@ class OssFileControllerTest {
     // detail
     mockMvc.perform(get(locations.get(0)))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.createTime").exists())
-      .andExpect(jsonPath("$.updateTime").exists())
-      .andExpect(jsonPath("$.id").exists())
+      .andExpect(jsonPath("$.data.createTime").exists())
+      .andExpect(jsonPath("$.data.updateTime").exists())
+      .andExpect(jsonPath("$.data.id").exists())
       .andDo(result -> log.info("Detail success: {}", result.getResponse().getContentAsString()));
+    // GET detail not found
+    mockMvc.perform(get("/files/999"))
+      .andExpect(status().isNotFound());
     // download
     mockMvc.perform(get(locations.get(0) + "/stream"))
       .andExpect(status().isOk())
       .andExpect(content().contentType(MediaType.APPLICATION_OCTET_STREAM))
       .andExpect(content().bytes(file.getBytes()))
       .andDo(result -> log.info("Download success: {}", locations.get(0) + "/stream"));
+    // download not found
+    mockMvc.perform(get("/files/999/stream")
+      .contentType(MediaType.APPLICATION_JSON)
+      .accept(MediaType.APPLICATION_JSON))
+      .andExpect(status().isNotFound());
     // page
     mockMvc.perform(get("/files")
       .param("name", "test")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.records").exists())
-      .andExpect(jsonPath("$.records").isArray())
-      .andExpect(jsonPath("$.records", Matchers.hasSize(1)))
+      .andExpect(jsonPath("$.data.records").exists())
+      .andExpect(jsonPath("$.data.records").isArray())
+      .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
     mockMvc.perform(get("/files")
       .param("ownerId", String.valueOf(100))
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.records").exists())
-      .andExpect(jsonPath("$.records").isArray())
-      .andExpect(jsonPath("$.records", Matchers.hasSize(1)))
+      .andExpect(jsonPath("$.data.records").exists())
+      .andExpect(jsonPath("$.data.records").isArray())
+      .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
     mockMvc.perform(get("/files")
       .param("directory", "/courses/100")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.records").exists())
-      .andExpect(jsonPath("$.records").isArray())
-      .andExpect(jsonPath("$.records", Matchers.hasSize(1)))
+      .andExpect(jsonPath("$.data.records").exists())
+      .andExpect(jsonPath("$.data.records").isArray())
+      .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
+    mockMvc.perform(get("/files")
+      .param("resourceType", "courses")
+      .param("resourceId", "100")
+      .contentType(MediaType.APPLICATION_JSON)
+      .accept(MediaType.APPLICATION_JSON))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.data.records").exists())
+      .andExpect(jsonPath("$.data.records").isArray())
+      .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
+      .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
+
     // DELETE Delete
     for (String location : locations) {
       mockMvc.perform(delete(location))
