@@ -72,7 +72,7 @@ public class CourseController {
   public ResponseEntity<Result<Course>> create(@NotNull @RequestBody @Validated Course course) {
     courseService.save(course);
     return ResponseEntity.created(URI.create(String.format("%s/courses/%d", contextPath, course.getId())))
-      .body(Result.createdOk("Create course success", course));
+      .body(Result.createdOk("Create course success, please pay attention to the LOCATION in headers", course));
   }
 
   @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

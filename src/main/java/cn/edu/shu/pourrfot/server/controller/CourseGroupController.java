@@ -65,7 +65,7 @@ public class CourseGroupController {
     courseGroupService.save(courseGroup);
     return ResponseEntity.created(
       URI.create(String.format("%s/courses/%d/groups/%d", contextPath, courseGroup.getCourseId(), courseGroup.getId())))
-      .body(Result.createdOk("Create course-group success", courseGroup));
+      .body(Result.createdOk("Create course-group success, please pay attention to the LOCATION in headers", courseGroup));
   }
 
   @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -66,7 +66,7 @@ public class CourseStudentController {
     courseStudentService.save(courseStudent);
     return ResponseEntity.created(
       URI.create(String.format("%s/courses/%d/students/%d", contextPath, courseStudent.getCourseId(), courseStudent.getId())))
-      .body(Result.createdOk("Create course-student success", courseStudent));
+      .body(Result.createdOk("Create course-student success, please pay attention to the LOCATION in headers", courseStudent));
   }
 
   @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

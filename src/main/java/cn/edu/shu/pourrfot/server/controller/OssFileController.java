@@ -72,7 +72,7 @@ public class OssFileController {
   }
 
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ApiResponses({@ApiResponse(code = 404, message = "Can't find oss-files with the specific id", response = Result.class)})
+  @ApiResponses({@ApiResponse(code = 404, message = "Can't find oss-file with the specific id", response = Result.class)})
   public ResponseEntity<Result<OssFile>> detail(@PathVariable Integer id) {
     final OssFile found = ossFileService.getById(id);
     return found != null ? ResponseEntity.ok(Result.normalOk("Get oss-file detail success", found)) :

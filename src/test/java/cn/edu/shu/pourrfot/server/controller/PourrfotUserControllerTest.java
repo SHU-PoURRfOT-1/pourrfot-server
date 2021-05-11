@@ -76,47 +76,50 @@ class PourrfotUserControllerTest {
     for (String location : locations) {
       mockMvc.perform(get(location))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.createTime").exists())
-        .andExpect(jsonPath("$.updateTime").exists())
-        .andExpect(jsonPath("$.password").exists())
+        .andExpect(jsonPath("$.data.createTime").exists())
+        .andExpect(jsonPath("$.data.updateTime").exists())
+        .andExpect(jsonPath("$.data.password").exists())
         .andDo(result -> log.info("Detail success: {}", result.getResponse().getContentAsString()));
     }
+    // GET detail not found
+    mockMvc.perform(get("/users/999"))
+      .andExpect(status().isNotFound());
     // GET page
     mockMvc.perform(get("/users")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.records").exists())
-      .andExpect(jsonPath("$.records").isArray())
-      .andExpect(jsonPath("$.records", Matchers.hasSize(users.length)))
-      .andExpect(jsonPath("$.records[0].password").value("******"))
+      .andExpect(jsonPath("$.data.records").exists())
+      .andExpect(jsonPath("$.data.records").isArray())
+      .andExpect(jsonPath("$.data.records", Matchers.hasSize(users.length)))
+      .andExpect(jsonPath("$.data.records[0].password").value("******"))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
     mockMvc.perform(get("/users")
       .param("role", RoleEnum.student.getValue())
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.records").exists())
-      .andExpect(jsonPath("$.records").isArray())
-      .andExpect(jsonPath("$.records", Matchers.hasSize(1)))
+      .andExpect(jsonPath("$.data.records").exists())
+      .andExpect(jsonPath("$.data.records").isArray())
+      .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
     mockMvc.perform(get("/users")
       .param("sex", SexEnum.male.getValue())
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.records").exists())
-      .andExpect(jsonPath("$.records").isArray())
-      .andExpect(jsonPath("$.records", Matchers.hasSize(2)))
+      .andExpect(jsonPath("$.data.records").exists())
+      .andExpect(jsonPath("$.data.records").isArray())
+      .andExpect(jsonPath("$.data.records", Matchers.hasSize(2)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
     mockMvc.perform(get("/users")
       .param("username", "student")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.records").exists())
-      .andExpect(jsonPath("$.records").isArray())
-      .andExpect(jsonPath("$.records", Matchers.hasSize(1)))
+      .andExpect(jsonPath("$.data.records").exists())
+      .andExpect(jsonPath("$.data.records").isArray())
+      .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
     // PUT update
     mockMvc.perform(put(locations.get(0))
@@ -124,9 +127,9 @@ class PourrfotUserControllerTest {
       .content(objectMapper.writeValueAsString(users[0].setNickname("UPDATE")))
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.createTime").exists())
-      .andExpect(jsonPath("$.updateTime").exists())
-      .andExpect(jsonPath("$.nickname").value("UPDATE"))
+      .andExpect(jsonPath("$.data.createTime").exists())
+      .andExpect(jsonPath("$.data.updateTime").exists())
+      .andExpect(jsonPath("$.data.nickname").value("UPDATE"))
       .andDo(result -> log.info("Update success: {}", result.getResponse().getContentAsString()));
     // DELETE Delete
     for (String location : locations) {
