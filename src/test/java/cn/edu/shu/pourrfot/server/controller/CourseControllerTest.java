@@ -96,54 +96,57 @@ class CourseControllerTest {
     for (String location : locations) {
       mockMvc.perform(get(location))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.createTime").exists())
-        .andExpect(jsonPath("$.updateTime").exists())
+        .andExpect(jsonPath("$.data.createTime").exists())
+        .andExpect(jsonPath("$.data.updateTime").exists())
         .andDo(result -> log.info("Detail success: {}", result.getResponse().getContentAsString()));
     }
+    // GET detail not found
+    mockMvc.perform(get("/courses/999"))
+      .andExpect(status().isNotFound());
     // GET page
     mockMvc.perform(get("/courses")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.records").exists())
-      .andExpect(jsonPath("$.records").isArray())
-      .andExpect(jsonPath("$.records", Matchers.hasSize(newCourses.length)))
+      .andExpect(jsonPath("$.data.records").exists())
+      .andExpect(jsonPath("$.data.records").isArray())
+      .andExpect(jsonPath("$.data.records", Matchers.hasSize(newCourses.length)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
     mockMvc.perform(get("/courses")
       .param("teacherId", String.valueOf(teachers[0].getId()))
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.records").exists())
-      .andExpect(jsonPath("$.records").isArray())
-      .andExpect(jsonPath("$.records", Matchers.hasSize(1)))
+      .andExpect(jsonPath("$.data.records").exists())
+      .andExpect(jsonPath("$.data.records").isArray())
+      .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
     mockMvc.perform(get("/courses")
       .param("term", "term1")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.records").exists())
-      .andExpect(jsonPath("$.records").isArray())
-      .andExpect(jsonPath("$.records", Matchers.hasSize(1)))
+      .andExpect(jsonPath("$.data.records").exists())
+      .andExpect(jsonPath("$.data.records").isArray())
+      .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
     mockMvc.perform(get("/courses")
       .param("courseName", "courseName1")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.records").exists())
-      .andExpect(jsonPath("$.records").isArray())
-      .andExpect(jsonPath("$.records", Matchers.hasSize(1)))
+      .andExpect(jsonPath("$.data.records").exists())
+      .andExpect(jsonPath("$.data.records").isArray())
+      .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
     mockMvc.perform(get("/courses")
       .param("courseCode", "courseCode1")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.records").exists())
-      .andExpect(jsonPath("$.records").isArray())
-      .andExpect(jsonPath("$.records", Matchers.hasSize(1)))
+      .andExpect(jsonPath("$.data.records").exists())
+      .andExpect(jsonPath("$.data.records").isArray())
+      .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
     // PUT update
     mockMvc.perform(put(locations.get(0))
@@ -151,9 +154,9 @@ class CourseControllerTest {
       .content(objectMapper.writeValueAsString(newCourses[0].setTerm("TEST")))
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.createTime").exists())
-      .andExpect(jsonPath("$.updateTime").exists())
-      .andExpect(jsonPath("$.term").value("TEST"))
+      .andExpect(jsonPath("$.data.createTime").exists())
+      .andExpect(jsonPath("$.data.updateTime").exists())
+      .andExpect(jsonPath("$.data.term").value("TEST"))
       .andDo(result -> log.info("Update success: {}", result.getResponse().getContentAsString()));
     // DELETE Delete
     for (String location : locations) {

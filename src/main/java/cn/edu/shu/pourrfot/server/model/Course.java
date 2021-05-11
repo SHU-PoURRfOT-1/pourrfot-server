@@ -49,7 +49,7 @@ public class Course {
   @NotNull
   private Integer teacherId;
   @TableField(value = "course_code")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "", notes = "Unique")
   @NotEmpty
   private String courseCode;
   @TableField(value = "course_name")

@@ -34,27 +34,27 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
       log.error("Can't save a course because the teacher doesn't exist: {}", entity, e);
       throw e;
     }
-    return super.save(entity
+    return baseMapper.insert(entity
       .setCreateTime(new Date(System.currentTimeMillis()))
-      .setUpdateTime(new Date(System.currentTimeMillis())));
+      .setUpdateTime(new Date(System.currentTimeMillis()))) == 1;
   }
 
   @Transactional(rollbackFor = Exception.class)
   @Override
   public boolean updateById(Course entity) {
-    final Course found = super.getById(entity.getId());
+    final Course found = baseMapper.selectById(entity.getId());
     if (found == null) {
       final NotFoundException e = new NotFoundException("Can't update the course because not found the course");
       log.error("Can't update a non-existed course: {}", entity, e);
       throw e;
     }
     if (!entity.getTeacherId().equals(found.getTeacherId())) {
-      final IllegalCRUDOperationException e = new IllegalCRUDOperationException("Can't modify the group's teacher");
+      final IllegalCRUDOperationException e = new IllegalCRUDOperationException("Can't modify the course's teacher");
       log.warn("Can't update a course's immutable fields: {}", entity, e);
       throw e;
     }
-    return super.updateById(entity
+    return baseMapper.updateById(entity
       .setCreateTime(found.getCreateTime())
-      .setUpdateTime(found.getUpdateTime()));
+      .setUpdateTime(found.getUpdateTime())) == 1;
   }
 }

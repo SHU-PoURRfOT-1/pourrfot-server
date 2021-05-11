@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @AllArgsConstructor
 @Getter
-@ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Can't operate because not found the resource")
+@ResponseStatus(code = HttpStatus.PRECONDITION_REQUIRED, reason = "Can't operate because not found the resource")
 public class NotFoundException extends RuntimeException {
   private final String message;
 }
