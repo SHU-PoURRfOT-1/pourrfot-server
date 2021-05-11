@@ -31,28 +31,28 @@ public class ProjectUser {
   public static final String COL_USER_ID = "user_id";
   public static final String COL_ROLE_NAME = "role_name";
   @TableId(value = "id", type = IdType.AUTO)
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private Integer id;
   @TableField(value = "create_time")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private Date createTime;
   @TableField(value = "update_time")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   @Version
   private Date updateTime;
   @TableField(value = "project_id")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true)
   @NotNull
   private Integer projectId;
   @TableField(value = "user_id")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true)
   @NotNull
   private Integer userId;
   /**
    * role in the project
    */
   @TableField(value = "role_name")
-  @ApiModelProperty(value = "role in the project")
+  @ApiModelProperty(value = "role in the project", required = true)
   @NotBlank
   private String roleName;
 }

@@ -31,27 +31,27 @@ public class Project {
   public static final String COL_OWNER_ID = "owner_id";
   public static final String COL_PROFILE_PHOTO = "profile_photo";
   @TableId(value = "id", type = IdType.AUTO)
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private Integer id;
   @TableField(value = "create_time")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private Date createTime;
   @TableField(value = "update_time")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   @Version
   private Date updateTime;
   @TableField(value = "project_name")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true)
   @NotBlank
   private String projectName;
   @TableField(value = "project_code")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true,value = "UNIQUE")
   @NotBlank
   private String projectCode;
   @TableField(value = "owner_id")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private Integer ownerId;
   @TableField(value = "profile_photo")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private String profilePhoto;
 }

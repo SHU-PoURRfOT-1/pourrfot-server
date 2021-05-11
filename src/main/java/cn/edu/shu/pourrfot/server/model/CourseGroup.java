@@ -31,23 +31,23 @@ public class CourseGroup {
   public static final String COL_GROUP_NAME = "group_name";
   public static final String COL_PROFILE_PHOTO = "profile_photo";
   @TableId(value = "id", type = IdType.AUTO)
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private Integer id;
   @TableField(value = "create_time")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private Date createTime;
   @TableField(value = "update_time")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   @Version
   private Date updateTime;
   @TableField(value = "course_id")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true)
   @NotNull
   private Integer courseId;
   @TableField(value = "group_name")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private String groupName;
   @TableField(value = "profile_photo")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private String profilePhoto;
 }

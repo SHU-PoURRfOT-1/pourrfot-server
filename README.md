@@ -6,6 +6,12 @@
 
 ![License](https://img.shields.io/github/license/SHU-PoURRfOT-1/pourrfot-web)
 
+## Integration
+
+Swagger Docs: [HERE](http://47.98.133.186/api/swagger-ui/index.html)
+
+Pourrfot-CAS: [HERE](https://github.com/SHU-PoURRfOT-1/pourrfot-cas)
+
 ## Development
 
 ### Main Dependencies

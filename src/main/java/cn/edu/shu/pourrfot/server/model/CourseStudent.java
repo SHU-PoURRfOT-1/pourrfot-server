@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -34,29 +35,32 @@ public class CourseStudent {
   public static final String COL_TOTAL_SCORE = "total_score";
   public static final String COL_SCORE_STRUCTURE = "score_structure";
   @TableId(value = "id", type = IdType.AUTO)
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private Integer id;
   @TableField(value = "create_time")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private Date createTime;
   @TableField(value = "update_time")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   @Version
   private Date updateTime;
   @TableField(value = "student_id")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true)
+  @NotNull
   private Integer studentId;
   @TableField(value = "student_name")
-  @ApiModelProperty
+  @ApiModelProperty(required = true)
+  @NotNull
   private String studentName;
   @TableField(value = "course_id")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true)
+  @NotNull
   private Integer courseId;
   @TableField(value = "group_id")
   @ApiModelProperty
   private Integer groupId;
   @TableField(value = "total_score")
-  @ApiModelProperty(value = "")
+  @ApiModelProperty()
   private Long totalScore;
   @TableField(value = "score_structure", typeHandler = JacksonTypeHandler.class)
   @ApiModelProperty
