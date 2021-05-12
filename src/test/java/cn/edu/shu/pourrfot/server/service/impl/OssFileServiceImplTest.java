@@ -6,7 +6,7 @@ import cn.edu.shu.pourrfot.server.model.OssFile;
 import cn.edu.shu.pourrfot.server.repository.CourseGroupMapper;
 import cn.edu.shu.pourrfot.server.repository.CourseMapper;
 import cn.edu.shu.pourrfot.server.repository.ProjectMapper;
-import cn.edu.shu.pourrfot.server.repository.StudentTransactionMapper;
+import cn.edu.shu.pourrfot.server.repository.PourrfotTransactionMapper;
 import cn.edu.shu.pourrfot.server.service.OssFileService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
@@ -34,7 +34,7 @@ class OssFileServiceImplTest {
   @Autowired
   private ProjectMapper projectMapper;
   @Autowired
-  private StudentTransactionMapper studentTransactionMapper;
+  private PourrfotTransactionMapper pourrfotTransactionMapper;
 
   @Test
   void saveCourseFileFailed() {
@@ -68,7 +68,7 @@ class OssFileServiceImplTest {
 
   @Test
   void saveStudentTransactionFileFailed() {
-    given(studentTransactionMapper.selectById(anyInt())).willReturn(null);
+    given(pourrfotTransactionMapper.selectById(anyInt())).willReturn(null);
     assertThrows(NotFoundException.class, () -> ossFileService.save(OssFile.builder()
       .resourceId(999)
       .resourceType(ResourceTypeEnum.transactions)
@@ -117,8 +117,8 @@ class OssFileServiceImplTest {
 
     @Bean
     @Primary
-    public StudentTransactionMapper studentTransactionMapper() {
-      return Mockito.mock(StudentTransactionMapper.class);
+    public PourrfotTransactionMapper studentTransactionMapper() {
+      return Mockito.mock(PourrfotTransactionMapper.class);
     }
   }
 }

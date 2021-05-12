@@ -18,14 +18,14 @@ import java.util.Map;
 /**
  * @author spencercjh
  */
-@ApiModel(value = "cn-edu-shu-pourrfot-server-model-StudentTransaction")
+@ApiModel(value = "cn-edu-shu-pourrfot-server-model-PourrfotTransaction")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName(value = "student_transaction", autoResultMap = true)
-public class StudentTransaction {
+@TableName(value = "pourrfot_transaction", autoResultMap = true)
+public class PourrfotTransaction {
   public static final String COL_ID = "id";
   public static final String COL_CREATE_TIME = "create_time";
   public static final String COL_UPDATE_TIME = "update_time";

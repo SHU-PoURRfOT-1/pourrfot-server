@@ -33,7 +33,7 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
   @Autowired
   private ProjectMapper projectMapper;
   @Autowired
-  private StudentTransactionMapper studentTransactionMapper;
+  private PourrfotTransactionMapper pourrfotTransactionMapper;
 
   /**
    * processes
@@ -94,7 +94,7 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
         }
         break;
       case transactions:
-        if (studentTransactionMapper.selectById(resourceId) == null) {
+        if (pourrfotTransactionMapper.selectById(resourceId) == null) {
           final String message = String.format("Not found the student-transaction: %s associated with the oss-file: %s",
             resourceId, name);
           log.error(message);

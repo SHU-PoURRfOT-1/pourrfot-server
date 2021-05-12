@@ -4,10 +4,10 @@ import cn.edu.shu.pourrfot.server.config.CustomMySQLContainer;
 import cn.edu.shu.pourrfot.server.exception.IllegalCRUDOperationException;
 import cn.edu.shu.pourrfot.server.exception.NotFoundException;
 import cn.edu.shu.pourrfot.server.model.PourrfotUser;
-import cn.edu.shu.pourrfot.server.model.StudentTransaction;
+import cn.edu.shu.pourrfot.server.model.PourrfotTransaction;
 import cn.edu.shu.pourrfot.server.repository.PourrfotUserMapper;
-import cn.edu.shu.pourrfot.server.repository.StudentTransactionMapper;
-import cn.edu.shu.pourrfot.server.service.StudentTransactionService;
+import cn.edu.shu.pourrfot.server.repository.PourrfotTransactionMapper;
+import cn.edu.shu.pourrfot.server.service.PourrfotTransactionService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
@@ -25,20 +25,20 @@ import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
 @Slf4j
-class StudentTransactionServiceImplTest {
+class PourrfotPourrfotTransactionServiceImplTest {
   @ClassRule
   public static MySQLContainer<CustomMySQLContainer> customMySQLContainer = CustomMySQLContainer.getInstance();
 
   @Autowired
-  private StudentTransactionService studentTransactionService;
+  private PourrfotTransactionService pourrfotTransactionService;
   @Autowired
   private PourrfotUserMapper pourrfotUserMapper;
   @Autowired
-  private StudentTransactionMapper studentTransactionMapper;
+  private PourrfotTransactionMapper pourrfotTransactionMapper;
 
   @Test
   void saveFailedBecauseSamePeople() {
-    assertThrows(IllegalCRUDOperationException.class, () -> studentTransactionService.save(StudentTransaction.builder()
+    assertThrows(IllegalCRUDOperationException.class, () -> pourrfotTransactionService.save(PourrfotTransaction.builder()
       .sender(100)
       .receiver(100)
       .build()));
@@ -47,7 +47,7 @@ class StudentTransactionServiceImplTest {
   @Test
   void saveFailedBecauseSenderNotExist() {
     given(pourrfotUserMapper.selectById(eq(100))).willReturn(null);
-    assertThrows(NotFoundException.class, () -> studentTransactionService.save(StudentTransaction.builder()
+    assertThrows(NotFoundException.class, () -> pourrfotTransactionService.save(PourrfotTransaction.builder()
       .sender(100)
       .receiver(200)
       .build()));
@@ -57,7 +57,7 @@ class StudentTransactionServiceImplTest {
   void saveFailedBecauseReceiverNotExist() {
     given(pourrfotUserMapper.selectById(eq(100))).willReturn(PourrfotUser.builder().id(100).build());
     given(pourrfotUserMapper.selectById(eq(200))).willReturn(null);
-    assertThrows(NotFoundException.class, () -> studentTransactionService.save(StudentTransaction.builder()
+    assertThrows(NotFoundException.class, () -> pourrfotTransactionService.save(PourrfotTransaction.builder()
       .sender(100)
       .receiver(200)
       .build()));
@@ -65,8 +65,8 @@ class StudentTransactionServiceImplTest {
 
   @Test
   void updateByIdFailedBecauseNotExist() {
-    given(studentTransactionMapper.selectById(eq(999))).willReturn(null);
-    assertThrows(NotFoundException.class, () -> studentTransactionService.updateById(StudentTransaction.builder()
+    given(pourrfotTransactionMapper.selectById(eq(999))).willReturn(null);
+    assertThrows(NotFoundException.class, () -> pourrfotTransactionService.updateById(PourrfotTransaction.builder()
       .id(999)
       .sender(999)
       .receiver(999)
@@ -75,16 +75,16 @@ class StudentTransactionServiceImplTest {
 
   @Test
   void updateByIdFailedBecauseIllegalOperation() {
-    final StudentTransaction mock = StudentTransaction.builder()
+    final PourrfotTransaction mock = PourrfotTransaction.builder()
       .id(999)
       .sender(100)
       .receiver(200)
       .build();
-    given(studentTransactionMapper.selectById(eq(999))).willReturn(mock);
+    given(pourrfotTransactionMapper.selectById(eq(999))).willReturn(mock);
     given(pourrfotUserMapper.selectById(eq(100))).willReturn(PourrfotUser.builder().id(100).build());
     given(pourrfotUserMapper.selectById(eq(200))).willReturn(PourrfotUser.builder().id(200).build());
     given(pourrfotUserMapper.selectById(eq(300))).willReturn(PourrfotUser.builder().id(300).build());
-    assertThrows(IllegalCRUDOperationException.class, () -> studentTransactionService.updateById(StudentTransaction.builder()
+    assertThrows(IllegalCRUDOperationException.class, () -> pourrfotTransactionService.updateById(PourrfotTransaction.builder()
       .id(999)
       .sender(300)
       .receiver(200)
@@ -102,8 +102,8 @@ class StudentTransactionServiceImplTest {
 
     @Bean
     @Primary
-    public StudentTransactionMapper studentTransactionMapper() {
-      return Mockito.spy(StudentTransactionMapper.class);
+    public PourrfotTransactionMapper studentTransactionMapper() {
+      return Mockito.spy(PourrfotTransactionMapper.class);
     }
   }
 }

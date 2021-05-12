@@ -4,7 +4,7 @@ import cn.edu.shu.pourrfot.server.config.CustomMySQLContainer;
 import cn.edu.shu.pourrfot.server.enums.RoleEnum;
 import cn.edu.shu.pourrfot.server.enums.SexEnum;
 import cn.edu.shu.pourrfot.server.model.PourrfotUser;
-import cn.edu.shu.pourrfot.server.model.StudentTransaction;
+import cn.edu.shu.pourrfot.server.model.PourrfotTransaction;
 import cn.edu.shu.pourrfot.server.service.PourrfotUserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j
 @AutoConfigureMockMvc(addFilters = false)
-public class StudentTransactionControllerTest {
+public class PourrfotTransactionControllerTest {
   @ClassRule
   public static MySQLContainer<CustomMySQLContainer> customMySQLContainer = CustomMySQLContainer.getInstance();
   final private PourrfotUser sender = PourrfotUser.builder()
@@ -65,14 +65,14 @@ public class StudentTransactionControllerTest {
   @Transactional
   @Test
   void integrationTest() throws Exception {
-    final List<StudentTransaction> toCreates = List.of(StudentTransaction.builder()
+    final List<PourrfotTransaction> toCreates = List.of(PourrfotTransaction.builder()
         .sender(sender.getId())
         .receiver(receiver.getId())
         .title("mock title1")
         .content("mock content1")
         .urgent(false)
         .build(),
-      StudentTransaction.builder()
+      PourrfotTransaction.builder()
         .sender(receiver.getId())
         .receiver(sender.getId())
         .title("中文测试")
@@ -82,8 +82,8 @@ public class StudentTransactionControllerTest {
     );
     final List<String> locations = new ArrayList<>(toCreates.size());
     // POST create
-    for (StudentTransaction toCreate : toCreates) {
-      mockMvc.perform(post("/student-transactions")
+    for (PourrfotTransaction toCreate : toCreates) {
+      mockMvc.perform(post("/transactions")
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(toCreate))
         .accept(MediaType.APPLICATION_JSON))
@@ -103,10 +103,10 @@ public class StudentTransactionControllerTest {
         .andDo(result -> log.info("Detail success: {}", result.getResponse().getContentAsString()));
     }
     // GET detail not found
-    mockMvc.perform(get("/student-transactions/999"))
+    mockMvc.perform(get("/transactions/999"))
       .andExpect(status().isNotFound());
     // page
-    mockMvc.perform(get("/student-transactions")
+    mockMvc.perform(get("/transactions")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
@@ -114,7 +114,7 @@ public class StudentTransactionControllerTest {
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(toCreates.size())))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/student-transactions")
+    mockMvc.perform(get("/transactions")
       .param("isUrgent", String.valueOf(false))
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
@@ -123,7 +123,7 @@ public class StudentTransactionControllerTest {
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/student-transactions")
+    mockMvc.perform(get("/transactions")
       .param("sender", String.valueOf(sender.getId()))
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
@@ -132,7 +132,7 @@ public class StudentTransactionControllerTest {
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/student-transactions")
+    mockMvc.perform(get("/transactions")
       .param("receiver", String.valueOf(receiver.getId()))
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
@@ -141,7 +141,7 @@ public class StudentTransactionControllerTest {
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/student-transactions")
+    mockMvc.perform(get("/transactions")
       .param("title", "测试")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
