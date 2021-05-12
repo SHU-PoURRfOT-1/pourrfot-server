@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.shu.pourrfot.server.repository.MessageMapper">
+    <resultMap id="BaseResultMap" type="cn.edu.shu.pourrfot.server.model.Message">
+        <!--@mbg.generated-->
+        <!--@Table message-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="parent_message_id" jdbcType="INTEGER" property="parentMessageId"/>
+        <result column="sender" jdbcType="INTEGER" property="sender"/>
+        <result column="receiver" jdbcType="INTEGER" property="receiver"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="urgent" jdbcType="BOOLEAN" property="urgent"/>
+        <result column="regular" jdbcType="BOOLEAN" property="regular"/>
+        <result column="content" jdbcType="LONGVARCHAR" property="content"/>
+        <result column="metadata" jdbcType="VARCHAR" property="metadata"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+    </resultMap>
+    <sql id=" Base_Column_List">
+        <!--@mbg.generated-->
+        id, create_time, update_time, parent_message_id, sender, receiver, title, urgent,
+        regular, content, metadata
+    </sql>
+</mapper>
