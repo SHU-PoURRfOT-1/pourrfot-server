@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.shu.pourrfot.server.repository.InboxMessageMapper">
+    <resultMap id="BaseResultMap" type="cn.edu.shu.pourrfot.server.model.InboxMessage">
+        <!--@mbg.generated-->
+        <!--@Table inbox_message-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="sender" jdbcType="INTEGER" property="sender"/>
+        <result column="receiver" jdbcType="INTEGER" property="receiver"/>
+        <result column="message_id" jdbcType="INTEGER" property="messageId"/>
+        <result column="have_read" jdbcType="BOOLEAN" property="haveRead"/>
+    </resultMap>
+    <resultMap id="SingleMessageResultMap" type="cn.edu.shu.pourrfot.server.model.dto.SingleMessage">
+        <!--@mbg.generated-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="parent_message_id" jdbcType="INTEGER" property="parentMessageId"/>
+        <result column="sender" jdbcType="INTEGER" property="sender"/>
+        <result column="receiver" jdbcType="INTEGER" property="receiver"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="urgent" jdbcType="BOOLEAN" property="urgent"/>
+        <result column="regular" jdbcType="BOOLEAN" property="regular"/>
+        <result column="content" jdbcType="LONGVARCHAR" property="content"/>
+        <result column="metadata" jdbcType="VARCHAR" property="metadata"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="have_read" jdbcType="BOOLEAN" property="haveRead"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, create_time, update_time, sender, receiver, message_id, have_read
+    </sql>
+
+    <select id="selectMessageByInboxMessageId" resultMap="SingleMessageResultMap">
+        select small.id as id,
+               small.create_time,
+               small.update_time,
+               big.parent_message_id,
+               big.sender,
+               big.receiver,
+               big.title,
+               big.urgent,
+               big.regular,
+               big.content,
+               big.metadata,
+               small.have_read
+        from inbox_message as small
+                 join message big on small.message_id = big.id
+        where small.id = #{id,jdbcType=INTEGER};
+    </select>
+
+    <select id="selectMessagesByCondition" resultMap="SingleMessageResultMap">
+        select small.id as id,
+               small.create_time,
+               small.update_time,
+               big.parent_message_id,
+               big.sender,
+               big.receiver,
+               big.title,
+               big.urgent,
+               big.regular,
+               big.content,
+               big.metadata,
+               small.have_read
+        from inbox_message as small
+                 join message big on small.message_id = big.id
+        <where>
+            <if test="sender != null">
+                small.sender = #{sender}
+            </if>
+            <if test="receiver != null">
+                AND small.receiver = #{receiver}
+            </if>
+            <if test="title != null">
+                AND big.title like concat('%', #{title}, '%')
+            </if>
+            <if test="isUrgent != null">
+                AND big.urgent = #{isUrgent}
+            </if>
+            <if test="isRegular != null">
+                AND big.regular = #{isRegular}
+            </if>
+            <if test="haveRead != null">
+                AND small.have_read = #{haveRead}
+            </if>
+        </where>
+        limit #{current},#{size}
+    </select>
+
+    <select id="countMessagesByCondition" resultType="java.lang.Integer">
+        select count(big.id)
+        from inbox_message as small
+                 join message big on small.message_id = big.id
+        <where>
+            <if test="sender != null">
+                small.sender = #{sender}
+            </if>
+            <if test="receiver != null">
+                AND small.receiver = #{receiver}
+            </if>
+            <if test="title != null">
+                AND big.title like concat('%', #{title}, '%')
+            </if>
+            <if test="isUrgent != null">
+                AND big.urgent = #{isUrgent}
+            </if>
+            <if test="isRegular != null">
+                AND big.regular = #{isRegular}
+            </if>
+            <if test="haveRead != null">
+                AND small.have_read = #{haveRead}
+            </if>
+        </where>
+    </select>
+</mapper>
