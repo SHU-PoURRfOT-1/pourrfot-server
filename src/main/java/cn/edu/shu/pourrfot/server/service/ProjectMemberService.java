@@ -1,12 +1,12 @@
 package cn.edu.shu.pourrfot.server.service;
 
-import cn.edu.shu.pourrfot.server.model.ProjectUser;
+import cn.edu.shu.pourrfot.server.model.ProjectMember;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * @author spencercjh
  */
-public interface ProjectUserService extends IService<ProjectUser> {
+public interface ProjectMemberService extends IService<ProjectMember> {
 
 
 }

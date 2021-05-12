@@ -5,7 +5,7 @@ import cn.edu.shu.pourrfot.server.enums.RoleEnum;
 import cn.edu.shu.pourrfot.server.enums.SexEnum;
 import cn.edu.shu.pourrfot.server.model.PourrfotUser;
 import cn.edu.shu.pourrfot.server.model.Project;
-import cn.edu.shu.pourrfot.server.model.ProjectUser;
+import cn.edu.shu.pourrfot.server.model.ProjectMember;
 import cn.edu.shu.pourrfot.server.repository.PourrfotUserMapper;
 import cn.edu.shu.pourrfot.server.repository.ProjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j
 @AutoConfigureMockMvc(addFilters = false)
-class ProjectUserControllerTest {
+class ProjectMemberControllerTest {
   @ClassRule
   public static MySQLContainer<CustomMySQLContainer> customMySQLContainer = CustomMySQLContainer.getInstance();
   private final PourrfotUser owner = PourrfotUser.builder()
@@ -63,11 +63,11 @@ class ProjectUserControllerTest {
     .projectName("projectName2")
     .profilePhoto("profilePhoto2")
     .build();
-  private final ProjectUser[] projectUsers = new ProjectUser[]{
-    ProjectUser.builder()
+  private final ProjectMember[] projectMembers = new ProjectMember[]{
+    ProjectMember.builder()
       .roleName("participant")
       .build(),
-    ProjectUser.builder()
+    ProjectMember.builder()
       .roleName("owner")
       .build()
   };
@@ -90,14 +90,14 @@ class ProjectUserControllerTest {
   @Transactional
   @Test
   void integrationTest() throws Exception {
-    final List<String> locations = new ArrayList<>(projectUsers.length);
-    projectUsers[0].setUserId(student.getId());
-    projectUsers[1].setUserId(owner.getId());
+    final List<String> locations = new ArrayList<>(projectMembers.length);
+    projectMembers[0].setUserId(student.getId());
+    projectMembers[1].setUserId(owner.getId());
     // POST create
-    for (ProjectUser projectUser : projectUsers) {
-      mockMvc.perform(post(String.format("/projects/%d/users", project.getId()))
+    for (ProjectMember projectMember : projectMembers) {
+      mockMvc.perform(post(String.format("/projects/%d/members", project.getId()))
         .contentType(MediaType.APPLICATION_JSON)
-        .content(objectMapper.writeValueAsString(projectUser.setProjectId(project.getId())))
+        .content(objectMapper.writeValueAsString(projectMember.setProjectId(project.getId())))
         .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isCreated())
         .andExpect(header().exists(HttpHeaders.LOCATION))
@@ -114,18 +114,18 @@ class ProjectUserControllerTest {
         .andDo(result -> log.info("Detail success: {}", result.getResponse().getContentAsString()));
     }
     // GET detail not found
-    mockMvc.perform(get("/projects/999/users/999"))
+    mockMvc.perform(get("/projects/999/members/999"))
       .andExpect(status().isNotFound());
     // page
-    mockMvc.perform(get(String.format("/projects/%d/users", project.getId()))
+    mockMvc.perform(get(String.format("/projects/%d/members", project.getId()))
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.data.records").exists())
       .andExpect(jsonPath("$.data.records").isArray())
-      .andExpect(jsonPath("$.data.records", Matchers.hasSize(projectUsers.length)))
+      .andExpect(jsonPath("$.data.records", Matchers.hasSize(projectMembers.length)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get(String.format("/projects/%d/users", project.getId()))
+    mockMvc.perform(get(String.format("/projects/%d/members", project.getId()))
       .param("roleName", "owner")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
@@ -137,7 +137,7 @@ class ProjectUserControllerTest {
     // PUT update
     mockMvc.perform(put(locations.get(1))
       .contentType(MediaType.APPLICATION_JSON)
-      .content(objectMapper.writeValueAsString(projectUsers[1].setRoleName("UPDATE")))
+      .content(objectMapper.writeValueAsString(projectMembers[1].setRoleName("UPDATE")))
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.data.createTime").exists())

@@ -48,5 +48,9 @@ INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nick
                                     email, telephone, password)
 VALUES (3, '2021-04-19 00:20:09', '2021-04-19 00:20:09', 'spencercjh', '蔡佳昊', '', '1998-03-25', 'male', 'student',
         'shouspencercjh@foxmail.com', '15000131965', '123456');
+INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
+                                    email, telephone, password)
+VALUES (4, '2021-05-12 14:46:03', '2021-05-12 14:46:03', 'admin', 'admin', '', null, 'unknown', 'admin', '', '',
+        'admin');
 INSERT INTO pourrfot.course_group (id, create_time, update_time, course_id, group_name, profile_photo)
 VALUES (1, '2021-04-20 19:35:34', '2021-04-20 19:35:34', 1, '软件项目管理-第1小组', 'profilePhoto');

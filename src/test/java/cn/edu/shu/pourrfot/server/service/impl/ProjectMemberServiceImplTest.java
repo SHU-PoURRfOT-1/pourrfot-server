@@ -7,10 +7,10 @@ import cn.edu.shu.pourrfot.server.exception.IllegalCRUDOperationException;
 import cn.edu.shu.pourrfot.server.exception.NotFoundException;
 import cn.edu.shu.pourrfot.server.model.PourrfotUser;
 import cn.edu.shu.pourrfot.server.model.Project;
-import cn.edu.shu.pourrfot.server.model.ProjectUser;
+import cn.edu.shu.pourrfot.server.model.ProjectMember;
 import cn.edu.shu.pourrfot.server.repository.PourrfotUserMapper;
 import cn.edu.shu.pourrfot.server.repository.ProjectMapper;
-import cn.edu.shu.pourrfot.server.service.ProjectUserService;
+import cn.edu.shu.pourrfot.server.service.ProjectMemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Slf4j
-class ProjectUserServiceImplTest {
+class ProjectMemberServiceImplTest {
   @ClassRule
   public static MySQLContainer<CustomMySQLContainer> customMySQLContainer = CustomMySQLContainer.getInstance();
   private final PourrfotUser owner = PourrfotUser.builder()
@@ -54,7 +54,7 @@ class ProjectUserServiceImplTest {
     .profilePhoto("profilePhoto2")
     .build();
   @Autowired
-  private ProjectUserService projectUserService;
+  private ProjectMemberService projectMemberService;
   @Autowired
   private ProjectMapper projectMapper;
   @Autowired
@@ -66,16 +66,16 @@ class ProjectUserServiceImplTest {
     assertEquals(1, pourrfotUserMapper.insert(owner));
     assertEquals(1, pourrfotUserMapper.insert(student));
     assertEquals(1, projectMapper.insert(project.setOwnerId(owner.getId())));
-    final ProjectUser projectUser = ProjectUser.builder()
+    final ProjectMember projectMember = ProjectMember.builder()
       .projectId(project.getId())
       .userId(student.getId())
       .roleName("participant")
       .build();
 
-    assertThrows(NotFoundException.class, () -> projectUserService.updateById(projectUser));
-    assertTrue(projectUserService.save(projectUser));
+    assertThrows(NotFoundException.class, () -> projectMemberService.updateById(projectMember));
+    assertTrue(projectMemberService.save(projectMember));
 
-    assertTrue(projectUserService.updateById(projectUser.setRoleName("UPDATE")));
-    assertThrows(IllegalCRUDOperationException.class, () -> projectUserService.updateById(projectUser.setUserId(999)));
+    assertTrue(projectMemberService.updateById(projectMember.setRoleName("UPDATE")));
+    assertThrows(IllegalCRUDOperationException.class, () -> projectMemberService.updateById(projectMember.setUserId(999)));
   }
 }
