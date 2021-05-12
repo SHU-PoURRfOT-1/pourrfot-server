@@ -16,14 +16,14 @@ import java.util.Date;
 /**
  * @author spencercjh
  */
-@ApiModel(value = "cn-edu-shu-pourrfot-server-model-ProjectUser")
+@ApiModel(value = "cn-edu-shu-pourrfot-server-model-ProjectMember")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "project_user")
+@TableName(value = "project_member")
 @Accessors(chain = true)
-public class ProjectUser {
+public class ProjectMember {
   public static final String COL_ID = "id";
   public static final String COL_CREATE_TIME = "create_time";
   public static final String COL_UPDATE_TIME = "update_time";
