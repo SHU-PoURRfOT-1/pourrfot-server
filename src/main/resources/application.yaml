@@ -34,7 +34,7 @@ pourrfot:
   web:
     host: "http://localhost:3000/pourrfot-web"
   # Turn false when dev or test locally
-  protect: false
+  protect: true
 aliyun:
   accessKeyId: id
   accessKeySecret: secret
