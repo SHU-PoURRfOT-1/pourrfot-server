@@ -14,6 +14,49 @@ Swagger Docs: [HERE](http://47.98.133.186/api/swagger-ui/index.html)
 
 Pourrfot-CAS: [HERE](https://github.com/SHU-PoURRfOT-1/pourrfot-cas)
 
+### Summary: How to get token
+
+```http request
+###
+POST http://47.98.133.186/cas/api/oauth/password-token
+Accept: application/json
+Content-Type: application/json
+
+{
+    "clientId": "pourrfot-web",
+    "grantType": "PASSWORD",
+    "password": "admin",
+    "scope": "admin",
+    "username": "admin"
+}
+
+###
+POST http://47.98.133.186/cas/api/oauth/password-token
+Accept: application/json
+Content-Type: application/json
+
+{
+    "clientId": "pourrfot-web",
+    "grantType": "PASSWORD",
+    "password": "teacher",
+    "scope": "teacher",
+    "username": "teacher"
+}
+
+###
+POST http://47.98.133.186/cas/api/oauth/password-token
+Accept: application/json
+Content-Type: application/json
+
+{
+    "clientId": "pourrfot-web",
+    "grantType": "PASSWORD",
+    "password": "student",
+    "scope": "student",
+    "username": "student"
+}
+```
+
 ## Development
 
 ### Main Dependencies

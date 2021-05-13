@@ -1,6 +1,8 @@
 package cn.edu.shu.pourrfot.server.filter;
 
 import cn.edu.shu.pourrfot.server.enums.RoleEnum;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +15,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -54,14 +57,18 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     this.objectMapper = new ObjectMapper();
     final RestTemplate restTemplate = new RestTemplate();
     final String casHost = environment.getProperty("pourrfot.cas.host");
-    while (true) {
+    int retryTime = 5;
+    while (retryTime-- > 0) {
       final String publicKeyJson = restTemplate.getForEntity(casHost + "/jwt/public-key", String.class).getBody();
-      log.info("Get public key from CAS now");
       try {
-        rsaJsonWebPublicKey = JsonWebKey.Factory.newJwk(publicKeyJson);
+        final JsonNode jsonNode = objectMapper.readTree(publicKeyJson);
+        rsaJsonWebPublicKey = JsonWebKey.Factory.newJwk(jsonNode.get("data").toString());
+        log.info("Get public key from CAS success");
         break;
       } catch (JoseException e) {
         log.error("Parse public key failed", e);
+      } catch (JsonProcessingException e) {
+        log.error("Parse public key responses failed", e);
       }
     }
   }
@@ -122,6 +129,20 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null,
       List.of(new SimpleGrantedAuthority(RoleEnum.valueOf(role))));
     authentication.setDetails(claimsMap);
+    log.info("User: {} {} {} with role: {}", username, request.getMethod(), request.getRequestURI(), role);
     return authentication;
+  }
+
+  static class SimpleGrantedAuthority implements GrantedAuthority {
+    private final RoleEnum role;
+
+    public SimpleGrantedAuthority(RoleEnum role) {
+      this.role = role;
+    }
+
+    @Override
+    public String getAuthority() {
+      return role.getValue();
+    }
   }
 }

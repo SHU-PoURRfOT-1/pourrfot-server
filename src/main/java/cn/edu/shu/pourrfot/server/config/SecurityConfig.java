@@ -2,12 +2,19 @@ package cn.edu.shu.pourrfot.server.config;
 
 import cn.edu.shu.pourrfot.server.enums.RoleEnum;
 import cn.edu.shu.pourrfot.server.filter.JwtAuthorizationFilter;
+import cn.edu.shu.pourrfot.server.model.dto.Result;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author spencercjh
@@ -30,6 +37,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   };
   @Autowired
   private Environment environment;
+  @Autowired
+  private ObjectMapper objectMapper;
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -42,9 +51,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .permitAll();
       return;
     }
-    http.cors()
+    http
+      .cors()
       .and()
       .csrf()
+      .disable()
+      .exceptionHandling()
+      .accessDeniedHandler((httpServletRequest, httpServletResponse, e) -> {
+        httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
+        httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        httpServletResponse.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        final PrintWriter writer = httpServletResponse.getWriter();
+        writer.append(objectMapper.writeValueAsString(Result.of(HttpStatus.FORBIDDEN,
+          "Access denied: " + e.getMessage())));
+        writer.flush();
+      })
+      .authenticationEntryPoint((httpServletRequest, httpServletResponse, e) -> {
+        httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+        httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        httpServletResponse.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        final PrintWriter writer = httpServletResponse.getWriter();
+        writer.append(objectMapper.writeValueAsString(Result.of(HttpStatus.UNAUTHORIZED,
+          "Access denied: " + e.getMessage())));
+        writer.flush();
+      })
       .and()
       .addFilter(new JwtAuthorizationFilter(authenticationManager(), environment))
       .authorizeRequests()
@@ -52,11 +82,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .antMatchers(AUTH_WHITELIST)
       .permitAll()
       // Do not add content-path as uri prefix
-      .antMatchers(HttpMethod.GET, "/courses/**")
+      .antMatchers(HttpMethod.GET, "/**")
       .hasAnyAuthority(RoleEnum.ALL_ROLE_VALUES.toArray(new String[]{}))
-      .antMatchers(HttpMethod.GET, "/courses/*/groups/**")
+      .antMatchers("/files/**")
       .hasAnyAuthority(RoleEnum.ALL_ROLE_VALUES.toArray(new String[]{}))
+      .antMatchers("/messages", "/inbox-messages")
+      .hasAnyAuthority(RoleEnum.ALL_ROLE_VALUES.toArray(new String[]{}))
+      .antMatchers("/**")
+      .hasAnyAuthority(RoleEnum.admin.getValue())
+      .antMatchers("/courses/**", "/projects.**")
+      .hasAuthority(RoleEnum.teacher.getValue())
       .anyRequest()
-      .authenticated();
+      .authenticated()
+      .and()
+      .rememberMe();
   }
 }

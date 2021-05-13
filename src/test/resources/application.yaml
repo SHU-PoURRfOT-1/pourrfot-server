@@ -9,11 +9,11 @@ spring:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
 pourrfot:
   cas:
-    host: "http://localhost:9001/cas/api"
+    host: "http://47.98.133.186/cas/api"
   web:
     host: "http://localhost:3000/pourrfot-web"
   # Turn false when dev or test locally
-  protect: false
+  protect: true
 server:
   servlet:
     contextPath: /api
