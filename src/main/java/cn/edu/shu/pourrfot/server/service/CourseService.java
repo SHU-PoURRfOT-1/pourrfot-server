@@ -7,6 +7,4 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author spencercjh
  */
 public interface CourseService extends IService<Course> {
-
-
 }

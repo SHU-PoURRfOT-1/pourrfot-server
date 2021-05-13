@@ -17,7 +17,33 @@
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
-        id, create_time, update_time, teacher_id, course_code, course_name, class_time, class_location,
-        term, profile_photo
+        course.id, course.create_time, course.update_time, course.teacher_id, course.course_code, course.course_name,
+        course.class_time, course.class_location, course.term, course.profile_photo
     </sql>
+
+    <select id="selectByStudentIdWithPage" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List">
+        </include>
+        from course_student
+                 join course on course.id = course_student.course_id
+        where course_student.student_id = #{studentId}
+        limit #{startOffset},#{rowCount}
+    </select>
+
+    <select id="selectByStudentId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List">
+        </include>
+        from course_student
+                 join course on course.id = course_student.course_id
+        where course_student.student_id = #{studentId}
+    </select>
+
+    <select id="countByStudentId" resultType="int">
+        select count(course.id)
+        from course_student
+                 join course on course.id = course_student.course_id
+        where course_student.student_id = #{studentId}
+    </select>
 </mapper>
