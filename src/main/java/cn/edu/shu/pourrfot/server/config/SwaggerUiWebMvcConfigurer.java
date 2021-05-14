@@ -36,7 +36,7 @@ public class SwaggerUiWebMvcConfigurer implements WebMvcConfigurer {
 
   @Bean
   public Docket api() {
-    return new Docket(DocumentationType.OAS_30)
+    return new Docket(DocumentationType.SWAGGER_2)
       .securityContexts(Collections.singletonList(SecurityContext.builder()
         .securityReferences(Collections.singletonList(new SecurityReference("JWT",
           new AuthorizationScope[]{new AuthorizationScope("global", "accessEverything")})))
