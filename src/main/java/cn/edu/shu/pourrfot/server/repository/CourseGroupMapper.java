@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author spencercjh
  */
@@ -18,4 +20,12 @@ public interface CourseGroupMapper extends BaseMapper<CourseGroup> {
    * @return one group
    */
   CourseGroup selectByStudentIdAndCourseId(@Param("studentId") int studentId, @Param("courseId") int courseId);
+
+  /**
+   * select by student id
+   *
+   * @param studentId studentId
+   * @return groups
+   */
+  List<CourseGroup> selectByStudentId(@Param("studentId") int studentId);
 }

@@ -58,6 +58,29 @@ public class CourseGroupServiceImpl extends ServiceImpl<CourseGroupMapper, Cours
     return super.page(page, queryWrapper);
   }
 
+  @Override
+  public CourseGroup getById(Serializable id) {
+    final CourseGroup found = baseMapper.selectById(id);
+    final SimpleUser user = SimpleUser.of(SecurityContextHolder.getContext().getAuthentication());
+    if (user != null && user.getRole().equals(RoleEnum.student)) {
+      final Set<Integer> studentGroups = baseMapper.selectByStudentId(user.getId())
+        .stream()
+        .map(CourseGroup::getId)
+        .collect(Collectors.toSet());
+      if (!studentGroups.contains(((int) id))) {
+        log.warn("Student: {} can't access the course-group: {} not belong to his/her", user, found);
+        throw new IllegalCRUDOperationException("Student can't access the course-group not belong to his/her");
+      }
+    } else if (user != null && user.getRole().equals(RoleEnum.teacher)) {
+      final Course foundCourse = courseMapper.selectById(found.getCourseId());
+      if (foundCourse == null || !foundCourse.getTeacherId().equals(user.getId())) {
+        log.warn("Teacher: {} can't access the course-group: {} not belong to his/her", user, found);
+        throw new IllegalCRUDOperationException("Teacher can't access the course-group not belong to his/her");
+      }
+    }
+    return found;
+  }
+
   @Transactional(rollbackFor = Exception.class)
   @Override
   public boolean save(CourseGroup courseGroup) {

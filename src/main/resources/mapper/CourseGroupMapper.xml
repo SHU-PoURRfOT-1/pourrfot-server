@@ -22,8 +22,17 @@
         <include refid="Base_Column_List">
         </include>
         from course_student
-                 join course_group on course_student.group_id = course_group.id
+        join course_group on course_student.group_id = course_group.id
         where course_student.student_id = #{studentId}
-          and course_group.course_id = #{courseId}
+        and course_group.course_id = #{courseId}
+    </select>
+
+    <select id="selectByStudentId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List">
+        </include>
+        from course_student
+        join course_group on course_student.group_id = course_group.id
+        where course_student.student_id = #{studentId}
     </select>
 </mapper>

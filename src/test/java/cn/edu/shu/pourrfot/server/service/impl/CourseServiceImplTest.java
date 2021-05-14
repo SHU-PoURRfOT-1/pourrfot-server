@@ -244,6 +244,56 @@ class CourseServiceImplTest {
 
   @Transactional
   @Test
+  void getById() {
+    given(pourrfotUserMapper.selectById(eq(teacher.getId()))).willReturn(teacher);
+    assertTrue(courseService.save(mockCourse));
+    assertNotNull(courseService.getById(mockCourse.getId()));
+  }
+
+  @Transactional
+  @Test
+  void getByIdWithStudentContext() {
+    given(pourrfotUserMapper.selectById(eq(teacher.getId()))).willReturn(teacher);
+    assertTrue(courseService.save(mockCourse));
+    PourrfotUser student = PourrfotUser.builder()
+      .id(200)
+      .password("student")
+      .nickname("student")
+      .username("student")
+      .role(RoleEnum.student)
+      .build();
+    assertEquals(1, courseStudentMapper.insert(CourseStudent.builder()
+      .courseId(mockCourse.getId())
+      .studentName("mock")
+      .studentId(student.getId())
+      .build()));
+    UsernamePasswordAuthenticationToken mockStudentAuthenticationToken = new UsernamePasswordAuthenticationToken(
+      "mock", "mock", List.of(new JwtAuthorizationFilter.SimpleGrantedAuthority(RoleEnum.student)));
+    mockStudentAuthenticationToken.setDetails(Map.<String, Object>of("id", ((long) student.getId()), "username", "mock",
+      "role", "student", "nickname", "student"));
+    SecurityContextHolder.getContext().setAuthentication(mockStudentAuthenticationToken);
+    assertNotNull(courseService.getById(mockCourse.getId()));
+    mockStudentAuthenticationToken.setDetails(Map.<String, Object>of("id", 999L, "username", "mock",
+      "role", "student", "nickname", "student"));
+    SecurityContextHolder.getContext().setAuthentication(mockStudentAuthenticationToken);
+    assertThrows(IllegalCRUDOperationException.class, () -> courseService.getById(mockCourse.getId()),
+      "Student can't access the course not belong to his/her");
+  }
+
+  @Transactional
+  @Test
+  void getByIdWithTeacherContextFailed() {
+    given(pourrfotUserMapper.selectById(eq(teacher.getId()))).willReturn(teacher);
+    assertTrue(courseService.save(mockCourse));
+    mockTeacherAuthenticationToken.setDetails(Map.of("id", 999L, "username", "mock",
+      "role", "teacher"));
+    SecurityContextHolder.getContext().setAuthentication(mockTeacherAuthenticationToken);
+    assertThrows(IllegalCRUDOperationException.class, () -> courseService.getById(mockCourse.getId()),
+      "Teacher can't access the course not belong to his/her");
+  }
+
+  @Transactional
+  @Test
   void updateByIdWithNoUserContext() {
     SecurityContextHolder.getContext().setAuthentication(null);
     saveWithNoUserContext();

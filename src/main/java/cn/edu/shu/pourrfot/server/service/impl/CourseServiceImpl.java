@@ -68,11 +68,34 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         .collect(Collectors.toList()));
       resultPage.setTotal(studentCourseIdSet.size());
       return resultPage;
-    } else if (user == null || user.getRole().equals(RoleEnum.admin)) {
-      return super.page(page, wrapper);
     } else {
-      throw new IllegalStateException("Invalid CourseService#Page state");
+      return super.page(page, wrapper);
     }
+  }
+
+  @Override
+  public Course getById(Serializable id) {
+    final Course found = baseMapper.selectById(id);
+    final SimpleUser user = SimpleUser.of(SecurityContextHolder.getContext().getAuthentication());
+    // Teacher users can only view their own courses
+    if (user != null && user.getRole().equals(RoleEnum.teacher)) {
+      if (!found.getTeacherId().equals(user.getId())) {
+        log.warn("Teacher: {} can't access the course: {} not belong to his/her", user, found);
+        throw new IllegalCRUDOperationException("Teacher can't access the course not belong to his/her");
+      }
+    }
+    // Student users can only view their own courses
+    else if (user != null && user.getRole().equals(RoleEnum.student)) {
+      final Set<Integer> studentCourseIdSet = baseMapper.selectByStudentId(user.getId())
+        .stream()
+        .map(Course::getId)
+        .collect(Collectors.toSet());
+      if (!studentCourseIdSet.contains(((int) id))) {
+        log.warn("Student: {} can't access the course: {} not belong to his/her", user, found);
+        throw new IllegalCRUDOperationException("Student can't access the course not belong to his/her");
+      }
+    }
+    return found;
   }
 
   @Transactional(rollbackFor = Exception.class)
