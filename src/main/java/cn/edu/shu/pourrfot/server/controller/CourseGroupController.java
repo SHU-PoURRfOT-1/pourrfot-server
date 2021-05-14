@@ -39,7 +39,7 @@ public class CourseGroupController {
                                                         @RequestParam(required = false, defaultValue = "10") Integer size,
                                                         @PathVariable @NotNull Integer courseId,
                                                         @RequestParam(required = false) String groupName) {
-    QueryWrapper<CourseGroup> query = Wrappers.query(new CourseGroup());
+    QueryWrapper<CourseGroup> query = Wrappers.query(new CourseGroup().setCourseId(courseId));
     if (courseId != null) {
       query = query.eq(CourseGroup.COL_COURSE_ID, courseId);
     }

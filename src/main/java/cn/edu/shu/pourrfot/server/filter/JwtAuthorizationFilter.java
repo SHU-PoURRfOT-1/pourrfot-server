@@ -26,6 +26,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -129,7 +131,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username,
       token, List.of(new SimpleGrantedAuthority(RoleEnum.valueOf(role))));
     authentication.setDetails(claimsMap);
-    log.info("User: {} {} {} with role: {}", username, request.getMethod(), request.getRequestURI(), role);
+    log.info("User: {} {} {} with role: {}", username, request.getMethod(),
+      URLDecoder.decode(request.getRequestURI(), StandardCharsets.UTF_8), role);
     return authentication;
   }
 

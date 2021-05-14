@@ -15,6 +15,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.ClassRule;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +95,11 @@ class CourseServiceImplTest {
   private CourseService courseService;
   @Autowired
   private CourseStudentMapper courseStudentMapper;
+
+  @AfterEach
+  void tearDown() {
+    SecurityContextHolder.getContext().setAuthentication(null);
+  }
 
   @Transactional
   @Test
