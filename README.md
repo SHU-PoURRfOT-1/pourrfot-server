@@ -26,7 +26,6 @@ Content-Type: application/json
     "clientId": "pourrfot-web",
     "grantType": "PASSWORD",
     "password": "admin",
-    "scope": "admin",
     "username": "admin"
 }
 
@@ -39,7 +38,6 @@ Content-Type: application/json
     "clientId": "pourrfot-web",
     "grantType": "PASSWORD",
     "password": "teacher",
-    "scope": "teacher",
     "username": "teacher"
 }
 
@@ -52,7 +50,6 @@ Content-Type: application/json
     "clientId": "pourrfot-web",
     "grantType": "PASSWORD",
     "password": "student",
-    "scope": "student",
     "username": "student"
 }
 ```
