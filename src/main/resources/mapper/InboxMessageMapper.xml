@@ -86,7 +86,7 @@
                 AND small.have_read = #{haveRead}
             </if>
         </where>
-        limit #{current},#{size}
+        limit #{startOffset},#{rowCount}
     </select>
 
     <select id="countMessagesByCondition" resultType="java.lang.Integer">

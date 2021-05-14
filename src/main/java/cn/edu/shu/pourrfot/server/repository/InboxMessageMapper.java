@@ -34,8 +34,8 @@ public interface InboxMessageMapper extends BaseMapper<InboxMessage> {
    * @param haveRead    have_read in where with eq
    * @return messages but with inbox-message's createTime and updateTime
    */
-  List<SingleMessage> selectMessagesByCondition(@Param("current") long startOffset,
-                                                @Param("size") long rowCount,
+  List<SingleMessage> selectMessagesByCondition(@Param("startOffset") long startOffset,
+                                                @Param("rowCount") long rowCount,
                                                 @Param("sender") Integer sender,
                                                 @Param("receiver") Integer receiver,
                                                 @Param("title") String title,

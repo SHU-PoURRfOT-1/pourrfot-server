@@ -90,7 +90,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
   private UsernamePasswordAuthenticationToken parseToken(HttpServletRequest request) {
     final String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-    log.info("Receive bearer token: {}", bearerToken);
+    log.debug("Receive bearer token: {}", bearerToken);
     if (StringUtils.isBlank(bearerToken)) {
       return null;
     }
@@ -126,14 +126,14 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
       log.warn("Empty username or role: {}", claimsMap);
       return null;
     }
-    final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null,
-      List.of(new SimpleGrantedAuthority(RoleEnum.valueOf(role))));
+    final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username,
+      token, List.of(new SimpleGrantedAuthority(RoleEnum.valueOf(role))));
     authentication.setDetails(claimsMap);
     log.info("User: {} {} {} with role: {}", username, request.getMethod(), request.getRequestURI(), role);
     return authentication;
   }
 
-  static class SimpleGrantedAuthority implements GrantedAuthority {
+  public static class SimpleGrantedAuthority implements GrantedAuthority {
     private final RoleEnum role;
 
     public SimpleGrantedAuthority(RoleEnum role) {

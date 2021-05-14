@@ -28,14 +28,15 @@ public class SwaggerUiWebMvcConfigurer implements WebMvcConfigurer {
   private final String baseUrl;
   private final String webUrl;
 
-  public SwaggerUiWebMvcConfigurer(@Value("${springfox.documentation.swagger-ui.base-url:}") String baseUrl, @Value("${pourrfot.web.host}") String webUrl) {
+  public SwaggerUiWebMvcConfigurer(@Value("${springfox.documentation.swagger-ui.base-url:}") String baseUrl,
+                                   @Value("${pourrfot.web.host}") String webUrl) {
     this.baseUrl = baseUrl;
     this.webUrl = webUrl;
   }
 
   @Bean
   public Docket api() {
-    return new Docket(DocumentationType.SWAGGER_2)
+    return new Docket(DocumentationType.OAS_30)
       .securityContexts(Collections.singletonList(SecurityContext.builder()
         .securityReferences(Collections.singletonList(new SecurityReference("JWT",
           new AuthorizationScope[]{new AuthorizationScope("global", "accessEverything")})))

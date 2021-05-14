@@ -82,7 +82,7 @@ class CustomExceptionHandlerTest {
       .contentType(MediaType.APPLICATION_JSON)
       .content(objectMapper.writeValueAsString(toCreate))
       .accept(MediaType.APPLICATION_JSON))
-      .andExpect(status().is(412))
+      .andExpect(status().is4xxClientError())
       .andExpect(jsonPath("$.code").exists())
       .andExpect(jsonPath("$.message").exists())
       .andExpect(jsonPath("$.data").doesNotExist());
@@ -104,7 +104,7 @@ class CustomExceptionHandlerTest {
       .contentType(MediaType.APPLICATION_JSON)
       .content(objectMapper.writeValueAsString(toCreate))
       .accept(MediaType.APPLICATION_JSON))
-      .andExpect(status().is(412))
+      .andExpect(status().is4xxClientError())
       .andExpect(jsonPath("$.code").exists())
       .andExpect(jsonPath("$.message").exists())
       .andExpect(jsonPath("$.data").doesNotExist());
@@ -127,7 +127,7 @@ class CustomExceptionHandlerTest {
       .contentType(MediaType.APPLICATION_JSON)
       .content(objectMapper.writeValueAsString(toCreate))
       .accept(MediaType.APPLICATION_JSON))
-      .andExpect(status().is(409))
+      .andExpect(status().is4xxClientError())
       .andExpect(jsonPath("$.code").exists())
       .andExpect(jsonPath("$.message").exists())
       .andExpect(jsonPath("$.data").doesNotExist());

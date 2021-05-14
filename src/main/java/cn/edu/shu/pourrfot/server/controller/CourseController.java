@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +69,7 @@ public class CourseController {
       ResponseEntity.ok(Result.normalOk("Get course detail success", found));
   }
 
+  @SecurityRequirements({@SecurityRequirement(name = "teacher"), @SecurityRequirement(name = "admin")})
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.CREATED)
   public ResponseEntity<Result<Course>> create(@NotNull @RequestBody @Validated Course course) {
@@ -75,6 +78,7 @@ public class CourseController {
       .body(Result.createdOk("Create course success, please pay attention to the LOCATION in headers", course));
   }
 
+  @SecurityRequirements({@SecurityRequirement(name = "teacher"), @SecurityRequirement(name = "admin")})
   @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Course>> update(@PathVariable @NotNull Integer id,
                                                @RequestBody @Validated @NotNull Course course) {
@@ -82,6 +86,7 @@ public class CourseController {
     return ResponseEntity.ok(Result.normalOk("Update course success", course));
   }
 
+  @SecurityRequirements({@SecurityRequirement(name = "teacher"), @SecurityRequirement(name = "admin")})
   @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete course success", response = Result.class),
