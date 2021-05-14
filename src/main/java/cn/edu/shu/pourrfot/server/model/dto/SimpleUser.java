@@ -18,11 +18,13 @@ public class SimpleUser {
   private final int id;
   private final String username;
   private final RoleEnum role;
+  private final String nickname;
 
-  private SimpleUser(int id, String username, RoleEnum role) {
+  private SimpleUser(int id, String username, RoleEnum role, String nickname) {
     this.id = id;
     this.username = username;
     this.role = role;
+    this.nickname = nickname;
   }
 
   @SuppressWarnings("unchecked")
@@ -37,6 +39,6 @@ public class SimpleUser {
     }
     return new SimpleUser(Integer.parseInt(details.get("id").toString()),
       (String) details.get("username"),
-      RoleEnum.valueOf((String) details.get("role")));
+      RoleEnum.valueOf((String) details.get("role")), (String) details.get("nickname"));
   }
 }

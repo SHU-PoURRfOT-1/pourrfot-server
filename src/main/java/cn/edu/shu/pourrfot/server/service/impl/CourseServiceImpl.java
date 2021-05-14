@@ -4,9 +4,13 @@ import cn.edu.shu.pourrfot.server.enums.RoleEnum;
 import cn.edu.shu.pourrfot.server.exception.IllegalCRUDOperationException;
 import cn.edu.shu.pourrfot.server.exception.NotFoundException;
 import cn.edu.shu.pourrfot.server.model.Course;
+import cn.edu.shu.pourrfot.server.model.CourseGroup;
+import cn.edu.shu.pourrfot.server.model.CourseStudent;
 import cn.edu.shu.pourrfot.server.model.PourrfotUser;
 import cn.edu.shu.pourrfot.server.model.dto.SimpleUser;
+import cn.edu.shu.pourrfot.server.repository.CourseGroupMapper;
 import cn.edu.shu.pourrfot.server.repository.CourseMapper;
+import cn.edu.shu.pourrfot.server.repository.CourseStudentMapper;
 import cn.edu.shu.pourrfot.server.repository.PourrfotUserMapper;
 import cn.edu.shu.pourrfot.server.service.CourseService;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
@@ -32,6 +36,10 @@ import java.util.stream.Collectors;
 public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> implements CourseService {
   @Autowired
   private PourrfotUserMapper pourrfotUserMapper;
+  @Autowired
+  private CourseGroupMapper courseGroupMapper;
+  @Autowired
+  private CourseStudentMapper courseStudentMapper;
 
   @Override
   public <E extends IPage<Course>> E page(E page, Wrapper<Course> wrapper) {
@@ -60,33 +68,58 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         .collect(Collectors.toList()));
       resultPage.setTotal(studentCourseIdSet.size());
       return resultPage;
-    } else if (user == null || user.getRole().equals(RoleEnum.admin)) {
-      return super.page(page, wrapper);
     } else {
-      throw new IllegalArgumentException("Invalid CourseService#Page state");
+      return super.page(page, wrapper);
     }
+  }
+
+  @Override
+  public Course getById(Serializable id) {
+    final Course found = baseMapper.selectById(id);
+    final SimpleUser user = SimpleUser.of(SecurityContextHolder.getContext().getAuthentication());
+    // Teacher users can only view their own courses
+    if (user != null && user.getRole().equals(RoleEnum.teacher)) {
+      if (!found.getTeacherId().equals(user.getId())) {
+        log.warn("Teacher: {} can't access the course: {} not belong to his/her", user, found);
+        throw new IllegalCRUDOperationException("Teacher can't access the course not belong to his/her");
+      }
+    }
+    // Student users can only view their own courses
+    else if (user != null && user.getRole().equals(RoleEnum.student)) {
+      final Set<Integer> studentCourseIdSet = baseMapper.selectByStudentId(user.getId())
+        .stream()
+        .map(Course::getId)
+        .collect(Collectors.toSet());
+      if (!studentCourseIdSet.contains(((int) id))) {
+        log.warn("Student: {} can't access the course: {} not belong to his/her", user, found);
+        throw new IllegalCRUDOperationException("Student can't access the course not belong to his/her");
+      }
+    }
+    return found;
   }
 
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public boolean save(Course entity) {
+  public boolean save(Course course) {
     final SimpleUser user = SimpleUser.of(SecurityContextHolder.getContext().getAuthentication());
     // only admin and teacher user can access this method
     if (user != null && user.getRole().equals(RoleEnum.teacher)) {
-      if (!entity.getTeacherId().equals(user.getId())) {
-        log.warn("Teacher user: {} is creating a not-own course: {}", user, entity);
+      if (!course.getTeacherId().equals(user.getId())) {
+        log.warn("Teacher user: {} is creating a not-own course: {}", user, course);
         throw new IllegalCRUDOperationException("Teacher user can't create a not-own course");
       }
     }
-    final PourrfotUser teacher = pourrfotUserMapper.selectById(entity.getTeacherId());
+    final PourrfotUser teacher = pourrfotUserMapper.selectById(course.getTeacherId());
     if (teacher == null || !RoleEnum.teacher.equals(teacher.getRole())) {
       final NotFoundException e = new NotFoundException("Can't create the course with non-existed teacher");
-      log.error("Can't save a course because the teacher doesn't exist: {}", entity, e);
+      log.error("Can't save a course because the teacher doesn't exist: {}", course, e);
       throw e;
     }
-    return baseMapper.insert(entity
+    final boolean result = baseMapper.insert(course
       .setCreateTime(new Date(System.currentTimeMillis()))
       .setUpdateTime(new Date(System.currentTimeMillis()))) == 1;
+    log.info("User: {} create a course: {}", user != null ? user : "null", course);
+    return result;
   }
 
   @Transactional(rollbackFor = Exception.class)
@@ -111,9 +144,11 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
       log.warn("Can't update a course's immutable fields: {}", entity, e);
       throw e;
     }
-    return baseMapper.updateById(entity
+    final boolean result = baseMapper.updateById(entity
       .setCreateTime(found.getCreateTime())
       .setUpdateTime(found.getUpdateTime())) == 1;
+    log.info("User: {} update a course: {}", user != null ? user : "null", found);
+    return result;
   }
 
   @Transactional(rollbackFor = Exception.class)
@@ -131,6 +166,27 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         throw new IllegalCRUDOperationException("Teacher user can't delete a not-own course");
       }
     }
-    return baseMapper.deleteById(id) == 1;
+    // delete the course's all groups and students
+    final boolean result = baseMapper.deleteById(id) == 1;
+    log.info("User: {} delete a course: {}", user != null ? user : "null", found);
+    final boolean deleteGroupsResult = courseGroupMapper.selectCount(new QueryWrapper<>(new CourseGroup())
+      .eq(CourseGroup.COL_COURSE_ID, id)) ==
+      courseGroupMapper.delete(new QueryWrapper<>(new CourseGroup())
+        .eq(CourseGroup.COL_COURSE_ID, id));
+    if (!deleteGroupsResult) {
+      log.error("Delete course-groups relationship failed anomalously");
+      throw new IllegalStateException("Delete course-groups relationship failed anomalously");
+    }
+    log.info("User: {} delete course: {} 's all groups after deleting the course", user, found);
+    final boolean deleteStudentsResult = courseStudentMapper.selectCount(new QueryWrapper<>(new CourseStudent())
+      .eq(CourseStudent.COL_COURSE_ID, id)) ==
+      courseStudentMapper.delete(new QueryWrapper<>(new CourseStudent())
+        .eq(CourseStudent.COL_COURSE_ID, id));
+    if (!deleteStudentsResult) {
+      log.error("Delete course-students relationship failed anomalously");
+      throw new IllegalStateException("Delete course-students relationship failed anomalously");
+    }
+    log.info("User: {} delete course: {} 's all students after deleting the course", user, found);
+    return result;
   }
 }

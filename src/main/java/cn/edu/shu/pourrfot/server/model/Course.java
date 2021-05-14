@@ -1,5 +1,6 @@
 package cn.edu.shu.pourrfot.server.model;
 
+import cn.edu.shu.pourrfot.server.enums.GroupingMethodEnum;
 import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -34,6 +35,7 @@ public class Course {
   public static final String COL_CLASS_LOCATION = "class_location";
   public static final String COL_TERM = "term";
   public static final String COL_PROFILE_PHOTO = "profile_photo";
+  public static final String COL_GROUPING_METHOD = "grouping_method";
   @TableId(value = "id", type = IdType.AUTO)
   @ApiModelProperty()
   private Integer id;
@@ -68,4 +70,7 @@ public class Course {
   @TableField(value = "profile_photo")
   @ApiModelProperty()
   private String profilePhoto;
+  @TableField(value = "grouping_method")
+  @ApiModelProperty(example = "NOT_GROUPING")
+  private GroupingMethodEnum groupingMethod;
 }

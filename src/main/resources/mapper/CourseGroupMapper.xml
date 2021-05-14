@@ -13,6 +13,26 @@
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
-        id, create_time, update_time, course_id, group_name, profile_photo
+        course_group.id, course_group.create_time, course_group.update_time, course_group.course_id,
+        course_group.group_name, course_group.profile_photo
     </sql>
+
+    <select id="selectByStudentIdAndCourseId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List">
+        </include>
+        from course_student
+        join course_group on course_student.group_id = course_group.id
+        where course_student.student_id = #{studentId}
+        and course_group.course_id = #{courseId}
+    </select>
+
+    <select id="selectByStudentId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List">
+        </include>
+        from course_student
+        join course_group on course_student.group_id = course_group.id
+        where course_student.student_id = #{studentId}
+    </select>
 </mapper>

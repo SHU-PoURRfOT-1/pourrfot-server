@@ -6,8 +6,7 @@ import cn.edu.shu.pourrfot.server.service.CourseService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import lombok.extern.slf4j.Slf4j;
@@ -30,12 +29,15 @@ import java.net.URI;
 @Validated
 @RestController
 @RequestMapping("/courses")
+@Api(value = "Courses CRUD", authorizations = {@Authorization("admin"), @Authorization("teacher")}, tags = "Courses")
 public class CourseController {
   @Value("${server.servlet.contextPath}")
   private String contextPath;
   @Autowired
   private CourseService courseService;
 
+  @ApiOperation(value = "courses page",
+    notes = "admin users can access all courses; teacher and student users can only access their own courses;")
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Page<Course>>> page(@RequestParam(required = false, defaultValue = "1") Integer current,
                                                    @RequestParam(required = false, defaultValue = "10") Integer size,
@@ -60,6 +62,8 @@ public class CourseController {
       Result.normalOk("Get courses page success", courseService.page(new Page<>(current, size), query)));
   }
 
+  @ApiOperation(value = "courses detail",
+    notes = "admin users can access all courses; teacher and student users can only access their own courses;")
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ApiResponses({@ApiResponse(code = 404, message = "Can't find course with the specific id", response = Result.class)})
   public ResponseEntity<Result<Course>> detail(@PathVariable @NotNull Integer id) {
@@ -69,6 +73,8 @@ public class CourseController {
       ResponseEntity.ok(Result.normalOk("Get course detail success", found));
   }
 
+  @ApiOperation(value = "create course",
+    notes = "admin users is unrestricted; teacher can only create a course with own teacher id;")
   @SecurityRequirements({@SecurityRequirement(name = "teacher"), @SecurityRequirement(name = "admin")})
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.CREATED)
@@ -78,6 +84,8 @@ public class CourseController {
       .body(Result.createdOk("Create course success, please pay attention to the LOCATION in headers", course));
   }
 
+  @ApiOperation(value = "update course",
+    notes = "admin users is unrestricted; teacher can only update a course with own teacher id; teacher_id is an immutable field;")
   @SecurityRequirements({@SecurityRequirement(name = "teacher"), @SecurityRequirement(name = "admin")})
   @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Course>> update(@PathVariable @NotNull Integer id,
@@ -86,6 +94,8 @@ public class CourseController {
     return ResponseEntity.ok(Result.normalOk("Update course success", course));
   }
 
+  @ApiOperation(value = "delete course",
+    notes = "admin users is unrestricted; teacher can only delete a course with own teacher id; all related groups and students will be deleted;")
   @SecurityRequirements({@SecurityRequirement(name = "teacher"), @SecurityRequirement(name = "admin")})
   @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)

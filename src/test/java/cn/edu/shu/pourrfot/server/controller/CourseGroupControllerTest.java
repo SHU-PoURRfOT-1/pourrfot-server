@@ -1,6 +1,7 @@
 package cn.edu.shu.pourrfot.server.controller;
 
 import cn.edu.shu.pourrfot.server.config.CustomMySQLContainer;
+import cn.edu.shu.pourrfot.server.enums.GroupingMethodEnum;
 import cn.edu.shu.pourrfot.server.model.Course;
 import cn.edu.shu.pourrfot.server.model.CourseGroup;
 import cn.edu.shu.pourrfot.server.repository.CourseMapper;
@@ -49,6 +50,7 @@ class CourseGroupControllerTest {
       .setCourseName("courseName1")
       .setProfilePhoto("profilePhoto1")
       .setTeacherId(100)
+      .setGroupingMethod(GroupingMethodEnum.FREE)
       .setTerm("term1");
     assertEquals(1, courseMapper.insert(course));
   }

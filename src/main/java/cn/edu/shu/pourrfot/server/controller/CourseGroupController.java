@@ -6,8 +6,7 @@ import cn.edu.shu.pourrfot.server.service.CourseGroupService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,18 +27,22 @@ import java.net.URI;
 @Validated
 @RestController
 @RequestMapping("/courses/{courseId}/groups")
+@Api(value = "Course-Groups CRUD", authorizations = {@Authorization("admin"), @Authorization("teacher"),
+  @Authorization("student")}, tags = "Course-Groups")
 public class CourseGroupController {
   @Value("${server.servlet.contextPath}")
   private String contextPath;
   @Autowired
   private CourseGroupService courseGroupService;
 
+  @ApiOperation(value = "course-groups page",
+    notes = "admin users can access all courses; teacher and student users can only access their own course's groups; student can only get one group max particularly")
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Page<CourseGroup>>> page(@RequestParam(required = false, defaultValue = "1") Integer current,
                                                         @RequestParam(required = false, defaultValue = "10") Integer size,
                                                         @PathVariable @NotNull Integer courseId,
                                                         @RequestParam(required = false) String groupName) {
-    QueryWrapper<CourseGroup> query = Wrappers.query(new CourseGroup());
+    QueryWrapper<CourseGroup> query = Wrappers.query(new CourseGroup().setCourseId(courseId));
     if (courseId != null) {
       query = query.eq(CourseGroup.COL_COURSE_ID, courseId);
     }
@@ -50,6 +53,8 @@ public class CourseGroupController {
       courseGroupService.page(new Page<>(current, size), query)));
   }
 
+  @ApiOperation(value = "course-group detail",
+    notes = "admin users can access all course's group; teacher and student users can only access their own course's group;")
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ApiResponses({@ApiResponse(code = 404, message = "Can't find course-group with the specific id", response = Result.class)})
   public ResponseEntity<Result<CourseGroup>> detail(@PathVariable @NotNull Integer courseId,
@@ -59,6 +64,8 @@ public class CourseGroupController {
       ResponseEntity.status(HttpStatus.NOT_FOUND).body(Result.notFound("Can't found course-group with the specific id"));
   }
 
+  @ApiOperation(value = "create course-group",
+    notes = "admin users is unrestricted; teacher and student can only create a course-group with own course; student can't create a group when the course's grouping_method is NOT_GROUPING or STRICT_CONTROLLED particularly")
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.CREATED)
   public ResponseEntity<Result<CourseGroup>> create(@NotNull @RequestBody @Validated CourseGroup courseGroup) {
@@ -68,6 +75,8 @@ public class CourseGroupController {
       .body(Result.createdOk("Create course-group success, please pay attention to the LOCATION in headers", courseGroup));
   }
 
+  @ApiOperation(value = "update course-group",
+    notes = "admin users is unrestricted; teacher and student can only update a course-group with own course; course_id is an immutable field;")
   @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<CourseGroup>> update(@PathVariable @NotNull Integer courseId,
                                                     @PathVariable @NotNull Integer id,
@@ -76,6 +85,8 @@ public class CourseGroupController {
     return ResponseEntity.ok(Result.normalOk("update course-group success", courseGroup));
   }
 
+  @ApiOperation(value = "delete course-group",
+    notes = "admin users is unrestricted; teacher and student can only delete a course with own course; student can't delete the group when the course's grouping_method is STRICT_CONTROLLED particularly;all related students will be updated;")
   @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete course-group success", response = Result.class),
