@@ -55,6 +55,14 @@ public class CourseGroupServiceImpl extends ServiceImpl<CourseGroupMapper, Cours
       }
       return (E) page.setTotal(1).setRecords(Collections.singletonList(studentGroup));
     }
+    // teacher user can only view the groups in their own courses
+    if (user != null && user.getRole().equals(RoleEnum.teacher)) {
+      final Course course = courseMapper.selectById(queryWrapper.getEntity().getCourseId());
+      if (!course.getTeacherId().equals(user.getId())) {
+        log.warn("Teacher: {} can't access the groups in the course: {} which isn't belong his/her", user, course);
+        throw new IllegalCRUDOperationException("Teacher can't access the groups in the course which isn't belong his/her");
+      }
+    }
     return super.page(page, queryWrapper);
   }
 

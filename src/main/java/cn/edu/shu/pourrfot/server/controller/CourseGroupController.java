@@ -36,7 +36,7 @@ public class CourseGroupController {
   private CourseGroupService courseGroupService;
 
   @ApiOperation(value = "course-groups page",
-    notes = "admin users can access all courses; teacher and student users can only access their own course's groups; student can only get one group max particularly")
+    notes = "admin users can access all courses-groups; teacher and student users can only access their own course's groups; student can only get one group max particularly")
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Page<CourseGroup>>> page(@RequestParam(required = false, defaultValue = "1") Integer current,
                                                         @RequestParam(required = false, defaultValue = "10") Integer size,
