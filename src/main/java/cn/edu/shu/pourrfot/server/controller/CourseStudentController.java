@@ -37,7 +37,9 @@ public class CourseStudentController {
   private CourseStudentService courseStudentService;
 
   @ApiOperation(value = "course-students page",
-    notes = "admin users can access all students; teacher and student users can only access their own course's students(scores); student can only get own particularly")
+    notes = "admin users can access all students;\n" +
+      "teacher and student users can only access their own course's students(scores);\n" +
+      "student can only get own particularly.")
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Page<CourseStudent>>> page(@RequestParam(required = false, defaultValue = "1") Integer current,
                                                           @RequestParam(required = false, defaultValue = "10") Integer size,
@@ -55,7 +57,8 @@ public class CourseStudentController {
   }
 
   @ApiOperation(value = "course-student detail",
-    notes = "admin users can access all course's student; teacher and student users can only access their own course's student")
+    notes = "admin users can access all course's student;\n" +
+      "teacher and student users can only access their own course's student.")
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ApiResponses({@ApiResponse(code = 404, message = "Can't find course-student with the specific id", response = Result.class)})
   public ResponseEntity<Result<CourseStudent>> detail(@PathVariable @NotNull Integer courseId,
@@ -66,7 +69,9 @@ public class CourseStudentController {
   }
 
   @ApiOperation(value = "create course-student",
-    notes = "admin users is unrestricted; teacher can only create a course-student with own course; student can't add a group when the course's grouping_method is NOT_GROUPING or STRICT_CONTROLLED particularly")
+    notes = "admin users is unrestricted;\n" +
+      "teacher can only create a course-student with own course;\n" +
+      "student can't add a group when the course's grouping_method is NOT_GROUPING or STRICT_CONTROLLED particularly.")
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.CREATED)
   public ResponseEntity<Result<CourseStudent>> create(@NotNull @RequestBody @Validated CourseStudent courseStudent) {
@@ -77,7 +82,10 @@ public class CourseStudentController {
   }
 
   @ApiOperation(value = "update course-student",
-    notes = "admin users is unrestricted; teacher and student can only update a course-student with own course; course_id, student_id and student_name is immutable fields; score will be 0 when student is updating")
+    notes = "admin users is unrestricted;\n" +
+      "teacher and student can only update a course-student with own course;\n" +
+      "course_id, student_id and student_name is immutable fields;\n" +
+      "score will be 0 when student is updating.")
   @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<CourseStudent>> update(@PathVariable @NotNull Integer courseId,
                                                       @PathVariable @NotNull Integer id,
@@ -87,7 +95,8 @@ public class CourseStudentController {
   }
 
   @ApiOperation(value = "update course-student",
-    notes = "admin users is unrestricted; teacher can only delete a course-student with own course;")
+    notes = "admin users is unrestricted;\n" +
+      "teacher can only delete a course-student with own course.")
   @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete course-student success", response = Result.class),
