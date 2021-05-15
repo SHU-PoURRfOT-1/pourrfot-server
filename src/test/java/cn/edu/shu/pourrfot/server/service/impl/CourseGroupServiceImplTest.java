@@ -132,6 +132,23 @@ class CourseGroupServiceImplTest {
 
   @Transactional
   @Test
+  void pageWithTeacherContext() {
+    given(courseMapper.selectById(eq(mockCourse.getId()))).willReturn(mockCourse);
+    mockTeacherAuthenticationToken.setDetails(teacherDetail);
+    SecurityContextHolder.getContext().setAuthentication(mockTeacherAuthenticationToken);
+    assertTrue(courseGroupService.save(mockCourseGroup));
+
+    mockTeacherAuthenticationToken.setDetails(Map.of("id", 999L, "username", "mock",
+      "role", "teacher"));
+    SecurityContextHolder.getContext().setAuthentication(mockTeacherAuthenticationToken);
+    assertThrows(IllegalCRUDOperationException.class, () -> courseGroupService.page(new Page<>(1, 10),
+      new QueryWrapper<>(new CourseGroup().setCourseId(mockCourse.getId()))
+        .eq(CourseGroup.COL_COURSE_ID, mockCourse.getId())),
+      "Teacher can't access the groups in the course which isn't belong his/her");
+  }
+
+  @Transactional
+  @Test
   void getById() {
     given(courseMapper.selectById(eq(mockCourse.getId()))).willReturn(mockCourse);
     mockAdminAuthenticationToken.setDetails(adminDetail);
