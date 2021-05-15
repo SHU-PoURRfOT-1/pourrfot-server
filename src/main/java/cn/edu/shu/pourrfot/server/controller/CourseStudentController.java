@@ -6,8 +6,7 @@ import cn.edu.shu.pourrfot.server.service.CourseStudentService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,18 +28,22 @@ import java.net.URI;
 @Validated
 @RestController
 @RequestMapping("/courses/{courseId}/students")
+@Api(value = "Course-Students CRUD", authorizations = {@Authorization("admin"), @Authorization("teacher"),
+  @Authorization("student")}, tags = "Course-Students")
 public class CourseStudentController {
   @Value("${server.servlet.contextPath}")
   private String contextPath;
   @Autowired
   private CourseStudentService courseStudentService;
 
+  @ApiOperation(value = "course-students page",
+    notes = "admin users can access all students; teacher and student users can only access their own course's students(scores); student can only get own particularly")
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Page<CourseStudent>>> page(@RequestParam(required = false, defaultValue = "1") Integer current,
                                                           @RequestParam(required = false, defaultValue = "10") Integer size,
                                                           @PathVariable @NotNull Integer courseId,
                                                           @RequestParam(required = false) Integer groupId) {
-    QueryWrapper<CourseStudent> query = Wrappers.query(new CourseStudent());
+    QueryWrapper<CourseStudent> query = Wrappers.query(new CourseStudent().setCourseId(courseId));
     if (courseId != null) {
       query = query.eq(CourseStudent.COL_COURSE_ID, courseId);
     }
@@ -51,6 +54,8 @@ public class CourseStudentController {
       courseStudentService.page(new Page<>(current, size), query)));
   }
 
+  @ApiOperation(value = "course-student detail",
+    notes = "admin users can access all course's student; teacher and student users can only access their own course's student;")
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ApiResponses({@ApiResponse(code = 404, message = "Can't find course-student with the specific id", response = Result.class)})
   public ResponseEntity<Result<CourseStudent>> detail(@PathVariable @NotNull Integer courseId,
@@ -60,6 +65,8 @@ public class CourseStudentController {
       ResponseEntity.status(HttpStatus.NOT_FOUND).body(Result.notFound("Can't found course-student with the specific id"));
   }
 
+  @ApiOperation(value = "create course-student",
+    notes = "admin users is unrestricted; teacher can only create a course-student with own course; student can't add a group when the course's grouping_method is NOT_GROUPING or STRICT_CONTROLLED particularly")
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.CREATED)
   public ResponseEntity<Result<CourseStudent>> create(@NotNull @RequestBody @Validated CourseStudent courseStudent) {

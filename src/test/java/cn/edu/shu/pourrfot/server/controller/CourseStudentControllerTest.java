@@ -21,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.*;
 
@@ -32,11 +33,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc(addFilters = false)
 @Slf4j
+@Testcontainers(disabledWithoutDocker = true)
 class CourseStudentControllerTest {
 
   @ClassRule
   public static MySQLContainer<CustomMySQLContainer> customMySQLContainer = CustomMySQLContainer.getInstance();
-
+  private final PourrfotUser teacher = PourrfotUser.builder()
+    .username("teacher")
+    .nickname("teacher-mock")
+    .password("teacher")
+    .role(RoleEnum.teacher)
+    .id(999)
+    .build();
   private final PourrfotUser[] students = new PourrfotUser[]{
     PourrfotUser.builder()
       .createTime(new Date(System.currentTimeMillis()))
@@ -118,6 +126,7 @@ class CourseStudentControllerTest {
 
   @BeforeEach
   void prepare() {
+    pourrfotUserMapper.insert(teacher);
     courseMapper.insert(course);
     Arrays.stream(courseGroups).forEach(courseGroup -> courseGroupMapper.insert(courseGroup.setCourseId(course.getId())));
     Arrays.stream(students).forEach(student -> pourrfotUserMapper.insert(student));
