@@ -55,7 +55,7 @@ public class CourseStudentController {
   }
 
   @ApiOperation(value = "course-student detail",
-    notes = "admin users can access all course's student; teacher and student users can only access their own course's student;")
+    notes = "admin users can access all course's student; teacher and student users can only access their own course's student")
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ApiResponses({@ApiResponse(code = 404, message = "Can't find course-student with the specific id", response = Result.class)})
   public ResponseEntity<Result<CourseStudent>> detail(@PathVariable @NotNull Integer courseId,
@@ -76,6 +76,8 @@ public class CourseStudentController {
       .body(Result.createdOk("Create course-student success, please pay attention to the LOCATION in headers", courseStudent));
   }
 
+  @ApiOperation(value = "update course-student",
+    notes = "admin users is unrestricted; teacher and student can only update a course-student with own course; course_id, student_id and student_name is immutable fields; score will be 0 when student is updating")
   @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<CourseStudent>> update(@PathVariable @NotNull Integer courseId,
                                                       @PathVariable @NotNull Integer id,
@@ -84,6 +86,8 @@ public class CourseStudentController {
     return ResponseEntity.ok(Result.normalOk("Update course-student success", courseStudent));
   }
 
+  @ApiOperation(value = "update course-student",
+    notes = "admin users is unrestricted; teacher can only delete a course-student with own course;")
   @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete course-student success", response = Result.class),
