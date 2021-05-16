@@ -15,4 +15,44 @@
         <!--@mbg.generated-->
         id, create_time, update_time, project_id, user_id, role_name
     </sql>
+
+    <select id="selectMemberUsersInOneProject" resultType="cn.edu.shu.pourrfot.server.model.dto.ProjectMemberUser">
+        select project_member.id           as id,
+               pourrfot_user.id            as userId,
+               project_member.project_id   as projectId,
+               pourrfot_user.create_time   as createTime,
+               pourrfot_user.update_time   as updateTime,
+               project_member.role_name    as projectRole,
+               pourrfot_user.username,
+               pourrfot_user.nickname,
+               pourrfot_user.profile_photo as profilePhoto,
+               pourrfot_user.birth,
+               pourrfot_user.sex,
+               pourrfot_user.role,
+               pourrfot_user.email,
+               pourrfot_user.telephone
+        from project_member
+                 join pourrfot_user on project_member.user_id = pourrfot_user.id
+        where project_member.project_id = #{projectId}
+    </select>
+
+    <select id="selectOneProjectMemberUser" resultType="cn.edu.shu.pourrfot.server.model.dto.ProjectMemberUser">
+        select project_member.id           as id,
+               pourrfot_user.id            as userId,
+               project_member.project_id   as projectId,
+               pourrfot_user.create_time   as createTime,
+               pourrfot_user.update_time   as updateTime,
+               project_member.role_name    as projectRole,
+               pourrfot_user.username,
+               pourrfot_user.nickname,
+               pourrfot_user.profile_photo as profilePhoto,
+               pourrfot_user.birth,
+               pourrfot_user.sex,
+               pourrfot_user.role,
+               pourrfot_user.email,
+               pourrfot_user.telephone
+        from project_member
+                 join pourrfot_user on project_member.user_id = pourrfot_user.id
+        where project_member.id = #{id}
+    </select>
 </mapper>
