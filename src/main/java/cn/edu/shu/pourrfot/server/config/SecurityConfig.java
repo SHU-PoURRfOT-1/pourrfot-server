@@ -102,8 +102,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .hasAnyAuthority(RoleEnum.student.getValue(), RoleEnum.teacher.getValue())
       .antMatchers(HttpMethod.DELETE, "/courses/*/students/**")
       .hasAnyAuthority(RoleEnum.teacher.getValue())
-      .antMatchers(HttpMethod.POST, "/projects/**")
-      .hasAnyAuthority(RoleEnum.student.getValue(), RoleEnum.teacher.getValue())
       .antMatchers("/courses/**", "/projects/**")
       .hasAnyAuthority(RoleEnum.teacher.getValue())
       .antMatchers("/**")

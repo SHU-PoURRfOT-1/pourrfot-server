@@ -112,3 +112,31 @@ VALUES (9, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 3, '蔡佳昊', 8, 9, 0
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
                                      total_score, score_structure)
 VALUES (10, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 5, 'student-test', 10, 10, 0, '[]');
+INSERT INTO pourrfot.project (id, create_time, update_time, project_name, project_code, owner_id, profile_photo)
+VALUES (1, '2021-05-16 22:54:42', '2021-05-16 22:54:42', '科创项目1', 'PROJECT-1', 1, '');
+INSERT INTO pourrfot.project (id, create_time, update_time, project_name, project_code, owner_id, profile_photo)
+VALUES (2, '2021-05-16 22:54:42', '2021-05-16 22:54:42', '科创项目2', 'PROJECT-2', 2, '');
+INSERT INTO pourrfot.project (id, create_time, update_time, project_name, project_code, owner_id, profile_photo)
+VALUES (3, '2021-05-16 22:54:42', '2021-05-16 22:54:42', '科创项目3', 'PROJECT-3', 1, '');
+INSERT INTO pourrfot.project (id, create_time, update_time, project_name, project_code, owner_id, profile_photo)
+VALUES (4, '2021-05-16 22:54:42', '2021-05-16 22:54:42', '科创项目4', 'PROJECT-4', 2, '');
+INSERT INTO pourrfot.project (id, create_time, update_time, project_name, project_code, owner_id, profile_photo)
+VALUES (5, '2021-05-16 22:54:42', '2021-05-16 22:54:42', '科创项目5', 'PROJECT-5', 6, '');
+INSERT INTO pourrfot.project_member (id, create_time, update_time, project_id, user_id, role_name)
+VALUES (1, '2021-05-16 23:30:10', '2021-05-16 23:30:10', 1, 1, 'owner');
+INSERT INTO pourrfot.project_member (id, create_time, update_time, project_id, user_id, role_name)
+VALUES (2, '2021-05-16 23:30:10', '2021-05-16 23:30:10', 2, 2, 'owner');
+INSERT INTO pourrfot.project_member (id, create_time, update_time, project_id, user_id, role_name)
+VALUES (3, '2021-05-16 23:30:10', '2021-05-16 23:30:10', 3, 1, 'owner');
+INSERT INTO pourrfot.project_member (id, create_time, update_time, project_id, user_id, role_name)
+VALUES (4, '2021-05-16 23:30:10', '2021-05-16 23:30:10', 4, 2, 'owner');
+INSERT INTO pourrfot.project_member (id, create_time, update_time, project_id, user_id, role_name)
+VALUES (5, '2021-05-16 23:30:10', '2021-05-16 23:30:10', 5, 6, 'owner');
+INSERT INTO pourrfot.project_member (id, create_time, update_time, project_id, user_id, role_name)
+VALUES (6, '2021-05-16 23:30:10', '2021-05-16 23:30:10', 1, 3, 'member');
+INSERT INTO pourrfot.project_member (id, create_time, update_time, project_id, user_id, role_name)
+VALUES (7, '2021-05-16 23:30:10', '2021-05-16 23:30:10', 2, 5, 'member');
+INSERT INTO pourrfot.project_member (id, create_time, update_time, project_id, user_id, role_name)
+VALUES (8, '2021-05-16 23:30:10', '2021-05-16 23:30:10', 3, 3, 'member');
+INSERT INTO pourrfot.project_member (id, create_time, update_time, project_id, user_id, role_name)
+VALUES (9, '2021-05-16 23:30:10', '2021-05-16 23:30:10', 4, 5, 'member');
