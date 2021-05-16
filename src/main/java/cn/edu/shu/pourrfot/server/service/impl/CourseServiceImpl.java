@@ -3,6 +3,7 @@ package cn.edu.shu.pourrfot.server.service.impl;
 import cn.edu.shu.pourrfot.server.enums.RoleEnum;
 import cn.edu.shu.pourrfot.server.exception.IllegalCRUDOperationException;
 import cn.edu.shu.pourrfot.server.exception.NotFoundException;
+import cn.edu.shu.pourrfot.server.helper.PageHelper;
 import cn.edu.shu.pourrfot.server.model.Course;
 import cn.edu.shu.pourrfot.server.model.CourseGroup;
 import cn.edu.shu.pourrfot.server.model.CourseStudent;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -57,17 +59,14 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     }
     // Student users can only view their own courses
     else if (user != null && user.getRole().equals(RoleEnum.student)) {
-      final E resultPage = super.page(page, wrapper);
       final Set<Integer> studentCourseIdSet = baseMapper.selectByStudentId(user.getId())
         .stream()
         .map(Course::getId)
         .collect(Collectors.toSet());
-      resultPage.setRecords(resultPage.getRecords()
-        .stream()
+      final List<Course> studentCourses = baseMapper.selectList(wrapper).stream()
         .filter(course -> studentCourseIdSet.contains(course.getId()))
-        .collect(Collectors.toList()));
-      resultPage.setTotal(studentCourseIdSet.size());
-      return resultPage;
+        .collect(Collectors.toList());
+      return PageHelper.manuallyPage(studentCourses, page);
     } else {
       return super.page(page, wrapper);
     }

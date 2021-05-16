@@ -6,8 +6,7 @@ import cn.edu.shu.pourrfot.server.service.ProjectService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +27,16 @@ import java.net.URI;
 @RequestMapping("/projects")
 @Slf4j
 @Validated
+@Api(value = "Projects CRUD", authorizations = {@Authorization("admin"), @Authorization("teacher")}, tags = "Projects")
 public class ProjectController {
   @Value("${server.servlet.contextPath}")
   private String contextPath;
   @Autowired
   private ProjectService projectService;
 
+  @ApiOperation(value = "projects page",
+    notes = "admin users can access all projects;\n" +
+      "teacher and student users can only access their own projects;\n")
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Page<Project>>> page(@RequestParam(required = false, defaultValue = "1") Integer current,
                                                     @RequestParam(required = false, defaultValue = "10") Integer size,
@@ -54,6 +57,9 @@ public class ProjectController {
       projectService.page(new Page<>(current, size), query)));
   }
 
+  @ApiOperation(value = "project detail",
+    notes = "admin users can access all projects;\n" +
+      "teacher and student users can only access their own projects;\n")
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ApiResponses({@ApiResponse(code = 404, message = "Can't find project with the specific id", response = Result.class)})
   public ResponseEntity<Result<Project>> detail(@PathVariable @NotNull Integer id) {
@@ -62,6 +68,9 @@ public class ProjectController {
       ResponseEntity.status(HttpStatus.NOT_FOUND).body(Result.notFound("Can't found project with the specific id"));
   }
 
+  @ApiOperation(value = "create project",
+    notes = "admin users is unrestricted but can't create a project with student owner;\n" +
+      "only teacher user can create a project with own id.")
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.CREATED)
   public ResponseEntity<Result<Project>> create(@NotNull @RequestBody @Validated Project project) {
@@ -71,6 +80,9 @@ public class ProjectController {
       .body(Result.createdOk("Create project success, please pay attention to the LOCATION in headers", project));
   }
 
+  @ApiOperation(value = "update project",
+    notes = "admin users is unrestricted but can't update a project with student owner;\n" +
+      "only project owner teacher can update project with own id.")
   @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Project>> update(@PathVariable @NotNull Integer id,
                                                 @RequestBody @Validated @NotNull Project project) {
@@ -78,6 +90,9 @@ public class ProjectController {
     return ResponseEntity.ok(Result.normalOk("Update project success", project));
   }
 
+  @ApiOperation(value = "update project",
+    notes = "admin users is unrestricted;\n" +
+      "only project owner teacher can update project.")
   @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete project success", response = Result.class),

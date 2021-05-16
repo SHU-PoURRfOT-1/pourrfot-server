@@ -14,6 +14,16 @@
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
-        id, create_time, update_time, project_name, project_code, owner_id, profile_photo
+        project.id, project.create_time, project.update_time, project.project_name, project.project_code,
+        project.owner_id, project.profile_photo
     </sql>
+
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List">
+        </include>
+        from project_member
+                 join project on project.id = project_member.project_id
+        where project_member.user_id = #{userId}
+    </select>
 </mapper>
