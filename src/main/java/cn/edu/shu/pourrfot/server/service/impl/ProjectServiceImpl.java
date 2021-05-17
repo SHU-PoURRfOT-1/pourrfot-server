@@ -101,13 +101,16 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     final boolean insertProjectResult = baseMapper.insert(project
       .setCreateTime(new Date(System.currentTimeMillis()))
       .setUpdateTime(new Date(System.currentTimeMillis()))) == 1;
-    final boolean insertMemberResult = projectMemberMapper.insert(ProjectMember.builder()
+    log.info("User: {} create a project: {}", user, project);
+    final ProjectMember ownerMember = ProjectMember.builder()
       .projectId(project.getId())
       .userId(project.getOwnerId())
       .roleName(ProjectMemberRoleEnum.OWNER.name())
       .createTime(new Date(System.currentTimeMillis()))
       .updateTime(new Date(System.currentTimeMillis()))
-      .build()) == 1;
+      .build();
+    final boolean insertMemberResult = projectMemberMapper.insert(ownerMember) == 1;
+    log.info("User: {} create a project-member: {}", user, ownerMember);
     return insertProjectResult && insertMemberResult;
   }
 
@@ -130,6 +133,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
       // teacher can only update own project
       entity.setOwnerId(user.getId());
     }
+    log.info("User: {} update a project: {}", user, entity);
     return baseMapper.updateById(entity
       .setCreateTime(found.getCreateTime())
       .setUpdateTime(found.getUpdateTime())) == 1;
@@ -151,10 +155,12 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     }
 
     final boolean deleteProjectResult = baseMapper.deleteById(id) == 1;
+    log.info("User: {} delete a project: {}", user, found);
     final int projectMemberCount = projectMemberMapper.selectCount(new QueryWrapper<>(new ProjectMember())
       .eq(ProjectMember.COL_PROJECT_ID, id));
     final int deleteResult = projectMemberMapper.delete(new QueryWrapper<>(new ProjectMember())
       .eq(ProjectMember.COL_PROJECT_ID, id));
+    log.info("User: {} delete {} project-members", user, projectMemberCount);
     return deleteProjectResult && projectMemberCount == deleteResult;
   }
 

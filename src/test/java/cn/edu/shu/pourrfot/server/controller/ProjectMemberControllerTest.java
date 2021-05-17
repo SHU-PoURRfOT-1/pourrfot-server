@@ -125,15 +125,6 @@ class ProjectMemberControllerTest {
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(projectMembers.length)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get(String.format("/projects/%d/members", project.getId()))
-      .param("roleName", "owner")
-      .contentType(MediaType.APPLICATION_JSON)
-      .accept(MediaType.APPLICATION_JSON))
-      .andExpect(status().isOk())
-      .andExpect(jsonPath("$.data.records").exists())
-      .andExpect(jsonPath("$.data.records").isArray())
-      .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
-      .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
     // PUT update
     mockMvc.perform(put(locations.get(1))
       .contentType(MediaType.APPLICATION_JSON)
