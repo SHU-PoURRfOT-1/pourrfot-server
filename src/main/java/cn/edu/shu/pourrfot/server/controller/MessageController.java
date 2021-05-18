@@ -36,7 +36,7 @@ public class MessageController {
   @Value("${server.servlet.contextPath}")
   private String contextPath;
 
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/page", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Page<Message>>> list(@RequestParam(required = false, defaultValue = "1") Integer current,
                                                     @RequestParam(required = false, defaultValue = "10") Integer size,
                                                     @RequestParam(required = false) Integer sender,
@@ -64,7 +64,7 @@ public class MessageController {
       messageService.page(new Page<>(current, size), query)));
   }
 
-  @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/detail/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ApiResponses({@ApiResponse(code = 404, message = "Can't find message with the specific id", response = Result.class)})
   public ResponseEntity<Result<Message>> detail(@PathVariable Integer id) {
     final Message found = messageService.getById(id);
@@ -72,15 +72,15 @@ public class MessageController {
       ResponseEntity.status(HttpStatus.NOT_FOUND).body(Result.notFound("Can't found message with the specific id"));
   }
 
-  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.CREATED)
   public ResponseEntity<Result<Message>> create(@NotNull @RequestBody @Validated Message message) {
     messageService.save(message);
-    return ResponseEntity.created(URI.create(String.format("%s/messages/%d", contextPath, message.getId())))
+    return ResponseEntity.created(URI.create(String.format("%s/messages/detail/%d", contextPath, message.getId())))
       .body(Result.createdOk("Create message success, please pay attention to the LOCATION in headers", message));
   }
 
-  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete message success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the message with the specific id to delete", response = Result.class)})

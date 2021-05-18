@@ -46,7 +46,7 @@ public class OssFileController {
   @Value("${server.servlet.contextPath}")
   private String contextPath;
 
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/page", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Page<OssFile>>> list(@RequestParam(required = false, defaultValue = "1") Integer current,
                                                     @RequestParam(required = false, defaultValue = "10") Integer size,
                                                     @RequestParam(required = false) ResourceTypeEnum resourceType,
@@ -71,7 +71,7 @@ public class OssFileController {
       ossFileService.page(new Page<>(current, size), query)));
   }
 
-  @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/detail/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ApiResponses({@ApiResponse(code = 404, message = "Can't find oss-file with the specific id", response = Result.class)})
   public ResponseEntity<Result<OssFile>> detail(@PathVariable Integer id) {
     final OssFile found = ossFileService.getById(id);
@@ -79,7 +79,7 @@ public class OssFileController {
       ResponseEntity.status(HttpStatus.NOT_FOUND).body(Result.notFound("Can't found oss-file with the specific id"));
   }
 
-  @GetMapping(value = "/{id}/stream")
+  @GetMapping(value = "/detail/{id}/stream")
   @ApiResponses({@ApiResponse(code = 200, message = "Start download oss-file with the specific id"),
     @ApiResponse(code = 404, message = "Can't found oss-file with the specific id to download", response = Result.class)})
   public ResponseEntity<?> downloadFile(@PathVariable Integer id) {
@@ -100,24 +100,24 @@ public class OssFileController {
       .body(ossFileResource);
   }
 
-  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.CREATED)
   public ResponseEntity<Result<OssFile>> create(@NotNull @RequestBody @Validated OssFile ossFile) {
     // origin oss url in header#location is encoded. It needs to be decoded
     ossFileService.save(ossFile.setOriginOssUrl(URLDecoder.decode(ossFile.getOriginOssUrl(), StandardCharsets.UTF_8)));
-    return ResponseEntity.created(URI.create(String.format("%s/files/%d", contextPath, ossFile.getId())))
+    return ResponseEntity.created(URI.create(String.format("%s/files/detail/%d", contextPath, ossFile.getId())))
       .body(Result.createdOk("Create oss-file success, please pay attention to the LOCATION in headers", ossFile));
   }
 
-  @PostMapping("/cache")
-  public ResponseEntity<Result<String>> uploadFile(@NotNull @RequestParam MultipartFile file,
-                                                   @RequestParam(required = false) String filename) {
+  @PostMapping(value = "/cache", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Result<String>> uploadFile(@NotNull @RequestPart MultipartFile file,
+                                                   @RequestPart(required = false) String filename) {
     final String ossUrl = ossService.uploadFileWithFilename(file, StringUtils.isBlank(filename) ?
       file.getOriginalFilename() : filename);
     return ResponseEntity.created(URI.create(ossUrl)).body(Result.normalOk("Upload file success", ossUrl));
   }
 
-  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete oss-url success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the oss-url with the specific id to delete", response = Result.class)})

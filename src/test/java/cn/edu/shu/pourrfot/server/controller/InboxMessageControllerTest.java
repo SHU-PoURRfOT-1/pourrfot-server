@@ -85,20 +85,20 @@ class InboxMessageControllerTest {
   @Test
   void integrationTest() throws Exception {
     // GET PAGE
-    mockMvc.perform(get("/inbox-messages")
+    mockMvc.perform(get("/inbox-messages/page")
       .contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.data.records").exists())
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(10)));
-    mockMvc.perform(get("/inbox-messages")
+    mockMvc.perform(get("/inbox-messages/page")
       .contentType(MediaType.APPLICATION_JSON)
       .param("sender", String.valueOf(sender.getId())))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.data.records").exists())
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(10)));
-    mockMvc.perform(get("/inbox-messages")
+    mockMvc.perform(get("/inbox-messages/page")
       .contentType(MediaType.APPLICATION_JSON)
       .param("sender", String.valueOf(sender.getId()))
       .param("receiver", String.valueOf(receiver.getId())))
@@ -106,21 +106,21 @@ class InboxMessageControllerTest {
       .andExpect(jsonPath("$.data.records").exists())
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(10)));
-    mockMvc.perform(get("/inbox-messages")
+    mockMvc.perform(get("/inbox-messages/page")
       .contentType(MediaType.APPLICATION_JSON)
       .param("title", "title"))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.data.records").exists())
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(10)));
-    mockMvc.perform(get("/inbox-messages")
+    mockMvc.perform(get("/inbox-messages/page")
       .contentType(MediaType.APPLICATION_JSON)
       .param("isUrgent", "true"))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.data.records").exists())
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(10)));
-    mockMvc.perform(get("/inbox-messages")
+    mockMvc.perform(get("/inbox-messages/page")
       .contentType(MediaType.APPLICATION_JSON)
       .param("isRegular", "true"))
       .andExpect(status().isOk())

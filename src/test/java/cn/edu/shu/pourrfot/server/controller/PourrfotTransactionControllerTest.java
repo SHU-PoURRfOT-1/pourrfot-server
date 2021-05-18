@@ -3,8 +3,8 @@ package cn.edu.shu.pourrfot.server.controller;
 import cn.edu.shu.pourrfot.server.config.CustomMySQLContainer;
 import cn.edu.shu.pourrfot.server.enums.RoleEnum;
 import cn.edu.shu.pourrfot.server.enums.SexEnum;
-import cn.edu.shu.pourrfot.server.model.PourrfotUser;
 import cn.edu.shu.pourrfot.server.model.PourrfotTransaction;
+import cn.edu.shu.pourrfot.server.model.PourrfotUser;
 import cn.edu.shu.pourrfot.server.service.PourrfotUserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -83,7 +84,7 @@ public class PourrfotTransactionControllerTest {
     final List<String> locations = new ArrayList<>(toCreates.size());
     // POST create
     for (PourrfotTransaction toCreate : toCreates) {
-      mockMvc.perform(post("/transactions")
+      mockMvc.perform(post("/transactions/create")
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(toCreate))
         .accept(MediaType.APPLICATION_JSON))
@@ -103,10 +104,10 @@ public class PourrfotTransactionControllerTest {
         .andDo(result -> log.info("Detail success: {}", result.getResponse().getContentAsString()));
     }
     // GET detail not found
-    mockMvc.perform(get("/transactions/999"))
+    mockMvc.perform(get("/transactions/detail/999"))
       .andExpect(status().isNotFound());
     // page
-    mockMvc.perform(get("/transactions")
+    mockMvc.perform(get("/transactions/page")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
@@ -114,7 +115,7 @@ public class PourrfotTransactionControllerTest {
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(toCreates.size())))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/transactions")
+    mockMvc.perform(get("/transactions/page")
       .param("isUrgent", String.valueOf(false))
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
@@ -123,7 +124,7 @@ public class PourrfotTransactionControllerTest {
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/transactions")
+    mockMvc.perform(get("/transactions/page")
       .param("sender", String.valueOf(sender.getId()))
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
@@ -132,7 +133,7 @@ public class PourrfotTransactionControllerTest {
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/transactions")
+    mockMvc.perform(get("/transactions/page")
       .param("receiver", String.valueOf(receiver.getId()))
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
@@ -141,7 +142,7 @@ public class PourrfotTransactionControllerTest {
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/transactions")
+    mockMvc.perform(get("/transactions/page")
       .param("title", "测试")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
@@ -151,7 +152,7 @@ public class PourrfotTransactionControllerTest {
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
     // PUT update
-    mockMvc.perform(put(locations.get(0))
+    mockMvc.perform(post(locations.get(0).replace("detail", "update"))
       .contentType(MediaType.APPLICATION_JSON)
       .content(objectMapper.writeValueAsString(toCreates.get(0).setTitle("TEST")))
       .accept(MediaType.APPLICATION_JSON))
@@ -162,10 +163,11 @@ public class PourrfotTransactionControllerTest {
       .andDo(result -> log.info("Update success: {}", result.getResponse().getContentAsString()));
     // DELETE Delete
     for (String location : locations) {
-      mockMvc.perform(delete(location))
+      location = location.replace("detail", "delete");
+      mockMvc.perform(post(location))
         .andExpect(status().isNoContent())
         .andDo(result -> log.info("Delete success: {}", result.getResponse().getContentAsString()));
-      mockMvc.perform(delete(location))
+      mockMvc.perform(post(location))
         .andExpect(status().isNotFound())
         .andDo(result -> log.info("Delete failed because not found: {}", result.getResponse().getContentAsString()));
     }

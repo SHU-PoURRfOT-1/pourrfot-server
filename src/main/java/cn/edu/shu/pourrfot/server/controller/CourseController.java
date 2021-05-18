@@ -39,7 +39,7 @@ public class CourseController {
   @ApiOperation(value = "courses page",
     notes = "admin users can access all courses;\n" +
       "teacher and student users can only access their own courses.")
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/page", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Page<Course>>> page(@RequestParam(required = false, defaultValue = "1") Integer current,
                                                    @RequestParam(required = false, defaultValue = "10") Integer size,
                                                    @RequestParam(required = false) Integer teacherId,
@@ -66,7 +66,7 @@ public class CourseController {
   @ApiOperation(value = "courses detail",
     notes = "admin users can access all courses;\n" +
       "teacher and student users can only access their own courses.")
-  @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/detail/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ApiResponses({@ApiResponse(code = 404, message = "Can't find course with the specific id", response = Result.class)})
   public ResponseEntity<Result<Course>> detail(@PathVariable @NotNull Integer id) {
     final Course found = courseService.getById(id);
@@ -79,11 +79,11 @@ public class CourseController {
     notes = "admin users is unrestricted;\n" +
       "teacher can only create a course with own teacher id.")
   @SecurityRequirements({@SecurityRequirement(name = "teacher"), @SecurityRequirement(name = "admin")})
-  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.CREATED)
   public ResponseEntity<Result<Course>> create(@NotNull @RequestBody @Validated Course course) {
     courseService.save(course);
-    return ResponseEntity.created(URI.create(String.format("%s/courses/%d", contextPath, course.getId())))
+    return ResponseEntity.created(URI.create(String.format("%s/courses/detail/%d", contextPath, course.getId())))
       .body(Result.createdOk("Create course success, please pay attention to the LOCATION in headers", course));
   }
 
@@ -92,7 +92,7 @@ public class CourseController {
       "teacher can only update a course with own teacher id;\n" +
       "teacher_id is an immutable field.")
   @SecurityRequirements({@SecurityRequirement(name = "teacher"), @SecurityRequirement(name = "admin")})
-  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Course>> update(@PathVariable @NotNull Integer id,
                                                @RequestBody @Validated @NotNull Course course) {
     courseService.updateById(course.setId(id));
@@ -104,7 +104,7 @@ public class CourseController {
       "teacher can only delete a course with own teacher id;\n" +
       "all related groups and students will be deleted.")
   @SecurityRequirements({@SecurityRequirement(name = "teacher"), @SecurityRequirement(name = "admin")})
-  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete course success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the course with the specific id to delete", response = Result.class)})

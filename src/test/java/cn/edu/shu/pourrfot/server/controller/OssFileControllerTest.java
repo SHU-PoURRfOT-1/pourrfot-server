@@ -41,7 +41,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -75,6 +76,7 @@ class OssFileControllerTest {
     // upload file
     mockMvc.perform(MockMvcRequestBuilders.multipart("/files/cache")
       .file(file)
+      .contentType(MediaType.MULTIPART_FORM_DATA)
       .param("filename", "test.txt")
       .with(request -> {
         request.setMethod(HttpMethod.POST.name());
@@ -106,6 +108,7 @@ class OssFileControllerTest {
     // upload file
     mockMvc.perform(MockMvcRequestBuilders.multipart("/files/cache")
       .file(file)
+      .contentType(MediaType.MULTIPART_FORM_DATA)
       .with(request -> {
         request.setMethod(HttpMethod.POST.name());
         return request;
@@ -114,7 +117,7 @@ class OssFileControllerTest {
       .andDo(result -> ossFile.setOriginOssUrl(result.getResponse().getHeader(HttpHeaders.LOCATION)));
     // create oss-file
     final List<String> locations = new ArrayList<>();
-    mockMvc.perform(post("/files")
+    mockMvc.perform(post("/files/create")
       .contentType(MediaType.APPLICATION_JSON)
       .content(objectMapper.writeValueAsString(ossFile))
       .accept(MediaType.APPLICATION_JSON))
@@ -130,7 +133,7 @@ class OssFileControllerTest {
       .andExpect(jsonPath("$.data.id").exists())
       .andDo(result -> log.info("Detail success: {}", result.getResponse().getContentAsString()));
     // GET detail not found
-    mockMvc.perform(get("/files/999"))
+    mockMvc.perform(get("/files/detail/999"))
       .andExpect(status().isNotFound());
     // download
     mockMvc.perform(get(locations.get(0) + "/stream"))
@@ -139,12 +142,12 @@ class OssFileControllerTest {
       .andExpect(content().bytes(file.getBytes()))
       .andDo(result -> log.info("Download success: {}", locations.get(0) + "/stream"));
     // download not found
-    mockMvc.perform(get("/files/999/stream")
+    mockMvc.perform(get("/files/detail/999/stream")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isNotFound());
     // page
-    mockMvc.perform(get("/files")
+    mockMvc.perform(get("/files/page")
       .param("name", "test")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
@@ -153,7 +156,7 @@ class OssFileControllerTest {
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/files")
+    mockMvc.perform(get("/files/page")
       .param("ownerId", String.valueOf(100))
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
@@ -162,7 +165,7 @@ class OssFileControllerTest {
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/files")
+    mockMvc.perform(get("/files/page")
       .param("directory", "/courses/100")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
@@ -171,7 +174,7 @@ class OssFileControllerTest {
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/files")
+    mockMvc.perform(get("/files/page")
       .param("resourceType", "courses")
       .param("resourceId", "100")
       .contentType(MediaType.APPLICATION_JSON)
@@ -184,10 +187,11 @@ class OssFileControllerTest {
 
     // DELETE Delete
     for (String location : locations) {
-      mockMvc.perform(delete(location))
+      location = location.replace("detail", "delete");
+      mockMvc.perform(post(location))
         .andExpect(status().isNoContent())
         .andDo(result -> log.info("Delete success: {}", result.getResponse().getContentAsString()));
-      mockMvc.perform(delete(location))
+      mockMvc.perform(post(location))
         .andExpect(status().isNotFound())
         .andDo(result -> log.info("Delete failed because not found: {}", result.getResponse().getContentAsString()));
     }

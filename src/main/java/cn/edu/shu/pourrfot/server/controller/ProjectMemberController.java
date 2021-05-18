@@ -37,7 +37,7 @@ public class ProjectMemberController {
   @ApiOperation(value = "project-members page",
     notes = "admin users can access all projects' members;\n" +
       "teacher and student users can only access their own projects' members.")
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/page", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Page<ProjectMemberUser>>> page(@RequestParam(required = false, defaultValue = "1") Integer current,
                                                               @RequestParam(required = false, defaultValue = "10") Integer size,
                                                               @PathVariable @NotNull Integer projectId) {
@@ -52,7 +52,7 @@ public class ProjectMemberController {
   @ApiOperation(value = "project-member detail",
     notes = "admin users can access all projects' members;\n" +
       "teacher and student users can only access their own projects' members.")
-  @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/detail/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ApiResponses({@ApiResponse(code = 404, message = "Can't find project-member with the specific id", response = Result.class)})
   public ResponseEntity<Result<ProjectMemberUser>> detail(@PathVariable @NotNull Integer projectId,
                                                           @PathVariable @NotNull Integer id) {
@@ -64,20 +64,20 @@ public class ProjectMemberController {
   @ApiOperation(value = "create project-member",
     notes = "admin users is unrestricted but can't create a project-member with student owner;\n" +
       "teacher users can only create own projects' members.")
-  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.CREATED)
   public ResponseEntity<Result<ProjectMember>> create(@PathVariable @NotNull Integer projectId,
                                                       @NotNull @RequestBody @Validated ProjectMember projectMember) {
     projectMemberService.save(projectMember.setProjectId(projectId));
     return ResponseEntity.created(
-      URI.create(String.format("%s/projects/%d/members/%d", contextPath, projectMember.getProjectId(), projectMember.getId())))
+      URI.create(String.format("%s/projects/%d/members/detail/%d", contextPath, projectMember.getProjectId(), projectMember.getId())))
       .body(Result.createdOk("Create project-member success, please pay attention to the LOCATION in headers", projectMember));
   }
 
   @ApiOperation(value = "update project-member",
     notes = "admin users is unrestricted;\n" +
       "teacher users can only update own projects' members.")
-  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<ProjectMember>> update(@PathVariable @NotNull Integer projectId,
                                                       @PathVariable @NotNull Integer id,
                                                       @RequestBody @Validated @NotNull ProjectMember projectMember) {
@@ -88,7 +88,7 @@ public class ProjectMemberController {
   @ApiOperation(value = "delete project-member",
     notes = "admin users is unrestricted;\n" +
       "teacher users can only delete own projects' members.")
-  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete project-member success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the project-member with the specific id to delete", response = Result.class)})

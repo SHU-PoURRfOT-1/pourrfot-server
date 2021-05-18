@@ -22,7 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -62,7 +63,7 @@ class PourrfotUserControllerTest {
   void integrationTest() throws Exception {
     final List<String> locations = new ArrayList<>(users.length);
     for (PourrfotUser user : users) {
-      mockMvc.perform(post("/users")
+      mockMvc.perform(post("/users/create")
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(user))
         .accept(MediaType.APPLICATION_JSON))
@@ -82,10 +83,10 @@ class PourrfotUserControllerTest {
         .andDo(result -> log.info("Detail success: {}", result.getResponse().getContentAsString()));
     }
     // GET detail not found
-    mockMvc.perform(get("/users/999"))
+    mockMvc.perform(get("/users/detail/999"))
       .andExpect(status().isNotFound());
     // GET page
-    mockMvc.perform(get("/users")
+    mockMvc.perform(get("/users/page")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
@@ -94,7 +95,7 @@ class PourrfotUserControllerTest {
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(users.length)))
       .andExpect(jsonPath("$.data.records[0].password").value("******"))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/users")
+    mockMvc.perform(get("/users/page")
       .param("role", RoleEnum.student.getValue())
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
@@ -103,7 +104,7 @@ class PourrfotUserControllerTest {
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/users")
+    mockMvc.perform(get("/users/page")
       .param("sex", SexEnum.male.getValue())
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
@@ -112,7 +113,7 @@ class PourrfotUserControllerTest {
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(2)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/users")
+    mockMvc.perform(get("/users/page")
       .param("username", "student")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
@@ -122,7 +123,7 @@ class PourrfotUserControllerTest {
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
     // PUT update
-    mockMvc.perform(put(locations.get(0))
+    mockMvc.perform(post(locations.get(0).replace("detail", "update"))
       .contentType(MediaType.APPLICATION_JSON)
       .content(objectMapper.writeValueAsString(users[0].setNickname("UPDATE")))
       .accept(MediaType.APPLICATION_JSON))
@@ -133,10 +134,11 @@ class PourrfotUserControllerTest {
       .andDo(result -> log.info("Update success: {}", result.getResponse().getContentAsString()));
     // DELETE Delete
     for (String location : locations) {
-      mockMvc.perform(delete(location))
+      location = location.replace("detail", "delete");
+      mockMvc.perform(post(location))
         .andExpect(status().isNoContent())
         .andDo(result -> log.info("Delete success: {}", result.getResponse().getContentAsString()));
-      mockMvc.perform(delete(location))
+      mockMvc.perform(post(location))
         .andExpect(status().isNotFound())
         .andDo(result -> log.info("Delete failed because not found: {}", result.getResponse().getContentAsString()));
     }
