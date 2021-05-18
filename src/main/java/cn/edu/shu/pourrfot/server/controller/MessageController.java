@@ -80,7 +80,7 @@ public class MessageController {
       .body(Result.createdOk("Create message success, please pay attention to the LOCATION in headers", message));
   }
 
-  @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete message success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the message with the specific id to delete", response = Result.class)})

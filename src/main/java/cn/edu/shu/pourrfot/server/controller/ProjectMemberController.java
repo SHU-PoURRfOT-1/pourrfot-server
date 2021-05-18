@@ -77,7 +77,7 @@ public class ProjectMemberController {
   @ApiOperation(value = "update project-member",
     notes = "admin users is unrestricted;\n" +
       "teacher users can only update own projects' members.")
-  @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<ProjectMember>> update(@PathVariable @NotNull Integer projectId,
                                                       @PathVariable @NotNull Integer id,
                                                       @RequestBody @Validated @NotNull ProjectMember projectMember) {
@@ -88,7 +88,7 @@ public class ProjectMemberController {
   @ApiOperation(value = "delete project-member",
     notes = "admin users is unrestricted;\n" +
       "teacher users can only delete own projects' members.")
-  @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete project-member success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the project-member with the specific id to delete", response = Result.class)})

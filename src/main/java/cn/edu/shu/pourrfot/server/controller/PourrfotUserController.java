@@ -73,14 +73,14 @@ public class PourrfotUserController {
       .body(Result.createdOk("Create user success, please pay attention to the LOCATION in headers", pourrfotUser));
   }
 
-  @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<PourrfotUser>> update(@PathVariable @NotNull Integer id,
                                                      @RequestBody @Validated @NotNull PourrfotUser pourrfotUser) {
     pourrfotUserService.updateById(pourrfotUser.setId(id));
     return ResponseEntity.ok(Result.normalOk("Update user success", pourrfotUser));
   }
 
-  @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete user success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the user with the specific id to delete", response = Result.class)})

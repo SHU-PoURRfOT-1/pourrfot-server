@@ -82,7 +82,7 @@ public class CourseGroupController {
     notes = "admin users is unrestricted;\n" +
       "teacher and student can only update a course-group with own course;\n" +
       "course_id is an immutable field;")
-  @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<CourseGroup>> update(@PathVariable @NotNull Integer courseId,
                                                     @PathVariable @NotNull Integer id,
                                                     @RequestBody @Validated @NotNull CourseGroup courseGroup) {
@@ -94,7 +94,7 @@ public class CourseGroupController {
     notes = "admin users is unrestricted; teacher and student can only delete a course with own course;\n" +
       "student can't delete the group when the course's grouping_method is STRICT_CONTROLLED particularly;\n" +
       "all related students will be updated.")
-  @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete course-group success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the course-group with the specific id to delete", response = Result.class)})

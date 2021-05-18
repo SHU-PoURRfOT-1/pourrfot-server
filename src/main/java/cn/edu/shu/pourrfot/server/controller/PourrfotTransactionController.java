@@ -75,14 +75,14 @@ public class PourrfotTransactionController {
       .body(Result.createdOk("Create student-transactions success, please pay attention to the LOCATION in headers", pourrfotTransaction));
   }
 
-  @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<PourrfotTransaction>> update(@PathVariable @NotNull Integer id,
                                                             @RequestBody @Validated @NotNull PourrfotTransaction pourrfotTransaction) {
     pourrfotTransactionService.updateById(pourrfotTransaction.setId(id));
     return ResponseEntity.ok(Result.normalOk("Update student-transactions success", pourrfotTransaction));
   }
 
-  @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete student-transactions success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the student-transactions with the specific id to delete", response = Result.class)})

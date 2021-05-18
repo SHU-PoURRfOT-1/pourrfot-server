@@ -83,7 +83,7 @@ public class ProjectController {
   @ApiOperation(value = "update project",
     notes = "admin users is unrestricted but can't update a project with student owner;\n" +
       "only project owner teacher can update project with own id.")
-  @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Project>> update(@PathVariable @NotNull Integer id,
                                                 @RequestBody @Validated @NotNull Project project) {
     projectService.updateById(project.setId(id));
@@ -93,7 +93,7 @@ public class ProjectController {
   @ApiOperation(value = "update project",
     notes = "admin users is unrestricted;\n" +
       "only project owner teacher can update project.")
-  @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete project success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the project with the specific id to delete", response = Result.class)})

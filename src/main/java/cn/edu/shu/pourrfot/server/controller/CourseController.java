@@ -92,7 +92,7 @@ public class CourseController {
       "teacher can only update a course with own teacher id;\n" +
       "teacher_id is an immutable field.")
   @SecurityRequirements({@SecurityRequirement(name = "teacher"), @SecurityRequirement(name = "admin")})
-  @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Course>> update(@PathVariable @NotNull Integer id,
                                                @RequestBody @Validated @NotNull Course course) {
     courseService.updateById(course.setId(id));
@@ -104,7 +104,7 @@ public class CourseController {
       "teacher can only delete a course with own teacher id;\n" +
       "all related groups and students will be deleted.")
   @SecurityRequirements({@SecurityRequirement(name = "teacher"), @SecurityRequirement(name = "admin")})
-  @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete course success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the course with the specific id to delete", response = Result.class)})

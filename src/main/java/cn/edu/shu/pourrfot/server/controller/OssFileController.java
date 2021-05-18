@@ -117,7 +117,7 @@ public class OssFileController {
     return ResponseEntity.created(URI.create(ossUrl)).body(Result.normalOk("Upload file success", ossUrl));
   }
 
-  @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete oss-url success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the oss-url with the specific id to delete", response = Result.class)})

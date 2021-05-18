@@ -86,7 +86,7 @@ public class CourseStudentController {
       "teacher and student can only update a course-student with own course;\n" +
       "course_id, student_id and student_name is immutable fields;\n" +
       "score will be 0 when student is updating.")
-  @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<CourseStudent>> update(@PathVariable @NotNull Integer courseId,
                                                       @PathVariable @NotNull Integer id,
                                                       @RequestBody @Validated @NotNull CourseStudent courseStudent) {
@@ -97,7 +97,7 @@ public class CourseStudentController {
   @ApiOperation(value = "update course-student",
     notes = "admin users is unrestricted;\n" +
       "teacher can only delete a course-student with own course.")
-  @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete course-student success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the course-student with the specific id to delete", response = Result.class)})
