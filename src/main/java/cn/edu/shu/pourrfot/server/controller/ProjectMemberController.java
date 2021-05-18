@@ -66,14 +66,15 @@ public class ProjectMemberController {
     notes = "admin users is unrestricted but can't create a project-member with student owner;\n" +
       "teacher users can only create own projects' members.")
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(code = HttpStatus.CREATED)
   @PreAuthorize("hasAnyAuthority('admin','teacher')")
   public ResponseEntity<Result<ProjectMember>> create(@PathVariable @NotNull Integer projectId,
                                                       @NotNull @RequestBody @Validated ProjectMember projectMember) {
     projectMemberService.save(projectMember.setProjectId(projectId));
-    return ResponseEntity.created(
-      URI.create(String.format("%s/projects/%d/members/detail/%d", contextPath, projectMember.getProjectId(), projectMember.getId())))
-      .body(Result.createdOk("Create project-member success, please pay attention to the LOCATION in headers", projectMember));
+    return ResponseEntity.ok()
+      .location(URI.create(String.format("%s/projects/%d/members/detail/%d", contextPath, projectMember.getProjectId(),
+        projectMember.getId())))
+      .body(Result.createdOk("Create project-member success, please pay attention to the LOCATION in headers",
+        projectMember));
   }
 
   @ApiOperation(value = "update project-member",
@@ -92,13 +93,12 @@ public class ProjectMemberController {
     notes = "admin users is unrestricted;\n" +
       "teacher users can only delete own projects' members.")
   @PostMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  @ApiResponses({@ApiResponse(code = 204, message = "Delete project-member success", response = Result.class),
+  @ApiResponses({@ApiResponse(code = 200, message = "Delete project-member success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the project-member with the specific id to delete", response = Result.class)})
   @PreAuthorize("hasAnyAuthority('admin','teacher')")
   public ResponseEntity<?> delete(@PathVariable @NotNull Integer projectId,
                                   @PathVariable @NotNull Integer id) {
-    return projectMemberService.removeById(id) ? ResponseEntity.status(HttpStatus.NO_CONTENT)
+    return projectMemberService.removeById(id) ? ResponseEntity.ok()
       .body(Result.deleteOk("Delete project-member success")) :
       ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(Result.notFound("Can't find the project-member with the specific id to delete"));

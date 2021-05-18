@@ -78,11 +78,11 @@ public class CourseController {
     notes = "admin users is unrestricted;\n" +
       "teacher can only create a course with own teacher id.")
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(code = HttpStatus.CREATED)
   @PreAuthorize("hasAnyAuthority('admin','teacher')")
   public ResponseEntity<Result<Course>> create(@NotNull @RequestBody @Validated Course course) {
     courseService.save(course);
-    return ResponseEntity.created(URI.create(String.format("%s/courses/detail/%d", contextPath, course.getId())))
+    return ResponseEntity.ok()
+      .location(URI.create(String.format("%s/courses/detail/%d", contextPath, course.getId())))
       .body(Result.createdOk("Create course success, please pay attention to the LOCATION in headers", course));
   }
 
@@ -103,13 +103,11 @@ public class CourseController {
       "teacher can only delete a course with own teacher id;\n" +
       "all related groups and students will be deleted.")
   @PostMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  @ApiResponses({@ApiResponse(code = 204, message = "Delete course success", response = Result.class),
+  @ApiResponses({@ApiResponse(code = 200, message = "Delete course success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the course with the specific id to delete", response = Result.class)})
   @PreAuthorize("hasAnyAuthority('admin','teacher')")
   public ResponseEntity<Result<?>> delete(@PathVariable @NotNull Integer id) {
-    return courseService.removeById(id) ? ResponseEntity.status(HttpStatus.NO_CONTENT)
-      .body(Result.deleteOk("Delete course success")) :
+    return courseService.removeById(id) ? ResponseEntity.ok(Result.deleteOk("Delete course success")) :
       ResponseEntity.status(HttpStatus.NOT_FOUND).body(Result.notFound("Can't find the course with the specific id to delete"));
   }
 }

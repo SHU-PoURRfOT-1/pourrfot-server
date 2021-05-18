@@ -67,12 +67,12 @@ public class PourrfotTransactionController {
   }
 
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(code = HttpStatus.CREATED)
   public ResponseEntity<Result<PourrfotTransaction>> create(@NotNull @RequestBody @Validated PourrfotTransaction pourrfotTransaction) {
     pourrfotTransactionService.save(pourrfotTransaction);
-    return ResponseEntity.created(
-      URI.create(String.format("%s/transactions/detail/%d", contextPath, pourrfotTransaction.getId())))
-      .body(Result.createdOk("Create student-transactions success, please pay attention to the LOCATION in headers", pourrfotTransaction));
+    return ResponseEntity.ok()
+      .location(URI.create(String.format("%s/transactions/detail/%d", contextPath, pourrfotTransaction.getId())))
+      .body(Result.createdOk("Create student-transactions success, please pay attention to the LOCATION in headers",
+        pourrfotTransaction));
   }
 
   @PostMapping(value = "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -83,11 +83,10 @@ public class PourrfotTransactionController {
   }
 
   @PostMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete student-transactions success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the student-transactions with the specific id to delete", response = Result.class)})
   public ResponseEntity<Result<?>> delete(@PathVariable @NotNull Integer id) {
-    return pourrfotTransactionService.removeById(id) ? ResponseEntity.status(HttpStatus.NO_CONTENT)
+    return pourrfotTransactionService.removeById(id) ? ResponseEntity.ok()
       .body(Result.deleteOk("Delete student-transactions success")) :
       ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(Result.notFound("Can't find the student-transactions with the specific id to delete"));

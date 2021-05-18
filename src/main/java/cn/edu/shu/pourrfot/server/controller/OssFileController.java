@@ -101,12 +101,13 @@ public class OssFileController {
   }
 
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(code = HttpStatus.CREATED)
   public ResponseEntity<Result<OssFile>> create(@NotNull @RequestBody @Validated OssFile ossFile) {
     // origin oss url in header#location is encoded. It needs to be decoded
     ossFileService.save(ossFile.setOriginOssUrl(URLDecoder.decode(ossFile.getOriginOssUrl(), StandardCharsets.UTF_8)));
-    return ResponseEntity.created(URI.create(String.format("%s/files/detail/%d", contextPath, ossFile.getId())))
-      .body(Result.createdOk("Create oss-file success, please pay attention to the LOCATION in headers", ossFile));
+    return ResponseEntity.ok()
+      .location(URI.create(String.format("%s/files/detail/%d", contextPath, ossFile.getId())))
+      .body(Result.createdOk("Create oss-file success, please pay attention to the LOCATION in headers",
+        ossFile));
   }
 
   @PostMapping(value = "/cache", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -118,11 +119,10 @@ public class OssFileController {
   }
 
   @PostMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  @ApiResponses({@ApiResponse(code = 204, message = "Delete oss-url success", response = Result.class),
+  @ApiResponses({@ApiResponse(code = 200, message = "Delete oss-url success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the oss-url with the specific id to delete", response = Result.class)})
   public ResponseEntity<Result<?>> delete(@PathVariable @NotNull Integer id) {
-    return ossFileService.removeById(id) ? ResponseEntity.status(HttpStatus.NO_CONTENT)
+    return ossFileService.removeById(id) ? ResponseEntity.ok()
       .body(Result.deleteOk("Delete oss-url success")) :
       ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(Result.notFound("Can't find the oss-url with the specific id to delete"));

@@ -154,7 +154,7 @@ class CourseStudentControllerTest {
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(courseStudent))
         .accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isCreated())
+        .andExpect(status().isOk())
         .andExpect(header().exists(HttpHeaders.LOCATION))
         .andDo(result -> courseStudentLocations.add(Objects.requireNonNull(result.getResponse()
           .getHeader(HttpHeaders.LOCATION))
@@ -213,7 +213,7 @@ class CourseStudentControllerTest {
     for (String location : courseStudentLocations) {
       location = location.replace("detail", "delete");
       mockMvc.perform(post(location))
-        .andExpect(status().isNoContent())
+        .andExpect(status().isOk())
         .andDo(result -> log.info("Delete success: {}", result.getResponse().getContentAsString()));
       mockMvc.perform(post(location))
         .andExpect(status().isNotFound())

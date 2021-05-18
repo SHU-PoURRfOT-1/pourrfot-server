@@ -73,19 +73,18 @@ public class MessageController {
   }
 
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(code = HttpStatus.CREATED)
   public ResponseEntity<Result<Message>> create(@NotNull @RequestBody @Validated Message message) {
     messageService.save(message);
-    return ResponseEntity.created(URI.create(String.format("%s/messages/detail/%d", contextPath, message.getId())))
+    return ResponseEntity.ok()
+      .location(URI.create(String.format("%s/messages/detail/%d", contextPath, message.getId())))
       .body(Result.createdOk("Create message success, please pay attention to the LOCATION in headers", message));
   }
 
   @PostMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  @ApiResponses({@ApiResponse(code = 204, message = "Delete message success", response = Result.class),
+  @ApiResponses({@ApiResponse(code = 200, message = "Delete message success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the message with the specific id to delete", response = Result.class)})
   public ResponseEntity<Result<?>> delete(@PathVariable @NotNull Integer id) {
-    return messageService.removeById(id) ? ResponseEntity.status(HttpStatus.NO_CONTENT)
+    return messageService.removeById(id) ? ResponseEntity.ok()
       .body(Result.deleteOk("Delete message success")) :
       ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(Result.notFound("Can't find the message with the specific id to delete"));

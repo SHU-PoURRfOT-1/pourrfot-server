@@ -73,13 +73,14 @@ public class CourseGroupController {
       "teacher and student can only create a course-group with own course;\n" +
       "student can't create a group when the course's grouping_method is NOT_GROUPING or STRICT_CONTROLLED particularly.")
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(code = HttpStatus.CREATED)
   @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   public ResponseEntity<Result<CourseGroup>> create(@NotNull @RequestBody @Validated CourseGroup courseGroup) {
     courseGroupService.save(courseGroup);
-    return ResponseEntity.created(
-      URI.create(String.format("%s/courses/%d/groups/detail/%d", contextPath, courseGroup.getCourseId(), courseGroup.getId())))
-      .body(Result.createdOk("Create course-group success, please pay attention to the LOCATION in headers", courseGroup));
+    return ResponseEntity.ok()
+      .location(URI.create(String.format("%s/courses/%d/groups/detail/%d", contextPath, courseGroup.getCourseId(),
+        courseGroup.getId())))
+      .body(Result.createdOk("Create course-group success, please pay attention to the LOCATION in headers",
+        courseGroup));
   }
 
   @ApiOperation(value = "update course-group",
@@ -101,11 +102,11 @@ public class CourseGroupController {
       "all related students will be updated.")
   @PostMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  @ApiResponses({@ApiResponse(code = 204, message = "Delete course-group success", response = Result.class),
+  @ApiResponses({@ApiResponse(code = 200, message = "Delete course-group success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the course-group with the specific id to delete", response = Result.class)})
   @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   public ResponseEntity<?> delete(@PathVariable @NotNull Integer courseId, @PathVariable @NotNull Integer id) {
-    return courseGroupService.removeById(id) ? ResponseEntity.status(HttpStatus.NO_CONTENT)
+    return courseGroupService.removeById(id) ? ResponseEntity.ok()
       .body(Result.deleteOk("Delete course-group success")) :
       ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(Result.notFound("Can't find the course-group with the specific id to delete"));

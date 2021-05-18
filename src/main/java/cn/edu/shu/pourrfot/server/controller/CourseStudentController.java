@@ -74,13 +74,14 @@ public class CourseStudentController {
       "teacher can only create a course-student with own course;\n" +
       "student can't add a group when the course's grouping_method is NOT_GROUPING or STRICT_CONTROLLED particularly.")
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(code = HttpStatus.CREATED)
   @PreAuthorize("hasAnyAuthority('admin','teacher')")
   public ResponseEntity<Result<CourseStudent>> create(@NotNull @RequestBody @Validated CourseStudent courseStudent) {
     courseStudentService.save(courseStudent);
-    return ResponseEntity.created(
-      URI.create(String.format("%s/courses/%d/students/detail/%d", contextPath, courseStudent.getCourseId(), courseStudent.getId())))
-      .body(Result.createdOk("Create course-student success, please pay attention to the LOCATION in headers", courseStudent));
+    return ResponseEntity.ok()
+      .location(URI.create(String.format("%s/courses/%d/students/detail/%d", contextPath, courseStudent.getCourseId(),
+        courseStudent.getId())))
+      .body(Result.createdOk("Create course-student success, please pay attention to the LOCATION in headers",
+        courseStudent));
   }
 
   @ApiOperation(value = "update course-student",
@@ -101,12 +102,11 @@ public class CourseStudentController {
     notes = "admin users is unrestricted;\n" +
       "teacher can only delete a course-student with own course.")
   @PostMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  @ApiResponses({@ApiResponse(code = 204, message = "Delete course-student success", response = Result.class),
+  @ApiResponses({@ApiResponse(code = 200, message = "Delete course-student success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the course-student with the specific id to delete", response = Result.class)})
   @PreAuthorize("hasAnyAuthority('admin','teacher')")
   public ResponseEntity<?> delete(@PathVariable @NotNull Integer courseId, @PathVariable @NotNull Integer id) {
-    return courseStudentService.removeById(id) ? ResponseEntity.status(HttpStatus.NO_CONTENT)
+    return courseStudentService.removeById(id) ? ResponseEntity.ok()
       .body(Result.deleteOk("Delete course-student success")) :
       ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(Result.notFound("Can't find the course-student with the specific id to delete"));
