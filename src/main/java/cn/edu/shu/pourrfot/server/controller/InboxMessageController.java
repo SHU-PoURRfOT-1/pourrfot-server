@@ -30,7 +30,7 @@ public class InboxMessageController {
   @Autowired
   private InboxMessageService inboxMessageService;
 
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/page", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Page<SingleMessage>>> list(@RequestParam(required = false, defaultValue = "1") @Min(1)
                                                             Integer current,
                                                           @RequestParam(required = false, defaultValue = "10") @Min(1) @Max(1000)
@@ -46,7 +46,7 @@ public class InboxMessageController {
       inboxMessageService.messagePage(sender, receiver, title, isUrgent, isRegular, haveRead, current, size)));
   }
 
-  @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/detail/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ApiResponses({@ApiResponse(code = 404, message = "Can't find message with the specific id", response = Result.class)})
   public ResponseEntity<Result<SingleMessage>> detail(@PathVariable Integer id) {
     final SingleMessage found = inboxMessageService.getMessageByInboxMessageId(id);

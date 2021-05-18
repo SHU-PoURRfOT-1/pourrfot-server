@@ -36,8 +36,8 @@ public class ProjectController {
 
   @ApiOperation(value = "projects page",
     notes = "admin users can access all projects;\n" +
-      "teacher and student users can only access their own projects;\n")
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+      "teacher and student users can only access their own projects.")
+  @GetMapping(value = "/page", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Page<Project>>> page(@RequestParam(required = false, defaultValue = "1") Integer current,
                                                     @RequestParam(required = false, defaultValue = "10") Integer size,
                                                     @RequestParam(required = false) String projectName,
@@ -59,8 +59,8 @@ public class ProjectController {
 
   @ApiOperation(value = "project detail",
     notes = "admin users can access all projects;\n" +
-      "teacher and student users can only access their own projects;\n")
-  @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+      "teacher and student users can only access their own projects.")
+  @GetMapping(value = "/detail/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ApiResponses({@ApiResponse(code = 404, message = "Can't find project with the specific id", response = Result.class)})
   public ResponseEntity<Result<Project>> detail(@PathVariable @NotNull Integer id) {
     final Project found = projectService.getById(id);
@@ -71,19 +71,19 @@ public class ProjectController {
   @ApiOperation(value = "create project",
     notes = "admin users is unrestricted but can't create a project with student owner;\n" +
       "only teacher user can create a project with own id.")
-  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.CREATED)
   public ResponseEntity<Result<Project>> create(@NotNull @RequestBody @Validated Project project) {
     projectService.save(project);
     return ResponseEntity.created(
-      URI.create(String.format("%s/projects/%d", contextPath, project.getId())))
+      URI.create(String.format("%s/projects/detail/%d", contextPath, project.getId())))
       .body(Result.createdOk("Create project success, please pay attention to the LOCATION in headers", project));
   }
 
   @ApiOperation(value = "update project",
     notes = "admin users is unrestricted but can't update a project with student owner;\n" +
       "only project owner teacher can update project with own id.")
-  @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Project>> update(@PathVariable @NotNull Integer id,
                                                 @RequestBody @Validated @NotNull Project project) {
     projectService.updateById(project.setId(id));
@@ -93,7 +93,7 @@ public class ProjectController {
   @ApiOperation(value = "update project",
     notes = "admin users is unrestricted;\n" +
       "only project owner teacher can update project.")
-  @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete project success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the project with the specific id to delete", response = Result.class)})

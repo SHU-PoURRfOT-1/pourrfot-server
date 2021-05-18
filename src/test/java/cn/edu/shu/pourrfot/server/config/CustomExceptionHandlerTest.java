@@ -25,7 +25,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -59,7 +58,7 @@ class CustomExceptionHandlerTest {
       .teacherId(200)
       .build();
     given(courseMapper.selectById(anyInt())).willReturn(found);
-    mockMvc.perform(put("/courses/100")
+    mockMvc.perform(post("/courses/update/100")
       .contentType(MediaType.APPLICATION_JSON)
       .content(objectMapper.writeValueAsString(toUpdate))
       .accept(MediaType.APPLICATION_JSON))
@@ -78,7 +77,7 @@ class CustomExceptionHandlerTest {
       .teacherId(200)
       .build();
     given(pourrfotUserMapper.selectById(anyInt())).willReturn(null);
-    mockMvc.perform(post("/courses")
+    mockMvc.perform(post("/courses/create")
       .contentType(MediaType.APPLICATION_JSON)
       .content(objectMapper.writeValueAsString(toCreate))
       .accept(MediaType.APPLICATION_JSON))
@@ -100,7 +99,7 @@ class CustomExceptionHandlerTest {
       .id(200)
       .role(RoleEnum.student)
       .build());
-    mockMvc.perform(post("/courses")
+    mockMvc.perform(post("/courses/create")
       .contentType(MediaType.APPLICATION_JSON)
       .content(objectMapper.writeValueAsString(toCreate))
       .accept(MediaType.APPLICATION_JSON))
@@ -123,7 +122,7 @@ class CustomExceptionHandlerTest {
       .role(RoleEnum.teacher)
       .build());
     given(courseMapper.insert(any(Course.class))).willThrow(DuplicateKeyException.class);
-    mockMvc.perform(post("/courses")
+    mockMvc.perform(post("/courses/create")
       .contentType(MediaType.APPLICATION_JSON)
       .content(objectMapper.writeValueAsString(toCreate))
       .accept(MediaType.APPLICATION_JSON))

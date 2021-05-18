@@ -26,7 +26,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -83,7 +84,7 @@ class CourseControllerTest {
     final List<String> locations = new ArrayList<>(newCourses.length);
     // POST create
     for (Course newCourse : newCourses) {
-      mockMvc.perform(post("/courses")
+      mockMvc.perform(post("/courses/create")
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(newCourse))
         .accept(MediaType.APPLICATION_JSON))
@@ -102,10 +103,10 @@ class CourseControllerTest {
         .andDo(result -> log.info("Detail success: {}", result.getResponse().getContentAsString()));
     }
     // GET detail not found
-    mockMvc.perform(get("/courses/999"))
+    mockMvc.perform(get("/courses/detail/999"))
       .andExpect(status().isNotFound());
     // GET page
-    mockMvc.perform(get("/courses")
+    mockMvc.perform(get("/courses/page")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
@@ -113,7 +114,7 @@ class CourseControllerTest {
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(newCourses.length)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/courses")
+    mockMvc.perform(get("/courses/page")
       .param("teacherId", String.valueOf(teachers[0].getId()))
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
@@ -122,7 +123,7 @@ class CourseControllerTest {
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/courses")
+    mockMvc.perform(get("/courses/page")
       .param("term", "term1")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
@@ -131,7 +132,7 @@ class CourseControllerTest {
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/courses")
+    mockMvc.perform(get("/courses/page")
       .param("courseName", "courseName1")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
@@ -140,7 +141,7 @@ class CourseControllerTest {
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get("/courses")
+    mockMvc.perform(get("/courses/page")
       .param("courseCode", "courseCode1")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
@@ -150,7 +151,7 @@ class CourseControllerTest {
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
     // PUT update
-    mockMvc.perform(put(locations.get(0))
+    mockMvc.perform(post(locations.get(0).replace("detail", "update"))
       .contentType(MediaType.APPLICATION_JSON)
       .content(objectMapper.writeValueAsString(newCourses[0].setTerm("TEST")))
       .accept(MediaType.APPLICATION_JSON))
@@ -161,10 +162,11 @@ class CourseControllerTest {
       .andDo(result -> log.info("Update success: {}", result.getResponse().getContentAsString()));
     // DELETE Delete
     for (String location : locations) {
-      mockMvc.perform(delete(location))
+      location = location.replace("detail", "delete");
+      mockMvc.perform(post(location))
         .andExpect(status().isNoContent())
         .andDo(result -> log.info("Delete success: {}", result.getResponse().getContentAsString()));
-      mockMvc.perform(delete(location))
+      mockMvc.perform(post(location))
         .andExpect(status().isNotFound())
         .andDo(result -> log.info("Delete failed because not found: {}", result.getResponse().getContentAsString()));
     }

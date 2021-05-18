@@ -25,7 +25,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -71,7 +72,7 @@ class CourseGroupControllerTest {
     final List<String> locations = new ArrayList<>(newCourseGroups.length);
     // POST create
     for (CourseGroup newCourseGroup : newCourseGroups) {
-      mockMvc.perform(post(String.format("/courses/%d/groups", course.getId()))
+      mockMvc.perform(post(String.format("/courses/%d/groups/create", course.getId()))
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(newCourseGroup))
         .accept(MediaType.APPLICATION_JSON)
@@ -92,10 +93,10 @@ class CourseGroupControllerTest {
         .andDo(result -> log.info("Detail success: {}", result.getResponse().getContentAsString()));
     }
     // GET detail not found
-    mockMvc.perform(get("/courses/1/groups/999"))
+    mockMvc.perform(get("/courses/1/groups/detail/999"))
       .andExpect(status().isNotFound());
     // GET page
-    mockMvc.perform(get(String.format("/courses/%d/groups", course.getId()))
+    mockMvc.perform(get(String.format("/courses/%d/groups/page", course.getId()))
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
@@ -103,7 +104,7 @@ class CourseGroupControllerTest {
       .andExpect(jsonPath("$.data.records").isArray())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(newCourseGroups.length)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
-    mockMvc.perform(get(String.format("/courses/%d/groups", course.getId()))
+    mockMvc.perform(get(String.format("/courses/%d/groups/page", course.getId()))
       .param("groupName", "courseName1")
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
@@ -114,7 +115,7 @@ class CourseGroupControllerTest {
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
     // PUT update
-    mockMvc.perform(put(locations.get(0))
+    mockMvc.perform(post(locations.get(0).replace("detail", "update"))
       .contentType(MediaType.APPLICATION_JSON)
       .content(objectMapper.writeValueAsString(newCourseGroups[0].setGroupName("UPDATE")))
       .accept(MediaType.APPLICATION_JSON))
@@ -125,10 +126,11 @@ class CourseGroupControllerTest {
       .andDo(result -> log.info("Update success: {}", result.getResponse().getContentAsString()));
     // DELETE Delete
     for (String location : locations) {
-      mockMvc.perform(delete(location))
+      location = location.replace("detail", "delete");
+      mockMvc.perform(post(location))
         .andExpect(status().isNoContent())
         .andDo(result -> log.info("Delete success: {}", result.getResponse().getContentAsString()));
-      mockMvc.perform(delete(location))
+      mockMvc.perform(post(location))
         .andExpect(status().isNotFound())
         .andDo(result -> log.info("Delete failed because not found: {}", result.getResponse().getContentAsString()));
     }

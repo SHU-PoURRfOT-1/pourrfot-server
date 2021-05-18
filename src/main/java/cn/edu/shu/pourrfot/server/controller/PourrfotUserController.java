@@ -36,7 +36,7 @@ public class PourrfotUserController {
   @Autowired
   private PourrfotUserService pourrfotUserService;
 
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/page", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Page<PourrfotUser>>> page(@RequestParam(required = false, defaultValue = "1") Integer current,
                                                          @RequestParam(required = false, defaultValue = "10") Integer size,
                                                          @RequestParam(required = false, value = "role") RoleEnum roleEnum,
@@ -56,7 +56,7 @@ public class PourrfotUserController {
       pourrfotUserService.page(new Page<>(current, size), query)));
   }
 
-  @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/detail/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ApiResponses({@ApiResponse(code = 404, message = "Can't find user with the specific id", response = Result.class)})
   public ResponseEntity<Result<PourrfotUser>> detail(@PathVariable @NotNull Integer id) {
     final PourrfotUser found = pourrfotUserService.getById(id);
@@ -64,23 +64,23 @@ public class PourrfotUserController {
       ResponseEntity.status(HttpStatus.NOT_FOUND).body(Result.notFound("Can't found user with the specific id"));
   }
 
-  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.CREATED)
   public ResponseEntity<Result<PourrfotUser>> create(@NotNull @RequestBody @Validated PourrfotUser pourrfotUser) {
     pourrfotUserService.save(pourrfotUser);
     return ResponseEntity.created(
-      URI.create(String.format("%s/users/%d", contextPath, pourrfotUser.getId())))
+      URI.create(String.format("%s/users/detail/%d", contextPath, pourrfotUser.getId())))
       .body(Result.createdOk("Create user success, please pay attention to the LOCATION in headers", pourrfotUser));
   }
 
-  @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<PourrfotUser>> update(@PathVariable @NotNull Integer id,
                                                      @RequestBody @Validated @NotNull PourrfotUser pourrfotUser) {
     pourrfotUserService.updateById(pourrfotUser.setId(id));
     return ResponseEntity.ok(Result.normalOk("Update user success", pourrfotUser));
   }
 
-  @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete user success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the user with the specific id to delete", response = Result.class)})
