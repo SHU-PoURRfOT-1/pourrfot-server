@@ -7,8 +7,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.*;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -78,9 +77,9 @@ public class CourseController {
   @ApiOperation(value = "create course",
     notes = "admin users is unrestricted;\n" +
       "teacher can only create a course with own teacher id.")
-  @SecurityRequirements({@SecurityRequirement(name = "teacher"), @SecurityRequirement(name = "admin")})
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.CREATED)
+  @PreAuthorize("hasAnyAuthority('admin','teacher')")
   public ResponseEntity<Result<Course>> create(@NotNull @RequestBody @Validated Course course) {
     courseService.save(course);
     return ResponseEntity.created(URI.create(String.format("%s/courses/detail/%d", contextPath, course.getId())))
@@ -91,8 +90,8 @@ public class CourseController {
     notes = "admin users is unrestricted;\n" +
       "teacher can only update a course with own teacher id;\n" +
       "teacher_id is an immutable field.")
-  @SecurityRequirements({@SecurityRequirement(name = "teacher"), @SecurityRequirement(name = "admin")})
   @PostMapping(value = "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasAnyAuthority('admin','teacher')")
   public ResponseEntity<Result<Course>> update(@PathVariable @NotNull Integer id,
                                                @RequestBody @Validated @NotNull Course course) {
     courseService.updateById(course.setId(id));
@@ -103,11 +102,11 @@ public class CourseController {
     notes = "admin users is unrestricted;\n" +
       "teacher can only delete a course with own teacher id;\n" +
       "all related groups and students will be deleted.")
-  @SecurityRequirements({@SecurityRequirement(name = "teacher"), @SecurityRequirement(name = "admin")})
   @PostMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete course success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the course with the specific id to delete", response = Result.class)})
+  @PreAuthorize("hasAnyAuthority('admin','teacher')")
   public ResponseEntity<Result<?>> delete(@PathVariable @NotNull Integer id) {
     return courseService.removeById(id) ? ResponseEntity.status(HttpStatus.NO_CONTENT)
       .body(Result.deleteOk("Delete course success")) :

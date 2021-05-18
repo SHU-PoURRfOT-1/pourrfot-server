@@ -131,6 +131,12 @@ public class CourseStudentServiceImpl extends ServiceImpl<CourseStudentMapper, C
         log.debug("Going to calculate score");
       }
     }
+    if (user != null && user.getRole().equals(RoleEnum.student)) {
+      if (!courseStudent.getGroupId().equals(found.getGroupId())) {
+        // TODO group restrictions for student users
+        log.debug("Going to divide group");
+      }
+    }
     final boolean result = baseMapper.updateById(courseStudent
       .setCreateTime(found.getCreateTime())
       .setUpdateTime(found.getUpdateTime())) == 1;

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,6 +74,7 @@ public class ProjectController {
       "only teacher user can create a project with own id.")
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.CREATED)
+  @PreAuthorize("hasAnyAuthority('admin','teacher')")
   public ResponseEntity<Result<Project>> create(@NotNull @RequestBody @Validated Project project) {
     projectService.save(project);
     return ResponseEntity.created(
@@ -84,6 +86,7 @@ public class ProjectController {
     notes = "admin users is unrestricted but can't update a project with student owner;\n" +
       "only project owner teacher can update project with own id.")
   @PostMapping(value = "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasAnyAuthority('admin','teacher')")
   public ResponseEntity<Result<Project>> update(@PathVariable @NotNull Integer id,
                                                 @RequestBody @Validated @NotNull Project project) {
     projectService.updateById(project.setId(id));
@@ -97,6 +100,7 @@ public class ProjectController {
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete project success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the project with the specific id to delete", response = Result.class)})
+  @PreAuthorize("hasAnyAuthority('admin','teacher')")
   public ResponseEntity<?> delete(@PathVariable @NotNull Integer id) {
     return projectService.removeById(id) ? ResponseEntity.status(HttpStatus.NO_CONTENT)
       .body(Result.deleteOk("Delete project success")) :

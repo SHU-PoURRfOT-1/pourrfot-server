@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -66,6 +67,7 @@ public class ProjectMemberController {
       "teacher users can only create own projects' members.")
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.CREATED)
+  @PreAuthorize("hasAnyAuthority('admin','teacher')")
   public ResponseEntity<Result<ProjectMember>> create(@PathVariable @NotNull Integer projectId,
                                                       @NotNull @RequestBody @Validated ProjectMember projectMember) {
     projectMemberService.save(projectMember.setProjectId(projectId));
@@ -78,6 +80,7 @@ public class ProjectMemberController {
     notes = "admin users is unrestricted;\n" +
       "teacher users can only update own projects' members.")
   @PostMapping(value = "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasAnyAuthority('admin','teacher')")
   public ResponseEntity<Result<ProjectMember>> update(@PathVariable @NotNull Integer projectId,
                                                       @PathVariable @NotNull Integer id,
                                                       @RequestBody @Validated @NotNull ProjectMember projectMember) {
@@ -92,6 +95,7 @@ public class ProjectMemberController {
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete project-member success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the project-member with the specific id to delete", response = Result.class)})
+  @PreAuthorize("hasAnyAuthority('admin','teacher')")
   public ResponseEntity<?> delete(@PathVariable @NotNull Integer projectId,
                                   @PathVariable @NotNull Integer id) {
     return projectMemberService.removeById(id) ? ResponseEntity.status(HttpStatus.NO_CONTENT)
