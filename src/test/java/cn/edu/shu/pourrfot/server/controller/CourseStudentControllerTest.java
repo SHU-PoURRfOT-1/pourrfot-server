@@ -3,6 +3,7 @@ package cn.edu.shu.pourrfot.server.controller;
 import cn.edu.shu.pourrfot.server.config.CustomMySQLContainer;
 import cn.edu.shu.pourrfot.server.enums.RoleEnum;
 import cn.edu.shu.pourrfot.server.enums.SexEnum;
+import cn.edu.shu.pourrfot.server.filter.JwtAuthorizationFilter;
 import cn.edu.shu.pourrfot.server.model.*;
 import cn.edu.shu.pourrfot.server.repository.CourseGroupMapper;
 import cn.edu.shu.pourrfot.server.repository.CourseMapper;
@@ -18,6 +19,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.MySQLContainer;
@@ -142,6 +145,11 @@ class CourseStudentControllerTest {
       assertNotNull(courseStudents[i].getStudentId());
       assertNotNull(courseStudents[i].getGroupId());
     }
+    final UsernamePasswordAuthenticationToken mockAdminAuthenticationToken = new UsernamePasswordAuthenticationToken(
+      "mock", "mock", List.of(new JwtAuthorizationFilter.SimpleGrantedAuthority(RoleEnum.admin)));
+    mockAdminAuthenticationToken.setDetails(Map.<String, Object>of("id", 100L, "username", "mock",
+      "role", "admin"));
+    SecurityContextHolder.getContext().setAuthentication(mockAdminAuthenticationToken);
   }
 
   @Transactional

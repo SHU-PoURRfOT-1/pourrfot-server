@@ -3,6 +3,7 @@ package cn.edu.shu.pourrfot.server.controller;
 import cn.edu.shu.pourrfot.server.config.CustomMySQLContainer;
 import cn.edu.shu.pourrfot.server.enums.RoleEnum;
 import cn.edu.shu.pourrfot.server.enums.SexEnum;
+import cn.edu.shu.pourrfot.server.filter.JwtAuthorizationFilter;
 import cn.edu.shu.pourrfot.server.model.Message;
 import cn.edu.shu.pourrfot.server.model.PourrfotUser;
 import cn.edu.shu.pourrfot.server.repository.PourrfotUserMapper;
@@ -20,9 +21,14 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.MySQLContainer;
+
+import java.util.List;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -79,6 +85,11 @@ class InboxMessageControllerTest {
         .setUrgent(i % 2 == 0)
         .setRegular(i % 3 == 0));
     }
+    final UsernamePasswordAuthenticationToken mockAdminAuthenticationToken = new UsernamePasswordAuthenticationToken(
+      "mock", "mock", List.of(new JwtAuthorizationFilter.SimpleGrantedAuthority(RoleEnum.admin)));
+    mockAdminAuthenticationToken.setDetails(Map.<String, Object>of("id", 100L, "username", "mock",
+      "role", "admin"));
+    SecurityContextHolder.getContext().setAuthentication(mockAdminAuthenticationToken);
   }
 
   @Transactional

@@ -2,7 +2,9 @@ package cn.edu.shu.pourrfot.server.controller;
 
 import cn.edu.shu.pourrfot.server.config.CustomMySQLContainer;
 import cn.edu.shu.pourrfot.server.enums.ResourceTypeEnum;
+import cn.edu.shu.pourrfot.server.enums.RoleEnum;
 import cn.edu.shu.pourrfot.server.exception.OssFileServiceException;
+import cn.edu.shu.pourrfot.server.filter.JwtAuthorizationFilter;
 import cn.edu.shu.pourrfot.server.model.Course;
 import cn.edu.shu.pourrfot.server.model.OssFile;
 import cn.edu.shu.pourrfot.server.repository.CourseMapper;
@@ -26,6 +28,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.ResourceUtils;
@@ -35,6 +39,7 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -67,6 +72,11 @@ class OssFileControllerTest {
     file = new MockMultipartFile("file",
       new BufferedInputStream(new FileInputStream(
         ResourceUtils.getFile("classpath:test-files/test.txt"))));
+    final UsernamePasswordAuthenticationToken mockAdminAuthenticationToken = new UsernamePasswordAuthenticationToken(
+      "mock", "mock", List.of(new JwtAuthorizationFilter.SimpleGrantedAuthority(RoleEnum.admin)));
+    mockAdminAuthenticationToken.setDetails(Map.<String, Object>of("id", 100L, "username", "mock",
+      "role", "admin"));
+    SecurityContextHolder.getContext().setAuthentication(mockAdminAuthenticationToken);
   }
 
   @Test

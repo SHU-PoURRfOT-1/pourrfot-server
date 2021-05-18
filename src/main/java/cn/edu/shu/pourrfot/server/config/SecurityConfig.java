@@ -94,8 +94,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .hasAnyAuthority(RoleEnum.ALL_ROLE_VALUES.toArray(new String[]{}))
       .antMatchers("/transactions/**")
       .hasAnyAuthority(RoleEnum.ALL_ROLE_VALUES.toArray(new String[]{}))
-      .antMatchers("/**")
-      .hasAnyAuthority(RoleEnum.admin.getValue())
       .anyRequest()
       .authenticated()
       .and()

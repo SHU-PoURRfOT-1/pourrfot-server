@@ -11,6 +11,8 @@ import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.jwt.consumer.JwtContext;
 import org.jose4j.lang.JoseException;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author spencercjh
  */
+@Order(Ordered.HIGHEST_PRECEDENCE + 2)
 @Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
