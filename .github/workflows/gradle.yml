@@ -9,8 +9,6 @@ on:
       - 'ci-cd/**'
       - 'docs/**'
       - 'dependabot/**'
-  pull_request:
-    branches: [ 'main' ]
   workflow_dispatch:
 
 jobs:
