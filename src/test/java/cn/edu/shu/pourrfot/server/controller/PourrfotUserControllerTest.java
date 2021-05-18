@@ -67,7 +67,7 @@ class PourrfotUserControllerTest {
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(user))
         .accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isCreated())
+        .andExpect(status().isOk())
         .andExpect(header().exists(HttpHeaders.LOCATION))
         .andDo(result -> locations.add(Objects.requireNonNull(result.getResponse()
           .getHeader(HttpHeaders.LOCATION))
@@ -136,7 +136,7 @@ class PourrfotUserControllerTest {
     for (String location : locations) {
       location = location.replace("detail", "delete");
       mockMvc.perform(post(location))
-        .andExpect(status().isNoContent())
+        .andExpect(status().isOk())
         .andDo(result -> log.info("Delete success: {}", result.getResponse().getContentAsString()));
       mockMvc.perform(post(location))
         .andExpect(status().isNotFound())

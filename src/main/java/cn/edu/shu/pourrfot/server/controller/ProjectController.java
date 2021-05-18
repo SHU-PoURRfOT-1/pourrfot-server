@@ -73,13 +73,13 @@ public class ProjectController {
     notes = "admin users is unrestricted but can't create a project with student owner;\n" +
       "only teacher user can create a project with own id.")
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(code = HttpStatus.CREATED)
   @PreAuthorize("hasAnyAuthority('admin','teacher')")
   public ResponseEntity<Result<Project>> create(@NotNull @RequestBody @Validated Project project) {
     projectService.save(project);
-    return ResponseEntity.created(
-      URI.create(String.format("%s/projects/detail/%d", contextPath, project.getId())))
-      .body(Result.createdOk("Create project success, please pay attention to the LOCATION in headers", project));
+    return ResponseEntity.ok()
+      .location(URI.create(String.format("%s/projects/detail/%d", contextPath, project.getId())))
+      .body(Result.createdOk("Create project success, please pay attention to the LOCATION in headers",
+        project));
   }
 
   @ApiOperation(value = "update project",
@@ -97,12 +97,11 @@ public class ProjectController {
     notes = "admin users is unrestricted;\n" +
       "only project owner teacher can update project.")
   @PostMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  @ApiResponses({@ApiResponse(code = 204, message = "Delete project success", response = Result.class),
+  @ApiResponses({@ApiResponse(code = 200, message = "Delete project success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the project with the specific id to delete", response = Result.class)})
   @PreAuthorize("hasAnyAuthority('admin','teacher')")
   public ResponseEntity<?> delete(@PathVariable @NotNull Integer id) {
-    return projectService.removeById(id) ? ResponseEntity.status(HttpStatus.NO_CONTENT)
+    return projectService.removeById(id) ? ResponseEntity.ok()
       .body(Result.deleteOk("Delete project success")) :
       ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(Result.notFound("Can't find the project with the specific id to delete"));

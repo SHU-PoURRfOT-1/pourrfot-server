@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -67,12 +66,12 @@ public class PourrfotUserController {
   }
 
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(code = HttpStatus.CREATED)
   public ResponseEntity<Result<PourrfotUser>> create(@NotNull @RequestBody @Validated PourrfotUser pourrfotUser) {
     pourrfotUserService.save(pourrfotUser);
-    return ResponseEntity.created(
-      URI.create(String.format("%s/users/detail/%d", contextPath, pourrfotUser.getId())))
-      .body(Result.createdOk("Create user success, please pay attention to the LOCATION in headers", pourrfotUser));
+    return ResponseEntity.ok()
+      .location(URI.create(String.format("%s/users/detail/%d", contextPath, pourrfotUser.getId())))
+      .body(Result.createdOk("Create user success, please pay attention to the LOCATION in headers",
+        pourrfotUser));
   }
 
   @PostMapping(value = "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -83,12 +82,11 @@ public class PourrfotUserController {
   }
 
   @PostMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  @ApiResponses({@ApiResponse(code = 204, message = "Delete user success", response = Result.class),
+  @ApiResponses({@ApiResponse(code = 200, message = "Delete user success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the user with the specific id to delete", response = Result.class)})
   @PreAuthorize("hasAnyAuthority('admin')")
   public ResponseEntity<?> delete(@PathVariable @NotNull Integer id) {
-    return pourrfotUserService.removeById(id) ? ResponseEntity.status(HttpStatus.NO_CONTENT)
+    return pourrfotUserService.removeById(id) ? ResponseEntity.ok()
       .body(Result.deleteOk("Delete user success")) :
       ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(Result.notFound("Can't find the user with the specific id to delete"));
