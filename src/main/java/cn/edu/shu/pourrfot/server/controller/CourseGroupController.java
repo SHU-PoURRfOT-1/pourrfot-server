@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,6 +74,7 @@ public class CourseGroupController {
       "student can't create a group when the course's grouping_method is NOT_GROUPING or STRICT_CONTROLLED particularly.")
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.CREATED)
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   public ResponseEntity<Result<CourseGroup>> create(@NotNull @RequestBody @Validated CourseGroup courseGroup) {
     courseGroupService.save(courseGroup);
     return ResponseEntity.created(
@@ -84,6 +86,7 @@ public class CourseGroupController {
     notes = "admin users is unrestricted;\n" +
       "teacher and student can only update a course-group with own course;\n" +
       "course_id is an immutable field.")
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @PostMapping(value = "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<CourseGroup>> update(@PathVariable @NotNull Integer courseId,
                                                     @PathVariable @NotNull Integer id,
@@ -100,6 +103,7 @@ public class CourseGroupController {
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete course-group success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the course-group with the specific id to delete", response = Result.class)})
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   public ResponseEntity<?> delete(@PathVariable @NotNull Integer courseId, @PathVariable @NotNull Integer id) {
     return courseGroupService.removeById(id) ? ResponseEntity.status(HttpStatus.NO_CONTENT)
       .body(Result.deleteOk("Delete course-group success")) :

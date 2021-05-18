@@ -252,7 +252,7 @@ class CourseStudentServiceImplTest {
   @Transactional
   @Test
   void saveWithStudentContextFailedBecauseCourseIsLimitedGrouping() {
-    mockCourse.setGroupingMethod(GroupingMethodEnum.STRICT_CONTROLLED);
+    mockCourse.setGroupingMethod(GroupingMethodEnum.NOT_GROUPING);
     given(courseMapper.selectById(eq(mockCourse.getId()))).willReturn(mockCourse);
     given(pourrfotUserMapper.selectById(eq(student.getId()))).willReturn(student);
     given(courseGroupMapper.selectById(eq(mockCourseGroup.getId()))).willReturn(mockCourseGroup);

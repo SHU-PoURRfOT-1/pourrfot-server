@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,6 +75,7 @@ public class CourseStudentController {
       "student can't add a group when the course's grouping_method is NOT_GROUPING or STRICT_CONTROLLED particularly.")
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(code = HttpStatus.CREATED)
+  @PreAuthorize("hasAnyAuthority('admin','teacher')")
   public ResponseEntity<Result<CourseStudent>> create(@NotNull @RequestBody @Validated CourseStudent courseStudent) {
     courseStudentService.save(courseStudent);
     return ResponseEntity.created(
@@ -87,6 +89,7 @@ public class CourseStudentController {
       "course_id, student_id and student_name is immutable fields;\n" +
       "score will be 0 when student is updating.")
   @PostMapping(value = "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   public ResponseEntity<Result<CourseStudent>> update(@PathVariable @NotNull Integer courseId,
                                                       @PathVariable @NotNull Integer id,
                                                       @RequestBody @Validated @NotNull CourseStudent courseStudent) {
@@ -101,6 +104,7 @@ public class CourseStudentController {
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete course-student success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the course-student with the specific id to delete", response = Result.class)})
+  @PreAuthorize("hasAnyAuthority('admin','teacher')")
   public ResponseEntity<?> delete(@PathVariable @NotNull Integer courseId, @PathVariable @NotNull Integer id) {
     return courseStudentService.removeById(id) ? ResponseEntity.status(HttpStatus.NO_CONTENT)
       .body(Result.deleteOk("Delete course-student success")) :

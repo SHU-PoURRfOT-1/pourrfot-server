@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -84,6 +86,7 @@ public class PourrfotUserController {
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   @ApiResponses({@ApiResponse(code = 204, message = "Delete user success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the user with the specific id to delete", response = Result.class)})
+  @PreAuthorize("hasAnyAuthority('admin')")
   public ResponseEntity<?> delete(@PathVariable @NotNull Integer id) {
     return pourrfotUserService.removeById(id) ? ResponseEntity.status(HttpStatus.NO_CONTENT)
       .body(Result.deleteOk("Delete user success")) :

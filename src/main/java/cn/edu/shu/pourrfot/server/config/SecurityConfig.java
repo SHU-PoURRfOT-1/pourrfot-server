@@ -32,8 +32,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     "/webjars/**",
     // -- Swagger UI v3 (OpenAPI)
     "/v3/api-docs/**",
-    "/swagger-ui/**"
+    "/swagger-ui/**",
     // other public endpoints of your API may be appended to this array
+    "/users/create",
+    "/users/update/**"
   };
   @Autowired
   private Environment environment;
@@ -90,20 +92,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .hasAnyAuthority(RoleEnum.ALL_ROLE_VALUES.toArray(new String[]{}))
       .antMatchers("/messages/**", "/inbox-messages/**")
       .hasAnyAuthority(RoleEnum.ALL_ROLE_VALUES.toArray(new String[]{}))
-      .antMatchers(HttpMethod.POST, "/courses/*/groups/**")
-      .hasAnyAuthority(RoleEnum.student.getValue(), RoleEnum.teacher.getValue())
-      .antMatchers(HttpMethod.PUT, "/courses/*/groups/**")
-      .hasAnyAuthority(RoleEnum.student.getValue(), RoleEnum.teacher.getValue())
-      .antMatchers(HttpMethod.DELETE, "/courses/*/groups/**")
-      .hasAnyAuthority(RoleEnum.teacher.getValue())
-      .antMatchers(HttpMethod.POST, "/courses/*/students/**")
-      .hasAnyAuthority(RoleEnum.student.getValue(), RoleEnum.teacher.getValue())
-      .antMatchers(HttpMethod.PUT, "/courses/*/students/**")
-      .hasAnyAuthority(RoleEnum.student.getValue(), RoleEnum.teacher.getValue())
-      .antMatchers(HttpMethod.DELETE, "/courses/*/students/**")
-      .hasAnyAuthority(RoleEnum.teacher.getValue())
-      .antMatchers("/courses/**", "/projects/**")
-      .hasAnyAuthority(RoleEnum.teacher.getValue())
+      .antMatchers("/transactions/**")
+      .hasAnyAuthority(RoleEnum.ALL_ROLE_VALUES.toArray(new String[]{}))
       .antMatchers("/**")
       .hasAnyAuthority(RoleEnum.admin.getValue())
       .anyRequest()
