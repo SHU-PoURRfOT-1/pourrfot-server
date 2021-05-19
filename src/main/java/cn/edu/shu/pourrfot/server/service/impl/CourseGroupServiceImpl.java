@@ -7,6 +7,7 @@ import cn.edu.shu.pourrfot.server.exception.NotFoundException;
 import cn.edu.shu.pourrfot.server.model.Course;
 import cn.edu.shu.pourrfot.server.model.CourseGroup;
 import cn.edu.shu.pourrfot.server.model.CourseStudent;
+import cn.edu.shu.pourrfot.server.model.dto.CompleteGroup;
 import cn.edu.shu.pourrfot.server.model.dto.SimpleUser;
 import cn.edu.shu.pourrfot.server.repository.CourseGroupMapper;
 import cn.edu.shu.pourrfot.server.repository.CourseMapper;
@@ -14,7 +15,7 @@ import cn.edu.shu.pourrfot.server.repository.CourseStudentMapper;
 import cn.edu.shu.pourrfot.server.service.CourseGroupService;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -24,10 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -41,29 +39,46 @@ public class CourseGroupServiceImpl extends ServiceImpl<CourseGroupMapper, Cours
   @Autowired
   private CourseStudentMapper courseStudentMapper;
 
-  @SuppressWarnings("unchecked")
   @Override
-  public <E extends IPage<CourseGroup>> E page(E page, Wrapper<CourseGroup> queryWrapper) {
+  public Page<CompleteGroup> page(Page<CourseGroup> page, Wrapper<CourseGroup> queryWrapper) {
     // there is an existed condition eq(course_id,id) in the wrapper
+    final int courseId = queryWrapper.getEntity().getCourseId();
     final SimpleUser user = SimpleUser.of(SecurityContextHolder.getContext().getAuthentication());
     // student user can only view their own groups
     if (user != null && user.getRole().equals(RoleEnum.student)) {
       final CourseGroup studentGroup = baseMapper.selectByStudentIdAndCourseId(user.getId(),
-        queryWrapper.getEntity().getCourseId());
+        courseId);
       if (studentGroup == null) {
-        return (E) page.setTotal(0);
+        return new Page<>(page.getCurrent(), page.getSize(), 0);
       }
-      return (E) page.setTotal(1).setRecords(Collections.singletonList(studentGroup));
+      final List<CourseStudent> groupStudents = courseStudentMapper.selectList(new QueryWrapper<>(new CourseStudent())
+        .eq(CourseStudent.COL_GROUP_ID, studentGroup.getId()));
+      return new Page<CompleteGroup>(page.getCurrent(), page.getSize(), 1)
+        .setRecords(Collections.singletonList(new CompleteGroup(studentGroup, groupStudents)));
     }
     // teacher user can only view the groups in their own courses
     if (user != null && user.getRole().equals(RoleEnum.teacher)) {
-      final Course course = courseMapper.selectById(queryWrapper.getEntity().getCourseId());
+      final Course course = courseMapper.selectById(courseId);
       if (!course.getTeacherId().equals(user.getId())) {
         log.warn("Teacher: {} can't access the groups in the course: {} which isn't belong his/her", user, course);
         throw new IllegalCRUDOperationException("Teacher can't access the groups in the course which isn't belong his/her");
       }
     }
-    return super.page(page, queryWrapper);
+    final Page<CourseGroup> groupPage = super.page(page, queryWrapper);
+    return new Page<CompleteGroup>(page.getCurrent(), page.getSize(), groupPage.getTotal())
+      .setRecords(groupPage.getRecords().stream().map(group ->
+        new CompleteGroup(group, courseStudentMapper.selectList(new QueryWrapper<>(new CourseStudent())
+          .eq(CourseStudent.COL_GROUP_ID, group.getId())))).collect(Collectors.toList()));
+  }
+
+  @Override
+  public CompleteGroup getCompleteGroupById(int id) {
+    final CourseGroup group = getById(id);
+    if (group != null) {
+      return new CompleteGroup(group, courseStudentMapper.selectList(new QueryWrapper<>(new CourseStudent())
+        .eq(CourseStudent.COL_GROUP_ID, group.getId())));
+    }
+    return null;
   }
 
   @Override

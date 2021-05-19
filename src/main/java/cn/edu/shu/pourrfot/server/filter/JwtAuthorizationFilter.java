@@ -64,8 +64,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     final String casHost = environment.getProperty("pourrfot.cas.host");
     int retryTime = 5;
     while (retryTime-- > 0) {
-      final String publicKeyJson = restTemplate.getForEntity(casHost + "/jwt/public-key", String.class).getBody();
       try {
+        final String publicKeyJson = restTemplate.getForEntity(casHost + "/jwt/public-key", String.class).getBody();
         final JsonNode jsonNode = objectMapper.readTree(publicKeyJson);
         rsaJsonWebPublicKey = JsonWebKey.Factory.newJwk(jsonNode.get("data").toString());
         log.info("Get public key from CAS success");
@@ -74,6 +74,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         log.error("Parse public key failed", e);
       } catch (JsonProcessingException e) {
         log.error("Parse public key responses failed", e);
+      } catch (Exception e) {
+        log.error("Get public-key failed", e);
       }
     }
   }

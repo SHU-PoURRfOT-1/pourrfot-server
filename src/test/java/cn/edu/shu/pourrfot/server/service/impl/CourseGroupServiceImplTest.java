@@ -10,6 +10,7 @@ import cn.edu.shu.pourrfot.server.model.Course;
 import cn.edu.shu.pourrfot.server.model.CourseGroup;
 import cn.edu.shu.pourrfot.server.model.CourseStudent;
 import cn.edu.shu.pourrfot.server.model.PourrfotUser;
+import cn.edu.shu.pourrfot.server.model.dto.CompleteGroup;
 import cn.edu.shu.pourrfot.server.repository.CourseMapper;
 import cn.edu.shu.pourrfot.server.repository.CourseStudentMapper;
 import cn.edu.shu.pourrfot.server.repository.PourrfotUserMapper;
@@ -112,7 +113,7 @@ class CourseGroupServiceImplTest {
   void pageWithStudentContext() {
     mockStudentAuthenticationToken.setDetails(studentDetail);
     SecurityContextHolder.getContext().setAuthentication(mockStudentAuthenticationToken);
-    Page<CourseGroup> page = courseGroupService.page(new Page<>(1, 10),
+    Page<CompleteGroup> page = courseGroupService.page(new Page<>(1, 10),
       new QueryWrapper<>(new CourseGroup().setCourseId(mockCourse.getId()))
         .eq(CourseGroup.COL_COURSE_ID, mockCourse.getId()));
     assertEquals(0, page.getTotal());

@@ -1,6 +1,7 @@
 package cn.edu.shu.pourrfot.server.controller;
 
 import cn.edu.shu.pourrfot.server.model.CourseGroup;
+import cn.edu.shu.pourrfot.server.model.dto.CompleteGroup;
 import cn.edu.shu.pourrfot.server.model.dto.Result;
 import cn.edu.shu.pourrfot.server.service.CourseGroupService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -41,10 +42,10 @@ public class CourseGroupController {
       "teacher and student users can only access their own course's groups;\n" +
       "student can only get one group max particularly.")
   @GetMapping(value = "/page", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Result<Page<CourseGroup>>> page(@RequestParam(required = false, defaultValue = "1") Integer current,
-                                                        @RequestParam(required = false, defaultValue = "10") Integer size,
-                                                        @PathVariable @NotNull Integer courseId,
-                                                        @RequestParam(required = false) String groupName) {
+  public ResponseEntity<Result<Page<CompleteGroup>>> page(@RequestParam(required = false, defaultValue = "1") Integer current,
+                                                          @RequestParam(required = false, defaultValue = "10") Integer size,
+                                                          @PathVariable @NotNull Integer courseId,
+                                                          @RequestParam(required = false) String groupName) {
     QueryWrapper<CourseGroup> query = Wrappers.query(new CourseGroup().setCourseId(courseId));
     if (courseId != null) {
       query = query.eq(CourseGroup.COL_COURSE_ID, courseId);
@@ -61,9 +62,9 @@ public class CourseGroupController {
       "teacher and student users can only access their own course's group.")
   @GetMapping(value = "/detail/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ApiResponses({@ApiResponse(code = 404, message = "Can't find course-group with the specific id", response = Result.class)})
-  public ResponseEntity<Result<CourseGroup>> detail(@PathVariable @NotNull Integer courseId,
-                                                    @PathVariable @NotNull Integer id) {
-    final CourseGroup found = courseGroupService.getById(id);
+  public ResponseEntity<Result<CompleteGroup>> detail(@PathVariable @NotNull Integer courseId,
+                                                      @PathVariable @NotNull Integer id) {
+    final CompleteGroup found = courseGroupService.getCompleteGroupById(id);
     return found != null ? ResponseEntity.ok(Result.normalOk("Get course-group detail success", found)) :
       ResponseEntity.status(HttpStatus.NOT_FOUND).body(Result.notFound("Can't found course-group with the specific id"));
   }
