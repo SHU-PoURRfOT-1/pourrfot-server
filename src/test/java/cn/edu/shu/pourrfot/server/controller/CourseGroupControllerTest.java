@@ -97,9 +97,9 @@ class CourseGroupControllerTest {
     for (String location : locations) {
       mockMvc.perform(get(location))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.data.groupName").exists())
-        .andExpect(jsonPath("$.data.createTime").exists())
-        .andExpect(jsonPath("$.data.updateTime").exists())
+        .andExpect(jsonPath("$.data.group.groupName").exists())
+        .andExpect(jsonPath("$.data.group.createTime").exists())
+        .andExpect(jsonPath("$.data.group.updateTime").exists())
         .andDo(result -> log.info("Detail success: {}", result.getResponse().getContentAsString()));
     }
     // GET detail not found
@@ -121,7 +121,7 @@ class CourseGroupControllerTest {
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.data.records").exists())
       .andExpect(jsonPath("$.data.records").isArray())
-      .andExpect(jsonPath("$.data.records[0].groupName").exists())
+      .andExpect(jsonPath("$.data.records[0].group.groupName").exists())
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
     // PUT update
