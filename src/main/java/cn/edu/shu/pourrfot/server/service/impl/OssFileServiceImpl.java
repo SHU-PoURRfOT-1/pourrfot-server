@@ -18,6 +18,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +50,8 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
   private MessageMapper messageMapper;
   @Autowired
   private PourrfotUserMapper pourrfotUserMapper;
+  @Value("${server.servlet.contextPath}")
+  private String contextPath;
 
   @Override
   public Page<CompleteOssFile> page(Page<OssFile> page, Wrapper<OssFile> queryWrapper) {
@@ -57,7 +60,8 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
       .setRecords(result.getRecords()
         .stream()
         .map(ossFile -> CompleteOssFile.of(ossFile, getOssFileAssociatedUser(ossFile.getOwnerId()),
-          getOssFileAssociatedResource(ossFile.getResourceType(), ossFile.getResourceId())))
+          getOssFileAssociatedResource(ossFile.getResourceType(), ossFile.getResourceId())
+          , setupDownloadUrl(ossFile.getId())))
         .collect(Collectors.toList()));
   }
 
@@ -68,7 +72,8 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
       return null;
     }
     return CompleteOssFile.of(found, getOssFileAssociatedUser(found.getOwnerId()),
-      getOssFileAssociatedResource(found.getResourceType(), found.getResourceId()));
+      getOssFileAssociatedResource(found.getResourceType(), found.getResourceId()),
+      setupDownloadUrl(found.getId()));
   }
 
   /**
@@ -185,6 +190,10 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
 
   private String setupSymbolLink(ResourceTypeEnum resourceType, int resourceId, String name) {
     return String.format("%s/%d/%s", resourceType.getValue(), resourceId, name);
+  }
+
+  private String setupDownloadUrl(int id) {
+    return String.format("%s/files/detail/%d/stream", contextPath, id);
   }
 
   private Map<String, Object> getOssFileAssociatedUser(Integer ownerId) {

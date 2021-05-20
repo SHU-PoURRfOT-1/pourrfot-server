@@ -35,6 +35,7 @@ public class ProjectMemberController {
   @Autowired
   private ProjectMemberService projectMemberService;
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @ApiOperation(value = "project-members page",
     notes = "admin users can access all projects' members;\n" +
       "teacher and student users can only access their own projects' members.")
@@ -50,6 +51,7 @@ public class ProjectMemberController {
       projectMemberService.page(new Page<>(current, size), query)));
   }
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @ApiOperation(value = "project-member detail",
     notes = "admin users can access all projects' members;\n" +
       "teacher and student users can only access their own projects' members.")

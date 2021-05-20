@@ -38,6 +38,7 @@ public class CourseStudentController {
   @Autowired
   private CourseStudentService courseStudentService;
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @ApiOperation(value = "course-students page",
     notes = "admin users can access all students;\n" +
       "teacher and student users can only access their own course's students(scores);\n" +
@@ -58,6 +59,7 @@ public class CourseStudentController {
       courseStudentService.pageCompleteCourseStudents(new Page<>(current, size), query)));
   }
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @ApiOperation(value = "course-student detail",
     notes = "admin users can access all course's student;\n" +
       "teacher and student users can only access their own course's student.")

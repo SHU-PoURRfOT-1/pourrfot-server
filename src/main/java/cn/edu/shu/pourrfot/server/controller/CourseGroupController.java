@@ -37,6 +37,7 @@ public class CourseGroupController {
   @Autowired
   private CourseGroupService courseGroupService;
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @ApiOperation(value = "course-groups page",
     notes = "admin users can access all courses-groups;\n" +
       "teacher and student users can only access their own course's groups;\n" +
@@ -57,6 +58,7 @@ public class CourseGroupController {
       courseGroupService.page(new Page<>(current, size), query)));
   }
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @ApiOperation(value = "course-group detail",
     notes = "admin users can access all course's group;\n" +
       "teacher and student users can only access their own course's group.")

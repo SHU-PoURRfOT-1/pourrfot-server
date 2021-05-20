@@ -42,6 +42,7 @@ public class PourrfotUserController {
   @Autowired
   private PourrfotUserService pourrfotUserService;
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @GetMapping(value = "/page", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Page<PourrfotUser>>> page(@RequestParam(required = false, defaultValue = "1") Integer current,
                                                          @RequestParam(required = false, defaultValue = "10") Integer size,
@@ -62,6 +63,7 @@ public class PourrfotUserController {
       pourrfotUserService.page(new Page<>(current, size), query)));
   }
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @GetMapping(value = "/detail/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ApiResponses({@ApiResponse(code = 404, message = "Can't find user with the specific id", response = Result.class)})
   public ResponseEntity<Result<PourrfotUser>> detail(@PathVariable @NotNull Integer id) {
@@ -70,6 +72,7 @@ public class PourrfotUserController {
       ResponseEntity.status(HttpStatus.NOT_FOUND).body(Result.notFound("Can't found user with the specific id"));
   }
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @GetMapping(value = "/detail/current", produces = MediaType.APPLICATION_JSON_VALUE)
   @ApiResponses({@ApiResponse(code = 404, message = "Can't find user with the specific id", response = Result.class)})
   public ResponseEntity<Result<PourrfotUser>> current() {
@@ -91,6 +94,7 @@ public class PourrfotUserController {
         pourrfotUser));
   }
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @PostMapping(value = "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<PourrfotUser>> update(@PathVariable @NotNull Integer id,
                                                      @RequestBody @Validated @NotNull PourrfotUser pourrfotUser) {

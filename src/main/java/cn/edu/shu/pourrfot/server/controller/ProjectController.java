@@ -35,6 +35,7 @@ public class ProjectController {
   @Autowired
   private ProjectService projectService;
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @ApiOperation(value = "projects page",
     notes = "admin users can access all projects;\n" +
       "teacher and student users can only access their own projects.")
@@ -58,6 +59,7 @@ public class ProjectController {
       projectService.page(new Page<>(current, size), query)));
   }
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @ApiOperation(value = "project detail",
     notes = "admin users can access all projects;\n" +
       "teacher and student users can only access their own projects.")
@@ -81,7 +83,6 @@ public class ProjectController {
       .body(Result.createdOk("Create project success, please pay attention to the LOCATION in headers",
         project));
   }
-
   @ApiOperation(value = "update project",
     notes = "admin users is unrestricted but can't update a project with student owner;\n" +
       "only project owner teacher can update project with own id.")

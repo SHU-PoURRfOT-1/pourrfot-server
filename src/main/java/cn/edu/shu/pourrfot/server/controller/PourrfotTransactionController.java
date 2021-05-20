@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +35,7 @@ public class PourrfotTransactionController {
   @Autowired
   private PourrfotTransactionService pourrfotTransactionService;
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @GetMapping(value = "/page", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Page<PourrfotTransaction>>> page(@RequestParam(required = false, defaultValue = "1") Integer current,
                                                                 @RequestParam(required = false, defaultValue = "10") Integer size,
@@ -54,41 +56,45 @@ public class PourrfotTransactionController {
     if (isUrgent != null) {
       query = query.eq(PourrfotTransaction.COL_URGENT, isUrgent);
     }
-    return ResponseEntity.ok(Result.normalOk("Get student-transactions page success",
+    return ResponseEntity.ok(Result.normalOk("Get transactions page success",
       pourrfotTransactionService.page(new Page<>(current, size), query)));
   }
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @GetMapping(value = "/detail/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ApiResponses({@ApiResponse(code = 404, message = "Can't find student-transactions with the specific id", response = Result.class)})
+  @ApiResponses({@ApiResponse(code = 404, message = "Can't find transactions with the specific id", response = Result.class)})
   public ResponseEntity<Result<PourrfotTransaction>> detail(@PathVariable @NotNull Integer id) {
     final PourrfotTransaction found = pourrfotTransactionService.getById(id);
-    return found != null ? ResponseEntity.ok(Result.normalOk("Get student-transactions detail success", found)) :
-      ResponseEntity.status(HttpStatus.NOT_FOUND).body(Result.notFound("Can't found student-transactions with the specific id"));
+    return found != null ? ResponseEntity.ok(Result.normalOk("Get transactions detail success", found)) :
+      ResponseEntity.status(HttpStatus.NOT_FOUND).body(Result.notFound("Can't found transactions with the specific id"));
   }
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<PourrfotTransaction>> create(@NotNull @RequestBody @Validated PourrfotTransaction pourrfotTransaction) {
     pourrfotTransactionService.save(pourrfotTransaction);
     return ResponseEntity.ok()
       .location(URI.create(String.format("%s/transactions/detail/%d", contextPath, pourrfotTransaction.getId())))
-      .body(Result.createdOk("Create student-transactions success, please pay attention to the LOCATION in headers",
+      .body(Result.createdOk("Create transactions success, please pay attention to the LOCATION in headers",
         pourrfotTransaction));
   }
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @PostMapping(value = "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<PourrfotTransaction>> update(@PathVariable @NotNull Integer id,
                                                             @RequestBody @Validated @NotNull PourrfotTransaction pourrfotTransaction) {
     pourrfotTransactionService.updateById(pourrfotTransaction.setId(id));
-    return ResponseEntity.ok(Result.normalOk("Update student-transactions success", pourrfotTransaction));
+    return ResponseEntity.ok(Result.normalOk("Update transactions success", pourrfotTransaction));
   }
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @PostMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @ApiResponses({@ApiResponse(code = 204, message = "Delete student-transactions success", response = Result.class),
-    @ApiResponse(code = 404, message = "Can't find the student-transactions with the specific id to delete", response = Result.class)})
+  @ApiResponses({@ApiResponse(code = 204, message = "Delete transactions success", response = Result.class),
+    @ApiResponse(code = 404, message = "Can't find the transactions with the specific id to delete", response = Result.class)})
   public ResponseEntity<Result<?>> delete(@PathVariable @NotNull Integer id) {
     return pourrfotTransactionService.removeById(id) ? ResponseEntity.ok()
-      .body(Result.deleteOk("Delete student-transactions success")) :
+      .body(Result.deleteOk("Delete transactions success")) :
       ResponseEntity.status(HttpStatus.NOT_FOUND)
-        .body(Result.notFound("Can't find the student-transactions with the specific id to delete"));
+        .body(Result.notFound("Can't find the transactions with the specific id to delete"));
   }
 }
