@@ -1,6 +1,7 @@
 package cn.edu.shu.pourrfot.server.controller;
 
 import cn.edu.shu.pourrfot.server.model.CourseStudent;
+import cn.edu.shu.pourrfot.server.model.dto.CompleteCourseStudent;
 import cn.edu.shu.pourrfot.server.model.dto.Result;
 import cn.edu.shu.pourrfot.server.service.CourseStudentService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -42,10 +43,10 @@ public class CourseStudentController {
       "teacher and student users can only access their own course's students(scores);\n" +
       "student can only get own particularly.")
   @GetMapping(value = "/page", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Result<Page<CourseStudent>>> page(@RequestParam(required = false, defaultValue = "1") Integer current,
-                                                          @RequestParam(required = false, defaultValue = "10") Integer size,
-                                                          @PathVariable @NotNull Integer courseId,
-                                                          @RequestParam(required = false) Integer groupId) {
+  public ResponseEntity<Result<Page<CompleteCourseStudent>>> page(@RequestParam(required = false, defaultValue = "1") Integer current,
+                                                                  @RequestParam(required = false, defaultValue = "10") Integer size,
+                                                                  @PathVariable @NotNull Integer courseId,
+                                                                  @RequestParam(required = false) Integer groupId) {
     QueryWrapper<CourseStudent> query = Wrappers.query(new CourseStudent().setCourseId(courseId));
     if (courseId != null) {
       query = query.eq(CourseStudent.COL_COURSE_ID, courseId);
@@ -54,7 +55,7 @@ public class CourseStudentController {
       query = query.eq(CourseStudent.COL_GROUP_ID, groupId);
     }
     return ResponseEntity.ok(Result.normalOk("Get course-students page success",
-      courseStudentService.page(new Page<>(current, size), query)));
+      courseStudentService.pageCompleteCourseStudents(new Page<>(current, size), query)));
   }
 
   @ApiOperation(value = "course-student detail",
@@ -62,9 +63,9 @@ public class CourseStudentController {
       "teacher and student users can only access their own course's student.")
   @GetMapping(value = "/detail/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ApiResponses({@ApiResponse(code = 404, message = "Can't find course-student with the specific id", response = Result.class)})
-  public ResponseEntity<Result<CourseStudent>> detail(@PathVariable @NotNull Integer courseId,
-                                                      @PathVariable @NotNull Integer id) {
-    final CourseStudent found = courseStudentService.getById(id);
+  public ResponseEntity<Result<CompleteCourseStudent>> detail(@PathVariable @NotNull Integer courseId,
+                                                              @PathVariable @NotNull Integer id) {
+    final CompleteCourseStudent found = courseStudentService.getCompleteCourseStudentById(id);
     return found != null ? ResponseEntity.ok(Result.normalOk("Get course-student detail success", found)) :
       ResponseEntity.status(HttpStatus.NOT_FOUND).body(Result.notFound("Can't found course-student with the specific id"));
   }
