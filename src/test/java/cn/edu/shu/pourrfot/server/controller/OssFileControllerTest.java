@@ -28,6 +28,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
 import org.testcontainers.containers.MySQLContainer;
 
@@ -75,6 +76,7 @@ class OssFileControllerTest {
     SecurityContextHolder.getContext().setAuthentication(mockAdminAuthenticationToken);
   }
 
+  @Transactional
   @Test
   void uploadFailed() throws Exception {
     given(ossService.uploadFileWithFilename(any(), anyString()))
@@ -91,6 +93,7 @@ class OssFileControllerTest {
       .andExpect(status().isServiceUnavailable());
   }
 
+  @Transactional
   @Test
   void integrationTest() throws Exception {
     when(ossService.uploadFileWithKey(any(), anyString())).thenReturn("oss://mock/test.txt");
