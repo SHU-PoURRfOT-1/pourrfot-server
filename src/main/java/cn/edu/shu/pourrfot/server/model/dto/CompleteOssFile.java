@@ -11,6 +11,7 @@ import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,7 +33,7 @@ public class CompleteOssFile {
   @ApiModelProperty(example = "test.txt")
   private String name;
   @ApiModelProperty()
-  private Map<String, Object> metadata;
+  private List<?> metadata;
   /**
    * Unix-like directory
    */

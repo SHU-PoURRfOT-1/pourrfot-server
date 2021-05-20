@@ -14,6 +14,7 @@ import lombok.experimental.Accessors;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -55,7 +56,7 @@ public class OssFile {
   private String name;
   @ApiModelProperty(example = "[{\\\"type\\\":\\\"danger\\\",\\\"label\\\":\\\"加急\\\"},{\\\"type\\\":\\\"success\\\",\\\"label\\\":\\\"success\\\"},{\\\"type\\\":\\\"warning\\\",\\\"label\\\":\\\"需要批阅\\\"}]")
   @TableField(value = "metadata", typeHandler = JacksonTypeHandler.class)
-  private Map<String, Object> metadata;
+  private List<?> metadata;
   @TableField(value = "resource_type")
   @ApiModelProperty(required = true)
   @NotNull

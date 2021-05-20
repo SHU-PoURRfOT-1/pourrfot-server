@@ -97,7 +97,8 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
       OssService.getKeyFromOssUrl(entity.getOriginOssUrl()) : entity.getOssKey();
     ossService.checkOssObjectExisted(key);
     // 3. create a symbol link
-    final String symbolLink = ossService.createSymbolLink(key, setupSymbolLink(entity), entity.getMetadata());
+    final String symbolLink = ossService.createSymbolLink(key, setupSymbolLink(entity),
+      Collections.emptyMap());
     // 4. save OssFile with new OSS info
     return baseMapper.insert(entity
       .setOssKey(symbolLink)
