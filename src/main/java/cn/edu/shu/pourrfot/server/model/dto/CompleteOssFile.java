@@ -52,6 +52,10 @@ public class CompleteOssFile {
   @ApiModelProperty()
   @NotBlank
   private String originOssUrl;
+
+  @ApiModelProperty()
+  @NotBlank
+  private String downloadUri;
   /**
    * uploader userid
    */
@@ -60,7 +64,8 @@ public class CompleteOssFile {
   @ApiModelProperty(notes = "get by resource type/resource id")
   private Map<String, Object> resource;
 
-  public static CompleteOssFile of(OssFile ossFile, Map<String, Object> owner, Map<String, Object> resource) {
+  public static CompleteOssFile of(OssFile ossFile, Map<String, Object> owner, Map<String, Object> resource,
+                                   String downloadUri) {
     return CompleteOssFile.builder()
       .id(ossFile.getId())
       .name(ossFile.getName())
@@ -69,6 +74,7 @@ public class CompleteOssFile {
       .ossKey(ossFile.getOssKey())
       .ossUrl(ossFile.getOssUrl())
       .originOssUrl(ossFile.getOriginOssUrl())
+      .downloadUri(downloadUri)
       .createTime(ossFile.getCreateTime())
       .updateTime(ossFile.getUpdateTime())
       .owner(owner)

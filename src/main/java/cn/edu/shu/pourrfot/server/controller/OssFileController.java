@@ -22,6 +22,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,6 +52,7 @@ public class OssFileController {
   @Value("${server.servlet.contextPath}")
   private String contextPath;
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @GetMapping(value = "/page", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Page<CompleteOssFile>>> list(@RequestParam(required = false, defaultValue = "1") Integer current,
                                                             @RequestParam(required = false, defaultValue = "10") Integer size,
@@ -78,6 +80,7 @@ public class OssFileController {
       ossFileService.page(new Page<>(current, size), query)));
   }
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @GetMapping(value = "/detail/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ApiResponses({@ApiResponse(code = 404, message = "Can't find oss-file with the specific id", response = Result.class)})
   public ResponseEntity<Result<CompleteOssFile>> detail(@PathVariable Integer id) {
@@ -107,6 +110,7 @@ public class OssFileController {
       .body(ossFileResource);
   }
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<OssFile>> create(@NotNull @RequestBody @Validated OssFile ossFile) {
     // origin oss url in header#location is encoded. It needs to be decoded
@@ -117,6 +121,7 @@ public class OssFileController {
         ossFile));
   }
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @PostMapping(value = "/cache", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<String>> uploadFile(@NotNull @RequestPart MultipartFile file,
                                                    @RequestPart(required = false) String filename) {
@@ -125,6 +130,7 @@ public class OssFileController {
     return ResponseEntity.created(URI.create(ossUrl)).body(Result.normalOk("Upload file success", ossUrl));
   }
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher')")
   @PostMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ApiResponses({@ApiResponse(code = 200, message = "Delete oss-url success", response = Result.class),
     @ApiResponse(code = 404, message = "Can't find the oss-url with the specific id to delete", response = Result.class)})

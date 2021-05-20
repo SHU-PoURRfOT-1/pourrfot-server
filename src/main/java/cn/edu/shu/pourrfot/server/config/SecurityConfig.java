@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -35,7 +34,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     "/swagger-ui/**",
     // other public endpoints of your API may be appended to this array
     "/users/create",
-    "/users/update/**"
+    "/users/update/**",
+    "/files/*/detail/*/stream",
+    "/users/create"
   };
   @Autowired
   private Environment environment;
@@ -86,16 +87,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       // Do not add content-path as uri prefix
       .antMatchers("/actuator")
       .hasAuthority(RoleEnum.admin.getValue())
-      .antMatchers(HttpMethod.GET, "/**")
-      .hasAnyAuthority(RoleEnum.ALL_ROLE_VALUES.toArray(new String[]{}))
-      .antMatchers("/files/**")
-      .hasAnyAuthority(RoleEnum.ALL_ROLE_VALUES.toArray(new String[]{}))
-      .antMatchers("/messages/**", "/inbox-messages/**")
-      .hasAnyAuthority(RoleEnum.ALL_ROLE_VALUES.toArray(new String[]{}))
-      .antMatchers("/transactions/**")
-      .hasAnyAuthority(RoleEnum.ALL_ROLE_VALUES.toArray(new String[]{}))
-      .anyRequest()
-      .authenticated()
       .and()
       .rememberMe();
   }

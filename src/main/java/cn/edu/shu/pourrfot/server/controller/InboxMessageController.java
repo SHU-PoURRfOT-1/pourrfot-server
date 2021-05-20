@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +31,7 @@ public class InboxMessageController {
   @Autowired
   private InboxMessageService inboxMessageService;
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @GetMapping(value = "/page", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Result<Page<SingleMessage>>> list(@RequestParam(required = false, defaultValue = "1") @Min(1)
                                                             Integer current,
@@ -46,6 +48,7 @@ public class InboxMessageController {
       inboxMessageService.messagePage(sender, receiver, title, isUrgent, isRegular, haveRead, current, size)));
   }
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @GetMapping(value = "/detail/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ApiResponses({@ApiResponse(code = 404, message = "Can't find message with the specific id", response = Result.class)})
   public ResponseEntity<Result<SingleMessage>> detail(@PathVariable Integer id) {

@@ -35,6 +35,7 @@ public class CourseController {
   @Autowired
   private CourseService courseService;
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @ApiOperation(value = "courses page",
     notes = "admin users can access all courses;\n" +
       "teacher and student users can only access their own courses.")
@@ -62,6 +63,7 @@ public class CourseController {
       Result.normalOk("Get courses page success", courseService.page(new Page<>(current, size), query)));
   }
 
+  @PreAuthorize("hasAnyAuthority('admin','teacher','student')")
   @ApiOperation(value = "courses detail",
     notes = "admin users can access all courses;\n" +
       "teacher and student users can only access their own courses.")
