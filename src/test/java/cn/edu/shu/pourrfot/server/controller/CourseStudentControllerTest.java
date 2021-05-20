@@ -87,6 +87,18 @@ class CourseStudentControllerTest {
     .term("COURSE_STUDENT1")
     .createTime(new Date(System.currentTimeMillis()))
     .updateTime(new Date(System.currentTimeMillis()))
+    .scoreStructure(List.of(ScoreItem.builder()
+        .weight(0.5)
+        .name("attendance")
+        .description("平时成绩")
+        .score(0.0)
+        .build(),
+      ScoreItem.builder()
+        .weight(0.5)
+        .name("final")
+        .description("平时成绩")
+        .score(0.0)
+        .build()))
     .build();
   private final CourseGroup[] courseGroups = new CourseGroup[]{
     CourseGroup.builder()
@@ -175,8 +187,8 @@ class CourseStudentControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data.studentId").exists())
         .andExpect(jsonPath("$.data.studentName").exists())
-        .andExpect(jsonPath("$.data.courseId").exists())
-        .andExpect(jsonPath("$.data.groupId").exists())
+        .andExpect(jsonPath("$.data.course").exists())
+        .andExpect(jsonPath("$.data.group").exists())
         .andDo(result -> log.info("Detail success: {}", result.getResponse().getContentAsString()));
     }
     // GET detail not found
@@ -204,18 +216,20 @@ class CourseStudentControllerTest {
     mockMvc.perform(post(courseStudentLocations.get(0).replace("detail", "update"))
       .contentType(MediaType.APPLICATION_JSON)
       .content(objectMapper.writeValueAsString(courseStudents[0].setTotalScore(100_00L)
-        .setScoreStructure(List.of(ScoreItem.builder()
-          .score(100.0)
-          .weight(1.0)
-          .description("Total")
+        .setDetailScore(List.of(ScoreItem.builder()
+          .weight(0.5)
+          .name("attendance")
+          .description("平时成绩")
+          .score(91.5)
           .build()))))
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.data.createTime").exists())
       .andExpect(jsonPath("$.data.updateTime").exists())
-      .andExpect(jsonPath("$.data.totalScore").value(100_00L))
-      .andExpect(jsonPath("$.data.scoreStructure").isArray())
-      .andExpect(jsonPath("$.data.scoreStructure", Matchers.hasSize(1)))
+      .andExpect(jsonPath("$.data.totalScore").value(45_75))
+      .andExpect(jsonPath("$.data.detailScore").isArray())
+      .andExpect(jsonPath("$.data.detailScore", Matchers.hasSize(1)))
+      .andExpect(jsonPath("$.data.totalScore").value(45_75))
       .andDo(result -> log.info("Update success: {}", result.getResponse().getContentAsString()));
     // DELETE Delete
     for (String location : courseStudentLocations) {

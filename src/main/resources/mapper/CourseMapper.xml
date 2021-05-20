@@ -15,11 +15,14 @@
         <result column="term" jdbcType="VARCHAR" property="term"/>
         <result column="profile_photo" jdbcType="VARCHAR" property="profilePhoto"/>
         <result column="grouping_method" jdbcType="OTHER" property="groupingMethod"/>
+        <result column="score_structure" jdbcType="VARCHAR" property="scoreStructure"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
         course.id, course.create_time, course.update_time, course.teacher_id, course.course_code, course.course_name,
-        course.class_time, course.class_location, course.term, course.profile_photo, course.grouping_method
+        course.class_time, course.class_location, course.term, course.profile_photo, course.grouping_method,
+        course.score_structure
     </sql>
 
     <select id="selectByStudentIdWithPage" resultMap="BaseResultMap">

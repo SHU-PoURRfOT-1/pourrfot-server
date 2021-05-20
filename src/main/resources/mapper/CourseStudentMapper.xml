@@ -12,11 +12,13 @@
         <result column="course_id" jdbcType="INTEGER" property="courseId"/>
         <result column="group_id" jdbcType="INTEGER" property="groupId"/>
         <result column="total_score" jdbcType="DECIMAL" property="totalScore"/>
-        <result column="score_structure" jdbcType="VARCHAR" property="scoreStructure"
+        <result column="detail_score" jdbcType="VARCHAR" property="detailScore"
                 typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
-        id, create_time, update_time, student_id, student_name, course_id, group_id, total_score, score_structure
+        course_student.id, course_student.create_time, course_student.update_time, course_student.student_id,
+        course_student.student_name, course_student.course_id, course_student.group_id, course_student.total_score,
+        course_student.detail_score
     </sql>
 </mapper>

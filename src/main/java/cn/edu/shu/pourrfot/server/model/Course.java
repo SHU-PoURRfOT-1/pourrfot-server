@@ -2,6 +2,7 @@ package cn.edu.shu.pourrfot.server.model;
 
 import cn.edu.shu.pourrfot.server.enums.GroupingMethodEnum;
 import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,7 @@ import lombok.experimental.Accessors;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author spencercjh
@@ -23,7 +25,7 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "course")
+@TableName(autoResultMap = true, value = "course")
 public class Course {
   public static final String COL_ID = "id";
   public static final String COL_CREATE_TIME = "create_time";
@@ -73,4 +75,7 @@ public class Course {
   @TableField(value = "grouping_method")
   @ApiModelProperty(example = "NOT_GROUPING")
   private GroupingMethodEnum groupingMethod;
+  @TableField(value = "score_structure", typeHandler = JacksonTypeHandler.class)
+  @ApiModelProperty
+  private List<?> scoreStructure;
 }
