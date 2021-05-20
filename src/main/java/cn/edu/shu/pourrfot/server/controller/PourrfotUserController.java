@@ -4,12 +4,15 @@ import cn.edu.shu.pourrfot.server.enums.RoleEnum;
 import cn.edu.shu.pourrfot.server.enums.SexEnum;
 import cn.edu.shu.pourrfot.server.model.PourrfotUser;
 import cn.edu.shu.pourrfot.server.model.dto.Result;
+import cn.edu.shu.pourrfot.server.model.dto.SimpleUser;
 import cn.edu.shu.pourrfot.server.service.PourrfotUserService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +35,7 @@ import java.net.URI;
 @RequestMapping("/users")
 @Slf4j
 @Validated
+@Api(value = "User CRUD", authorizations = {@Authorization("admin"), @Authorization("teacher"), @Authorization("student")}, tags = "Users")
 public class PourrfotUserController {
   @Value("${server.servlet.contextPath}")
   private String contextPath;
@@ -61,6 +66,18 @@ public class PourrfotUserController {
   @ApiResponses({@ApiResponse(code = 404, message = "Can't find user with the specific id", response = Result.class)})
   public ResponseEntity<Result<PourrfotUser>> detail(@PathVariable @NotNull Integer id) {
     final PourrfotUser found = pourrfotUserService.getById(id);
+    return found != null ? ResponseEntity.ok(Result.normalOk("Get user detail success", found)) :
+      ResponseEntity.status(HttpStatus.NOT_FOUND).body(Result.notFound("Can't found user with the specific id"));
+  }
+
+  @GetMapping(value = "/detail/current", produces = MediaType.APPLICATION_JSON_VALUE)
+  @ApiResponses({@ApiResponse(code = 404, message = "Can't find user with the specific id", response = Result.class)})
+  public ResponseEntity<Result<PourrfotUser>> current() {
+    final SimpleUser user = SimpleUser.of(SecurityContextHolder.getContext().getAuthentication());
+    if (user == null) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+    final PourrfotUser found = pourrfotUserService.getById(user.getId());
     return found != null ? ResponseEntity.ok(Result.normalOk("Get user detail success", found)) :
       ResponseEntity.status(HttpStatus.NOT_FOUND).body(Result.notFound("Can't found user with the specific id"));
   }
