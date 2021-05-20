@@ -21,6 +21,7 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.*;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,7 +36,7 @@ class OssServiceImplTest {
   private final OSSObject mockOssObject = new OSSObject();
   private final OssFile mockOssFile = OssFile.builder()
     .name("test.txt")
-    .metadata(Map.of("test", "test"))
+    .metadata(List.of(Map.of("test", "test")))
     .resourceType(ResourceTypeEnum.courses)
     .resourceId(100)
     .ownerId(100)

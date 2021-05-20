@@ -2,14 +2,17 @@ package cn.edu.shu.pourrfot.server.controller;
 
 import cn.edu.shu.pourrfot.server.enums.ResourceTypeEnum;
 import cn.edu.shu.pourrfot.server.model.OssFile;
+import cn.edu.shu.pourrfot.server.model.dto.CompleteOssFile;
 import cn.edu.shu.pourrfot.server.model.dto.Result;
 import cn.edu.shu.pourrfot.server.service.OssFileService;
 import cn.edu.shu.pourrfot.server.service.OssService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +41,8 @@ import java.nio.charset.StandardCharsets;
 @Validated
 @RestController
 @RequestMapping("/files")
+@Api(value = "OssFiles CRUD", authorizations = {@Authorization("admin"), @Authorization("teacher"), @Authorization("student")},
+  tags = "OssFiles")
 public class OssFileController {
   @Autowired
   private OssFileService ossFileService;
@@ -47,16 +52,18 @@ public class OssFileController {
   private String contextPath;
 
   @GetMapping(value = "/page", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Result<Page<OssFile>>> list(@RequestParam(required = false, defaultValue = "1") Integer current,
-                                                    @RequestParam(required = false, defaultValue = "10") Integer size,
-                                                    @RequestParam(required = false) ResourceTypeEnum resourceType,
-                                                    @RequestParam(required = false) Integer resourceId,
-                                                    @RequestParam(required = false) String name,
-                                                    @RequestParam(required = false) String directory,
-                                                    @RequestParam(required = false) Integer ownerId) {
+  public ResponseEntity<Result<Page<CompleteOssFile>>> list(@RequestParam(required = false, defaultValue = "1") Integer current,
+                                                            @RequestParam(required = false, defaultValue = "10") Integer size,
+                                                            @RequestParam(required = false) ResourceTypeEnum resourceType,
+                                                            @RequestParam(required = false) Integer resourceId,
+                                                            @RequestParam(required = false) String name,
+                                                            @RequestParam(required = false) String directory,
+                                                            @RequestParam(required = false) Integer ownerId) {
     QueryWrapper<OssFile> query = Wrappers.query(new OssFile());
     if (resourceType != null && resourceId != null) {
       query = query.eq(OssFile.COL_RESOURCE_TYPE, resourceType).eq(OssFile.COL_RESOURCE_ID, resourceId);
+    } else if (resourceType != null) {
+      query = query.eq(OssFile.COL_RESOURCE_TYPE, resourceType);
     }
     if (StringUtils.isNotBlank(name)) {
       query = query.like(OssFile.COL_NAME, name.trim());
@@ -73,8 +80,8 @@ public class OssFileController {
 
   @GetMapping(value = "/detail/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @ApiResponses({@ApiResponse(code = 404, message = "Can't find oss-file with the specific id", response = Result.class)})
-  public ResponseEntity<Result<OssFile>> detail(@PathVariable Integer id) {
-    final OssFile found = ossFileService.getById(id);
+  public ResponseEntity<Result<CompleteOssFile>> detail(@PathVariable Integer id) {
+    final CompleteOssFile found = ossFileService.getCompleteOssFileById(id);
     return found != null ? ResponseEntity.ok(Result.normalOk("Get oss-file detail success", found)) :
       ResponseEntity.status(HttpStatus.NOT_FOUND).body(Result.notFound("Can't found oss-file with the specific id"));
   }

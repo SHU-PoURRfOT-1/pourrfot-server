@@ -3,10 +3,7 @@ package cn.edu.shu.pourrfot.server.service.impl;
 import cn.edu.shu.pourrfot.server.enums.ResourceTypeEnum;
 import cn.edu.shu.pourrfot.server.exception.NotFoundException;
 import cn.edu.shu.pourrfot.server.model.OssFile;
-import cn.edu.shu.pourrfot.server.repository.CourseGroupMapper;
-import cn.edu.shu.pourrfot.server.repository.CourseMapper;
-import cn.edu.shu.pourrfot.server.repository.ProjectMapper;
-import cn.edu.shu.pourrfot.server.repository.PourrfotTransactionMapper;
+import cn.edu.shu.pourrfot.server.repository.*;
 import cn.edu.shu.pourrfot.server.service.OssFileService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
@@ -35,6 +32,8 @@ class OssFileServiceImplTest {
   private ProjectMapper projectMapper;
   @Autowired
   private PourrfotTransactionMapper pourrfotTransactionMapper;
+  @Autowired
+  private MessageMapper messageMapper;
 
   @Test
   void saveCourseFileFailed() {
@@ -72,6 +71,16 @@ class OssFileServiceImplTest {
     assertThrows(NotFoundException.class, () -> ossFileService.save(OssFile.builder()
       .resourceId(999)
       .resourceType(ResourceTypeEnum.transactions)
+      .originOssUrl("mock")
+      .build()));
+  }
+
+  @Test
+  void saveMessageFileFailed() {
+    given(messageMapper.selectById(anyInt())).willReturn(null);
+    assertThrows(NotFoundException.class, () -> ossFileService.save(OssFile.builder()
+      .resourceId(999)
+      .resourceType(ResourceTypeEnum.messages)
       .originOssUrl("mock")
       .build()));
   }
@@ -119,6 +128,12 @@ class OssFileServiceImplTest {
     @Primary
     public PourrfotTransactionMapper studentTransactionMapper() {
       return Mockito.mock(PourrfotTransactionMapper.class);
+    }
+
+    @Bean
+    @Primary
+    public MessageMapper messageMapper() {
+      return Mockito.mock(MessageMapper.class);
     }
   }
 }

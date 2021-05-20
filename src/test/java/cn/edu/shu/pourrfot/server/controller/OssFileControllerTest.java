@@ -18,20 +18,17 @@ import org.hamcrest.Matchers;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
 import org.testcontainers.containers.MySQLContainer;
 
@@ -79,6 +76,7 @@ class OssFileControllerTest {
     SecurityContextHolder.getContext().setAuthentication(mockAdminAuthenticationToken);
   }
 
+  @Transactional
   @Test
   void uploadFailed() throws Exception {
     given(ossService.uploadFileWithFilename(any(), anyString()))
@@ -95,6 +93,7 @@ class OssFileControllerTest {
       .andExpect(status().isServiceUnavailable());
   }
 
+  @Transactional
   @Test
   void integrationTest() throws Exception {
     when(ossService.uploadFileWithKey(any(), anyString())).thenReturn("oss://mock/test.txt");
@@ -103,15 +102,16 @@ class OssFileControllerTest {
     when(ossService.createSymbolLink(anyString(), anyString(), any())).thenReturn("oss://mock/symbolLink/test.txt");
     given(ossService.deleteOssObject(anyString())).willReturn(true);
     given(ossService.getOssFileResource(any())).willReturn(file.getResource());
-    given(courseMapper.selectById(any())).willReturn(Course.builder()
+    final Course course = Course.builder()
       .courseName("mock")
       .courseName("mock")
-      .id(100)
-      .build());
+      .teacherId(100)
+      .build();
+    courseMapper.insert(course);
     final OssFile ossFile = OssFile.builder()
       .name("test.txt")
       .ownerId(100)
-      .resourceId(100)
+      .resourceId(course.getId())
       .resourceType(ResourceTypeEnum.courses)
       .ossUrl("Not blank")
       .build();
@@ -176,7 +176,7 @@ class OssFileControllerTest {
       .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
     mockMvc.perform(get("/files/page")
-      .param("directory", "/courses/100")
+      .param("directory", String.format("/courses/%d", course.getId()))
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
@@ -186,7 +186,16 @@ class OssFileControllerTest {
       .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
     mockMvc.perform(get("/files/page")
       .param("resourceType", "courses")
-      .param("resourceId", "100")
+      .contentType(MediaType.APPLICATION_JSON)
+      .accept(MediaType.APPLICATION_JSON))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.data.records").exists())
+      .andExpect(jsonPath("$.data.records").isArray())
+      .andExpect(jsonPath("$.data.records", Matchers.hasSize(1)))
+      .andDo(result -> log.info("Page success: {}", result.getResponse().getContentAsString()));
+    mockMvc.perform(get("/files/page")
+      .param("resourceType", "courses")
+      .param("resourceId", String.valueOf(course.getId()))
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
@@ -204,15 +213,6 @@ class OssFileControllerTest {
       mockMvc.perform(post(location))
         .andExpect(status().isNotFound())
         .andDo(result -> log.info("Delete failed because not found: {}", result.getResponse().getContentAsString()));
-    }
-  }
-
-  @TestConfiguration
-  public static class TestConfig {
-    @Bean
-    @Primary
-    public CourseMapper courseMapper() {
-      return Mockito.mock(CourseMapper.class);
     }
   }
 }
