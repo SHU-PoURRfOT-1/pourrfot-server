@@ -53,7 +53,7 @@ public class OssFile {
   @ApiModelProperty(example = "test.txt", required = true)
   @NotBlank
   private String name;
-  @ApiModelProperty()
+  @ApiModelProperty(example = "[{\\\"type\\\":\\\"danger\\\",\\\"label\\\":\\\"加急\\\"},{\\\"type\\\":\\\"success\\\",\\\"label\\\":\\\"success\\\"},{\\\"type\\\":\\\"warning\\\",\\\"label\\\":\\\"需要批阅\\\"}]")
   @TableField(value = "metadata", typeHandler = JacksonTypeHandler.class)
   private Map<String, Object> metadata;
   @TableField(value = "resource_type")
@@ -93,6 +93,6 @@ public class OssFile {
    * uploader userid
    */
   @TableField(value = "owner_id")
-  @ApiModelProperty(value = "uploader userid", required = true)
+  @ApiModelProperty(value = "uploader userid; SET BY SERVER")
   private Integer ownerId;
 }
