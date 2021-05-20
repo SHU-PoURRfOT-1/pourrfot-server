@@ -207,6 +207,7 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
           .eq(Course.COL_ID, resourceId));
         if (CollectionUtils.isNotEmpty(courseResult)) {
           resource = courseResult.get(0);
+          resource.put("title", "课程：" + resource.get("course_name"));
         }
         break;
       case groups:
@@ -214,6 +215,7 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
           .eq(CourseGroup.COL_ID, resourceId));
         if (CollectionUtils.isNotEmpty(groupResult)) {
           resource = groupResult.get(0);
+          resource.put("title", "课程小组：" + resource.get("group_name"));
         }
         break;
       case projects:
@@ -221,6 +223,7 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
           .eq(Project.COL_ID, resourceId));
         if (CollectionUtils.isNotEmpty(projectResult)) {
           resource = projectResult.get(0);
+          resource.put("title", "项目：" + resource.get("project_name"));
         }
         break;
       case transactions:
@@ -228,12 +231,14 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
           .eq(PourrfotTransaction.COL_ID, resourceId));
         if (CollectionUtils.isNotEmpty(transactionResult)) {
           resource = transactionResult.get(0);
+          resource.put("title", "事务：" + resource.get("title"));
         }
         break;
       case messages:
         final List<Map<String, Object>> messageResult = messageMapper.selectMaps(new QueryWrapper<>(new Message()).eq(Message.COL_ID, resourceId));
         if (CollectionUtils.isNotEmpty(messageResult)) {
           resource = messageResult.get(0);
+          resource.put("title", "消息：" + resource.get("title"));
         }
         break;
       default:
