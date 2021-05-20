@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
@@ -61,8 +63,10 @@ public class CourseStudent {
   private Integer groupId;
   @TableField(value = "total_score")
   @ApiModelProperty()
+  @Max(100_00)
+  @Min(0)
   private Long totalScore;
-  @TableField(value = "score_structure", typeHandler = JacksonTypeHandler.class)
+  @TableField(value = "detail_score", typeHandler = JacksonTypeHandler.class)
   @ApiModelProperty
-  private List<ScoreItem> scoreStructure;
+  private List<?> detailScore;
 }

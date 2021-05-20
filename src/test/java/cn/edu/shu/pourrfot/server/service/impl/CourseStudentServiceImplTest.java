@@ -86,6 +86,18 @@ class CourseStudentServiceImplTest {
     .teacherId(teacher.getId())
     .term("course-mock")
     .groupingMethod(GroupingMethodEnum.FREE)
+    .scoreStructure(List.of(ScoreItem.builder()
+        .weight(0.5)
+        .name("attendance")
+        .description("平时成绩")
+        .score(0.0)
+        .build(),
+      ScoreItem.builder()
+        .weight(0.5)
+        .name("final")
+        .description("平时成绩")
+        .score(0.0)
+        .build()))
     .build();
   private final CourseGroup mockCourseGroup = CourseGroup.builder()
     .courseId(mockCourse.getId())
@@ -379,15 +391,15 @@ class CourseStudentServiceImplTest {
     mockStudentAuthenticationToken.setDetails(studentDetail);
     SecurityContextHolder.getContext().setAuthentication(mockStudentAuthenticationToken);
     assertTrue(courseStudentService.updateById(mockCourseStudent.setTotalScore(100_00L)
-      .setScoreStructure(List.of(ScoreItem.builder()
+      .setDetailScore(List.of(ScoreItem.builder()
         .description("mock")
         .weight(1.0)
         .score(100.0)
         .build()))));
     assertEquals(0, mockCourseStudent.getTotalScore());
-    assertTrue(mockCourseStudent.getScoreStructure().isEmpty());
+    assertTrue(mockCourseStudent.getDetailScore().isEmpty());
     // reset
-    mockCourseStudent.setTotalScore(null).setScoreStructure(null);
+    mockCourseStudent.setTotalScore(null).setDetailScore(null);
   }
 
   @Transactional
@@ -401,15 +413,66 @@ class CourseStudentServiceImplTest {
     mockTeacherAuthenticationToken.setDetails(teacherDetail);
     SecurityContextHolder.getContext().setAuthentication(mockTeacherAuthenticationToken);
     assertTrue(courseStudentService.updateById(mockCourseStudent.setTotalScore(100_00L)
-      .setScoreStructure(List.of(ScoreItem.builder()
-        .description("mock")
-        .weight(1.0)
-        .score(100.0)
-        .build()))));
-    assertEquals(100_00L, mockCourseStudent.getTotalScore());
-    assertFalse(mockCourseStudent.getScoreStructure().isEmpty());
+      .setDetailScore(List.of(ScoreItem.builder()
+          .weight(0.5)
+          .name("attendance")
+          .description("平时成绩")
+          .score(91.5)
+          .build(),
+        ScoreItem.builder()
+          .weight(0.5)
+          .name("final")
+          .description("期末")
+          .score(91.0)
+          .build()))));
+    assertEquals(91_25, mockCourseStudent.getTotalScore());
+    assertFalse(mockCourseStudent.getDetailScore().isEmpty());
     // reset
-    mockCourseStudent.setTotalScore(null).setScoreStructure(null);
+    mockCourseStudent.setTotalScore(null).setDetailScore(null);
+  }
+
+  @Transactional
+  @Test
+  void updateByIdWithTeacherContextWithPartialDetailScore() {
+    given(courseMapper.selectById(eq(mockCourse.getId()))).willReturn(mockCourse);
+    given(pourrfotUserMapper.selectById(eq(student.getId()))).willReturn(student);
+    given(courseGroupMapper.selectById(eq(mockCourseGroup.getId()))).willReturn(mockCourseGroup);
+    assertTrue(courseStudentService.save(mockCourseStudent));
+
+    mockTeacherAuthenticationToken.setDetails(teacherDetail);
+    SecurityContextHolder.getContext().setAuthentication(mockTeacherAuthenticationToken);
+    assertTrue(courseStudentService.updateById(mockCourseStudent.setTotalScore(100_00L)
+      .setDetailScore(List.of(ScoreItem.builder()
+        .weight(0.5)
+        .name("attendance")
+        .description("平时成绩")
+        .score(91.5)
+        .build()))));
+    assertEquals(45_75, mockCourseStudent.getTotalScore());
+    assertFalse(mockCourseStudent.getDetailScore().isEmpty());
+    // reset
+    mockCourseStudent.setTotalScore(null).setDetailScore(null);
+  }
+
+  @Transactional
+  @Test
+  void updateByIdWithTeacherContextWithWrongDetailScore() {
+    given(courseMapper.selectById(eq(mockCourse.getId()))).willReturn(mockCourse);
+    given(pourrfotUserMapper.selectById(eq(student.getId()))).willReturn(student);
+    given(courseGroupMapper.selectById(eq(mockCourseGroup.getId()))).willReturn(mockCourseGroup);
+    assertTrue(courseStudentService.save(mockCourseStudent));
+
+    mockTeacherAuthenticationToken.setDetails(teacherDetail);
+    SecurityContextHolder.getContext().setAuthentication(mockTeacherAuthenticationToken);
+    assertThrows(NotFoundException.class, () -> courseStudentService.updateById(mockCourseStudent.setTotalScore(100_00L)
+      .setDetailScore(List.of(ScoreItem.builder()
+        .weight(0.5)
+        .name("MOCK")
+        .description("MOCK")
+        .score(100.0)
+        .build()))), "Not existed score item");
+    // reset
+    mockCourseStudent.setTotalScore(null).setDetailScore(null);
   }
 
   @Transactional

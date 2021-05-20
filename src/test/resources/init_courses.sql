@@ -216,115 +216,115 @@ VALUES (22, '2021-05-18 22:38:41', '2021-05-18 22:38:41', 1, '软件项目管理
 INSERT INTO pourrfot.course_group (id, create_time, update_time, course_id, group_name, profile_photo)
 VALUES (23, '2021-05-18 22:38:41', '2021-05-18 22:38:41', 1, '软件项目管理-第14小组', '');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (1, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 3, '蔡佳昊', 1, 1, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (2, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 5, 'student-test', 2, 2, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (3, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 3, '蔡佳昊', 3, 3, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (4, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 5, 'student-test', 4, 4, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (5, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 3, '蔡佳昊', 5, 5, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (6, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 5, 'student-test', 6, 6, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (7, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 3, '蔡佳昊', 7, 7, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (8, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 5, 'student-test', 8, 8, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (9, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 3, '蔡佳昊', 8, 9, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (10, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 5, 'student-test', 10, 10, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (11, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 7, 'abc', 1, 11, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (12, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 8, 'student-a', 1, 12, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (13, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 9, 'student-b', 1, 13, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (14, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 10, 'student-c', 1, 14, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (15, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 11, 'student-d', 1, 15, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (16, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 12, 'student-e', 1, 16, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (17, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 13, 'student-f', 1, 17, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (18, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 14, 'student-g', 1, 18, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (19, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 15, 'student-h', 1, 19, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (20, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 16, 'student-i', 1, 20, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (21, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 17, 'student-j', 1, 21, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (22, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 18, 'student-k', 1, 22, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (23, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 19, 'student-l', 1, 23, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (24, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 20, 'student-m', 1, 11, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (25, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 21, 'student-n', 1, 12, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (26, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 22, 'student-o', 1, 13, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (27, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 23, 'student-p', 1, 14, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (28, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 24, 'student-q', 1, 15, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (29, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 25, 'student-r', 1, 16, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (30, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 26, 'student-s', 1, 17, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (31, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 27, 'student-t', 1, 18, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (32, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 28, 'student-u', 1, 19, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (33, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 29, 'student-v', 1, 20, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (34, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 30, 'student-w', 1, 21, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (35, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 31, 'student-x', 1, 22, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (36, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 32, 'student-y', 1, 23, 0, '[]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, score_structure)
+                                     total_score, detail_score)
 VALUES (37, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 33, 'student-z', 1, 1, 0, '[]');
 INSERT INTO pourrfot.project (id, create_time, update_time, project_name, project_code, owner_id, profile_photo)
 VALUES (1, '2021-05-16 22:54:42', '2021-05-16 22:54:42', '科创项目1', 'PROJECT-1', 1, '');
