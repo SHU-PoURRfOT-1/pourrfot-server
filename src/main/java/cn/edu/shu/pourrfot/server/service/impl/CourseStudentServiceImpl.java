@@ -5,6 +5,7 @@ import cn.edu.shu.pourrfot.server.enums.RoleEnum;
 import cn.edu.shu.pourrfot.server.exception.IllegalCRUDOperationException;
 import cn.edu.shu.pourrfot.server.exception.NotFoundException;
 import cn.edu.shu.pourrfot.server.model.*;
+import cn.edu.shu.pourrfot.server.model.dto.CompleteCourseStudent;
 import cn.edu.shu.pourrfot.server.model.dto.SimpleUser;
 import cn.edu.shu.pourrfot.server.repository.CourseGroupMapper;
 import cn.edu.shu.pourrfot.server.repository.CourseMapper;
@@ -14,6 +15,7 @@ import cn.edu.shu.pourrfot.server.service.CourseStudentService;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,17 @@ public class CourseStudentServiceImpl extends ServiceImpl<CourseStudentMapper, C
   @Autowired
   private CourseGroupMapper courseGroupMapper;
 
+  @Override
+  public Page<CompleteCourseStudent> pageCompleteCourseStudents(Page<CourseStudent> page, Wrapper<CourseStudent> queryWrapper) {
+    final Page<CourseStudent> result = page(page, queryWrapper);
+    return new Page<CompleteCourseStudent>(result.getCurrent(), result.getSize(), result.getTotal())
+      .setRecords(result.getRecords()
+        .stream()
+        .map(courseStudent -> CompleteCourseStudent.of(courseStudent,
+          courseMapper.selectById(courseStudent.getCourseId()),
+          courseGroupMapper.selectById(courseStudent.getGroupId()))).collect(Collectors.toList()));
+  }
+
   @SuppressWarnings("unchecked")
   @Override
   public <E extends IPage<CourseStudent>> E page(E page, Wrapper<CourseStudent> queryWrapper) {
@@ -67,6 +80,17 @@ public class CourseStudentServiceImpl extends ServiceImpl<CourseStudentMapper, C
       }
     }
     return super.page(page, queryWrapper);
+  }
+
+  @Override
+  public CompleteCourseStudent getCompleteCourseStudentById(int id) {
+    final CourseStudent courseStudent = getById(id);
+    if (courseStudent == null) {
+      return null;
+    }
+    return CompleteCourseStudent.of(courseStudent,
+      courseMapper.selectById(courseStudent.getCourseId()),
+      courseGroupMapper.selectById(courseStudent.getGroupId()));
   }
 
   @Override

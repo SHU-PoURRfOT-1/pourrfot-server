@@ -187,8 +187,8 @@ class CourseStudentControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data.studentId").exists())
         .andExpect(jsonPath("$.data.studentName").exists())
-        .andExpect(jsonPath("$.data.courseId").exists())
-        .andExpect(jsonPath("$.data.groupId").exists())
+        .andExpect(jsonPath("$.data.course").exists())
+        .andExpect(jsonPath("$.data.group").exists())
         .andDo(result -> log.info("Detail success: {}", result.getResponse().getContentAsString()));
     }
     // GET detail not found

@@ -7,6 +7,7 @@ import cn.edu.shu.pourrfot.server.exception.IllegalCRUDOperationException;
 import cn.edu.shu.pourrfot.server.exception.NotFoundException;
 import cn.edu.shu.pourrfot.server.filter.JwtAuthorizationFilter;
 import cn.edu.shu.pourrfot.server.model.*;
+import cn.edu.shu.pourrfot.server.model.dto.CompleteCourseStudent;
 import cn.edu.shu.pourrfot.server.repository.CourseGroupMapper;
 import cn.edu.shu.pourrfot.server.repository.CourseMapper;
 import cn.edu.shu.pourrfot.server.repository.PourrfotUserMapper;
@@ -130,7 +131,7 @@ class CourseStudentServiceImplTest {
   void pageWithStudentContext() {
     mockStudentAuthenticationToken.setDetails(studentDetail);
     SecurityContextHolder.getContext().setAuthentication(mockStudentAuthenticationToken);
-    Page<CourseStudent> result = courseStudentService.page(new Page<>(1, 10),
+    Page<CompleteCourseStudent> result = courseStudentService.pageCompleteCourseStudents(new Page<>(1, 10),
       new QueryWrapper<>(new CourseStudent().setCourseId(mockCourse.getId())));
     assertEquals(0, result.getTotal());
     assertTrue(result.getRecords().isEmpty());
@@ -143,7 +144,7 @@ class CourseStudentServiceImplTest {
 
     mockStudentAuthenticationToken.setDetails(studentDetail);
     SecurityContextHolder.getContext().setAuthentication(mockStudentAuthenticationToken);
-    result = courseStudentService.page(new Page<>(1, 10),
+    result = courseStudentService.pageCompleteCourseStudents(new Page<>(1, 10),
       new QueryWrapper<>(new CourseStudent().setCourseId(mockCourse.getId())));
     assertEquals(1, result.getTotal());
     assertEquals(1, result.getRecords().size());
@@ -159,7 +160,7 @@ class CourseStudentServiceImplTest {
     SecurityContextHolder.getContext().setAuthentication(mockTeacherAuthenticationToken);
     assertTrue(courseStudentService.save(mockCourseStudent));
 
-    final Page<CourseStudent> result = courseStudentService.page(new Page<>(1, 10),
+    final Page<CompleteCourseStudent> result = courseStudentService.pageCompleteCourseStudents(new Page<>(1, 10),
       new QueryWrapper<>(new CourseStudent().setCourseId(mockCourse.getId())));
     assertEquals(1, result.getTotal());
     assertEquals(1, result.getRecords().size());
@@ -172,7 +173,7 @@ class CourseStudentServiceImplTest {
     given(courseMapper.selectById(eq(mockCourse.getId()))).willReturn(mockCourse);
     mockTeacherAuthenticationToken.setDetails(teacherDetail);
     SecurityContextHolder.getContext().setAuthentication(mockTeacherAuthenticationToken);
-    assertThrows(IllegalCRUDOperationException.class, () -> courseStudentService.page(new Page<>(1, 10),
+    assertThrows(IllegalCRUDOperationException.class, () -> courseStudentService.pageCompleteCourseStudents(new Page<>(1, 10),
       new QueryWrapper<>(new CourseStudent().setCourseId(mockCourse.getId()))),
       "Teacher can't access the students in the course which isn't belong his/her");
     // reset
