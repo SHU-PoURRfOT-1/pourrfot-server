@@ -39,136 +39,137 @@ INSERT INTO pourrfot.course (id, create_time, update_time, teacher_id, course_co
 VALUES (10, '2021-04-15 15:32:24', '2021-04-15 15:32:24', 2, '3ZSL08401', '操作系统结构与分析', '二[7-10](1-10周)', '嘉定校区1-411',
         '202002', '');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
-                                    password)
-VALUES (1, '2021-04-16 09:15:51', '2021-04-16 09:15:51', 'caomin', '曹旻', '', '1970-01-01 00:00:00', 'female',
-        'teacher', 'caomin');
-INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
-                                    password)
-VALUES (2, '2021-04-16 09:18:07', '2021-04-16 09:18:07', 'chenyihai', '陈怡海', '', '1970-01-01 00:00:00', 'male',
-        'teacher', 'chenyihai');
+                                    email, telephone, password)
+VALUES (1, '2021-04-16 09:15:51', '2021-04-16 09:15:51', 'caomin', '曹旻', '', '1970-01-01', 'female', 'teacher', '', '',
+        'caomin');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (3, '2021-04-19 00:20:09', '2021-04-19 00:20:09', 'spencercjh', '蔡佳昊', '', '1998-03-25', 'male', 'student',
-        'shouspencercjh@foxmail.com', '15000131965', '123456');
-INSERT INTO `pourrfot_user` (`id`, `create_time`, `update_time`, `username`, `nickname`, `profile_photo`, `birth`,
-                             `sex`, `role`, `email`, `telephone`, `password`)
+VALUES (2, '2021-04-16 09:18:07', '2021-04-16 09:18:07', 'chenyihai', '陈怡海', '', '1970-01-01', 'male', 'teacher', '',
+        '', 'chenyihai');
+INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
+                                    email, telephone, password)
+VALUES (3, '2021-04-19 00:20:09', '2021-04-19 00:20:09', '20721599', '蔡佳昊', '', '1998-03-25', 'male', 'student',
+        'shouspencercjh@foxmail.com', '15000131965', '20721599');
+INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
+                                    email, telephone, password)
 VALUES (4, '2021-05-12 14:46:03', '2021-05-12 14:46:03', 'admin', 'admin-test', '', null, 'unknown', 'admin', '', '',
         'admin');
-INSERT INTO `pourrfot_user` (`id`, `create_time`, `update_time`, `username`, `nickname`, `profile_photo`, `birth`,
-                             `sex`, `role`, `email`, `telephone`, `password`)
-VALUES (5, '2021-05-13 14:08:19', '2021-05-13 14:08:19', 'student', 'student-test', '', null, 'unknown', 'student', '',
-        '', 'student');
-INSERT INTO `pourrfot_user` (`id`, `create_time`, `update_time`, `username`, `nickname`, `profile_photo`, `birth`,
-                             `sex`, `role`, `email`, `telephone`, `password`)
+INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
+                                    email, telephone, password)
+VALUES (5, '2021-05-13 14:08:19', '2021-05-13 14:08:19', '20721601', 'student-test', '', null, 'unknown', 'student', '',
+        '', '20721601');
+INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
+                                    email, telephone, password)
 VALUES (6, '2021-05-13 14:09:07', '2021-05-13 14:09:07', 'teacher', 'teacher-test', '', null, 'unknown', 'teacher', '',
         '', 'teacher');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (7, '2021-05-18 23:50:09', '2021-05-18 23:50:09', 'abc', 'abc', '', null, 'male', 'student', '', '', 'abc');
+VALUES (7, '2021-05-18 23:50:09', '2021-05-18 23:50:09', '20721602', 'abc', '', null, 'male', 'student', '', '',
+        '20721602');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (8, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'a', 'student-a', '', '1998-03-25', 'male', 'student', '', '',
-        'a');
+VALUES (8, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721603', 'student-a', '', '1998-03-25', 'male', 'student',
+        '', '', '20721603');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (9, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'b', 'student-b', '', '1998-03-25', 'male', 'student', '', '',
-        'b');
+VALUES (9, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721604', 'student-b', '', '1998-03-25', 'male', 'student',
+        '', '', '20721604');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (10, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'c', 'student-c', '', '1998-03-25', 'male', 'student', '', '',
-        'c');
+VALUES (10, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721605', 'student-c', '', '1998-03-25', 'male', 'student',
+        '', '', '20721605');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (11, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'd', 'student-d', '', '1998-03-25', 'male', 'student', '', '',
-        'd');
+VALUES (11, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721606', 'student-d', '', '1998-03-25', 'male', 'student',
+        '', '', '20721606');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (12, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'e', 'student-e', '', '1998-03-25', 'male', 'student', '', '',
-        'e');
+VALUES (12, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721607', 'student-e', '', '1998-03-25', 'male', 'student',
+        '', '', '20721607');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (13, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'f', 'student-f', '', '1998-03-25', 'male', 'student', '', '',
-        'f');
+VALUES (13, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721608', 'student-f', '', '1998-03-25', 'male', 'student',
+        '', '', '20721608');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (14, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'g', 'student-g', '', '1998-03-25', 'male', 'student', '', '',
-        'g');
+VALUES (14, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721609', 'student-g', '', '1998-03-25', 'male', 'student',
+        '', '', '20721609');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (15, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'h', 'student-h', '', '1998-03-25', 'male', 'student', '', '',
-        'h');
+VALUES (15, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721610', 'student-h', '', '1998-03-25', 'male', 'student',
+        '', '', '20721610');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (16, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'i', 'student-i', '', '1998-03-25', 'male', 'student', '', '',
-        'i');
+VALUES (16, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721611', 'student-i', '', '1998-03-25', 'male', 'student',
+        '', '', '20721611');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (17, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'j', 'student-j', '', '1998-03-25', 'male', 'student', '', '',
-        'j');
+VALUES (17, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721612', 'student-j', '', '1998-03-25', 'male', 'student',
+        '', '', '20721612');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (18, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'k', 'student-k', '', '1998-03-25', 'male', 'student', '', '',
-        'k');
+VALUES (18, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721613', 'student-k', '', '1998-03-25', 'male', 'student',
+        '', '', '20721613');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (19, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'l', 'student-l', '', '1998-03-25', 'male', 'student', '', '',
-        'l');
+VALUES (19, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721614', 'student-l', '', '1998-03-25', 'male', 'student',
+        '', '', '20721614');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (20, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'm', 'student-m', '', '1998-03-25', 'male', 'student', '', '',
-        'm');
+VALUES (20, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721615', 'student-m', '', '1998-03-25', 'male', 'student',
+        '', '', '20721615');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (21, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'n', 'student-n', '', '1998-03-25', 'female', 'student', '',
-        '', 'n');
+VALUES (21, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721616', 'student-n', '', '1998-03-25', 'female',
+        'student', '', '', '20721616');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (22, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'o', 'student-o', '', '1998-03-25', 'female', 'student', '',
-        '', 'o');
+VALUES (22, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721617', 'student-o', '', '1998-03-25', 'female',
+        'student', '', '', '20721617');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (23, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'p', 'student-p', '', '1998-03-25', 'female', 'student', '',
-        '', 'p');
+VALUES (23, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721618', 'student-p', '', '1998-03-25', 'female',
+        'student', '', '', '20721618');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (24, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'q', 'student-q', '', '1998-03-25', 'female', 'student', '',
-        '', 'q');
+VALUES (24, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721619', 'student-q', '', '1998-03-25', 'female',
+        'student', '', '', '20721619');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (25, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'r', 'student-r', '', '1998-03-25', 'female', 'student', '',
-        '', 'r');
+VALUES (25, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721620', 'student-r', '', '1998-03-25', 'female',
+        'student', '', '', '20721620');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (26, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 's', 'student-s', '', '1998-03-25', 'female', 'student', '',
-        '', 's');
+VALUES (26, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721621', 'student-s', '', '1998-03-25', 'female',
+        'student', '', '', '20721621');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (27, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 't', 'student-t', '', '1998-03-25', 'female', 'student', '',
-        '', 't');
+VALUES (27, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721622', 'student-t', '', '1998-03-25', 'female',
+        'student', '', '', '20721622');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (28, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'u', 'student-u', '', '1998-03-25', 'female', 'student', '',
-        '', 'u');
+VALUES (28, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721623', 'student-u', '', '1998-03-25', 'female',
+        'student', '', '', '20721623');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (29, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'v', 'student-v', '', '1998-03-25', 'female', 'student', '',
-        '', 'v');
+VALUES (29, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721624', 'student-v', '', '1998-03-25', 'female',
+        'student', '', '', '20721624');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (30, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'w', 'student-w', '', '1998-03-25', 'female', 'student', '',
-        '', 'w');
+VALUES (30, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721625', 'student-w', '', '1998-03-25', 'female',
+        'student', '', '', '20721625');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (31, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'x', 'student-x', '', '1998-03-25', 'female', 'student', '',
-        '', 'x');
+VALUES (31, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721626', 'student-x', '', '1998-03-25', 'female',
+        'student', '', '', '20721626');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (32, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'y', 'student-y', '', '1998-03-25', 'female', 'student', '',
-        '', 'y');
+VALUES (32, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721627', 'student-y', '', '1998-03-25', 'female',
+        'student', '', '', '20721627');
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
-VALUES (33, '2021-05-18 23:39:23', '2021-05-18 23:39:23', 'z', 'student-z', '', '1998-03-25', 'female', 'student', '',
-        '', 'z');
+VALUES (33, '2021-05-18 23:39:23', '2021-05-18 23:39:23', '20721628', 'student-z', '', '1998-03-25', 'female',
+        'student', '', '', '20721628');
 INSERT INTO pourrfot.course_group (id, create_time, update_time, course_id, group_name, profile_photo)
 VALUES (1, '2021-04-20 19:35:34', '2021-04-20 19:35:34', 1, '软件项目管理-第1小组', 'profilePhoto');
 INSERT INTO pourrfot.course_group (id, create_time, update_time, course_id, group_name, profile_photo)
@@ -215,117 +216,117 @@ INSERT INTO pourrfot.course_group (id, create_time, update_time, course_id, grou
 VALUES (22, '2021-05-18 22:38:41', '2021-05-18 22:38:41', 1, '软件项目管理-第13小组', '');
 INSERT INTO pourrfot.course_group (id, create_time, update_time, course_id, group_name, profile_photo)
 VALUES (23, '2021-05-18 22:38:41', '2021-05-18 22:38:41', 1, '软件项目管理-第14小组', '');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (1, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 3, '蔡佳昊', 1, 1, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (2, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 5, 'student-test', 2, 2, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (3, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 3, '蔡佳昊', 3, 3, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (4, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 5, 'student-test', 4, 4, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (5, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 3, '蔡佳昊', 5, 5, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (6, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 5, 'student-test', 6, 6, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (7, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 3, '蔡佳昊', 7, 7, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (8, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 5, 'student-test', 8, 8, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (9, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 3, '蔡佳昊', 8, 9, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (10, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 5, 'student-test', 10, 10, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (11, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 7, 'abc', 1, 11, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (12, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 8, 'student-a', 1, 12, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (13, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 9, 'student-b', 1, 13, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (14, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 10, 'student-c', 1, 14, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (15, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 11, 'student-d', 1, 15, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (16, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 12, 'student-e', 1, 16, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (17, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 13, 'student-f', 1, 17, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (18, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 14, 'student-g', 1, 18, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (19, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 15, 'student-h', 1, 19, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (20, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 16, 'student-i', 1, 20, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (21, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 17, 'student-j', 1, 21, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (22, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 18, 'student-k', 1, 22, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (23, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 19, 'student-l', 1, 23, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (24, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 20, 'student-m', 1, 11, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (25, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 21, 'student-n', 1, 12, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (26, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 22, 'student-o', 1, 13, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (27, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 23, 'student-p', 1, 14, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (28, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 24, 'student-q', 1, 15, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (29, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 25, 'student-r', 1, 16, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (30, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 26, 'student-s', 1, 17, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (31, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 27, 'student-t', 1, 18, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (32, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 28, 'student-u', 1, 19, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (33, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 29, 'student-v', 1, 20, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (34, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 30, 'student-w', 1, 21, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (35, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 31, 'student-x', 1, 22, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (36, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 32, 'student-y', 1, 23, 0, '[]');
-INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_name, course_id, group_id,
-                                     total_score, detail_score)
-VALUES (37, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 33, 'student-z', 1, 1, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (1, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 3, '20721599', '蔡佳昊', 1, 1, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (2, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 5, '20721601', 'student-test', 2, 2, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (3, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 3, '20721599', '蔡佳昊', 3, 3, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (4, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 5, '20721601', 'student-test', 4, 4, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (5, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 3, '20721599', '蔡佳昊', 5, 5, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (6, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 5, '20721601', 'student-test', 6, 6, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (7, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 3, '20721599', '蔡佳昊', 7, 7, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (8, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 5, '20721601', 'student-test', 8, 8, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (9, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 3, '20721599', '蔡佳昊', 8, 9, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (10, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 5, '20721601', 'student-test', 10, 10, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (11, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 7, '20721602', 'abc', 1, 11, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (12, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 8, '20721603', 'student-a', 1, 12, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (13, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 9, '20721604', 'student-b', 1, 13, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (14, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 10, '20721605', 'student-c', 1, 14, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (15, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 11, '20721606', 'student-d', 1, 15, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (16, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 12, '20721607', 'student-e', 1, 16, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (17, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 13, '20721608', 'student-f', 1, 17, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (18, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 14, '20721609', 'student-g', 1, 18, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (19, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 15, '20721610', 'student-h', 1, 19, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (20, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 16, '20721611', 'student-i', 1, 20, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (21, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 17, '20721612', 'student-j', 1, 21, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (22, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 18, '20721613', 'student-k', 1, 22, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (23, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 19, '20721614', 'student-l', 1, 23, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (24, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 20, '20721615', 'student-m', 1, 11, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (25, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 21, '20721616', 'student-n', 1, 12, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (26, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 22, '20721617', 'student-o', 1, 13, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (27, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 23, '20721618', 'student-p', 1, 14, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (28, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 24, '20721619', 'student-q', 1, 15, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (29, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 25, '20721620', 'student-r', 1, 16, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (30, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 26, '20721621', 'student-s', 1, 17, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (31, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 27, '20721622', 'student-t', 1, 18, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (32, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 28, '20721623', 'student-u', 1, 19, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (33, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 29, '20721624', 'student-v', 1, 20, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (34, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 30, '20721625', 'student-w', 1, 21, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (35, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 31, '20721626', 'student-x', 1, 22, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (36, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 32, '20721627', 'student-y', 1, 23, 0, '[]');
+INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
+                                     group_id, total_score, detail_score)
+VALUES (37, '2021-05-18 23:53:18', '2021-05-18 23:53:18', 33, '20721628', 'student-z', 1, 1, 0, '[]');
 INSERT INTO pourrfot.project (id, create_time, update_time, project_name, project_code, owner_id, profile_photo)
 VALUES (1, '2021-05-16 22:54:42', '2021-05-16 22:54:42', '科创项目1', 'PROJECT-1', 1, '');
 INSERT INTO pourrfot.project (id, create_time, update_time, project_name, project_code, owner_id, profile_photo)

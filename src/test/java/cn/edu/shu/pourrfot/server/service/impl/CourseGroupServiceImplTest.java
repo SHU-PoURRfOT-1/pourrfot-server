@@ -37,8 +37,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.List;
 import java.util.Map;
 
+import static cn.edu.shu.pourrfot.server.enums.GroupingMethodEnum.FREE;
+import static cn.edu.shu.pourrfot.server.enums.GroupingMethodEnum.STRICT_CONTROLLED;
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 
 
@@ -91,6 +94,7 @@ class CourseGroupServiceImplTest {
     .teacherId(teacher.getId())
     .term("course-mock")
     .groupingMethod(GroupingMethodEnum.FREE)
+    .groupSize(10)
     .build();
   private final CourseGroup mockCourseGroup = CourseGroup.builder()
     .courseId(mockCourse.getId())
@@ -260,6 +264,7 @@ class CourseGroupServiceImplTest {
       .courseId(mockCourse.getId())
       .studentId(student.getId())
       .studentName("mock")
+      .studentNumber("mock")
       .build()));
     given(courseMapper.selectById(eq(mockCourse.getId()))).willReturn(mockCourse);
     given(courseMapper.selectByStudentId(eq(student.getId()))).willReturn(List.of(mockCourse));
@@ -271,7 +276,7 @@ class CourseGroupServiceImplTest {
   @Transactional
   @Test
   void saveWithStudentContextFailedBecauseCourseIsStrictControlledGrouping() {
-    mockCourse.setGroupingMethod(GroupingMethodEnum.STRICT_CONTROLLED);
+    mockCourse.setGroupingMethod(STRICT_CONTROLLED);
     given(courseMapper.selectById(eq(mockCourse.getId()))).willReturn(mockCourse);
     mockStudentAuthenticationToken.setDetails(studentDetail);
     SecurityContextHolder.getContext().setAuthentication(mockStudentAuthenticationToken);
@@ -462,7 +467,7 @@ class CourseGroupServiceImplTest {
     given(courseMapper.selectById(eq(mockCourse.getId()))).willReturn(mockCourse);
     assertTrue(courseGroupService.save(mockCourseGroup));
 
-    mockCourse.setGroupingMethod(GroupingMethodEnum.STRICT_CONTROLLED);
+    mockCourse.setGroupingMethod(STRICT_CONTROLLED);
     given(courseMapper.selectById(eq(mockCourse.getId()))).willReturn(mockCourse);
     mockStudentAuthenticationToken.setDetails(studentDetail);
     SecurityContextHolder.getContext().setAuthentication(mockStudentAuthenticationToken);
@@ -497,6 +502,43 @@ class CourseGroupServiceImplTest {
     SecurityContextHolder.getContext().setAuthentication(mockTeacherAuthenticationToken);
     assertThrows(IllegalCRUDOperationException.class, () -> courseGroupService.removeById(mockCourseGroup.getId()),
       "Teacher can't delete a group not belong to his/her course");
+  }
+
+  @Transactional
+  @Test
+  void divideGroupsFailedWithNonExistedCourse() {
+    given(courseMapper.selectById(anyInt())).willReturn(null);
+    assertThrows(NotFoundException.class, () ->
+        courseGroupService.divideGroups(mockCourse.getId(), GroupingMethodEnum.AVERAGE, 100),
+      "Can't divide groups for non-exited course"
+    );
+  }
+
+  @Transactional
+  @Test
+  void divideGroupsWithTeacherContextFailedWithNotOwnCourse() {
+    given(courseMapper.selectById(eq(mockCourse.getId()))).willReturn(mockCourse);
+    mockTeacherAuthenticationToken.setDetails(Map.of("id", 999L, "username", "mock",
+      "role", "teacher"));
+    SecurityContextHolder.getContext().setAuthentication(mockTeacherAuthenticationToken);
+    assertThrows(IllegalCRUDOperationException.class, () ->
+        courseGroupService.divideGroups(mockCourse.getId(), GroupingMethodEnum.AVERAGE, 100),
+      "Teacher can't divide groups for not-own course"
+    );
+  }
+
+  @Transactional
+  @Test
+  void divideGroupsWithTeacherContext() {
+    given(courseMapper.selectById(eq(mockCourse.getId()))).willReturn(mockCourse);
+    given(courseMapper.updateById(any(Course.class))).willReturn(1);
+    mockTeacherAuthenticationToken.setDetails(teacherDetail);
+    SecurityContextHolder.getContext().setAuthentication(mockTeacherAuthenticationToken);
+    assertEquals(emptyList(), courseGroupService.divideGroups(mockCourse.getId(), STRICT_CONTROLLED, 100));
+    assertEquals(STRICT_CONTROLLED, mockCourse.getGroupingMethod());
+    assertEquals(100, mockCourse.getGroupSize());
+    // reset
+    mockCourse.setGroupingMethod(FREE).setGroupSize(10);
   }
 
   @TestConfiguration

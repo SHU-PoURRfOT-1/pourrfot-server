@@ -3,6 +3,7 @@ package cn.edu.shu.pourrfot.server.controller;
 import cn.edu.shu.pourrfot.server.model.CourseGroup;
 import cn.edu.shu.pourrfot.server.model.dto.CompleteGroup;
 import cn.edu.shu.pourrfot.server.model.dto.Result;
+import cn.edu.shu.pourrfot.server.model.vo.DivideGroupRequest;
 import cn.edu.shu.pourrfot.server.service.CourseGroupService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
 import java.net.URI;
+import java.util.List;
 
 /**
  * @author spencercjh
@@ -84,6 +86,22 @@ public class CourseGroupController {
         courseGroup.getId())))
       .body(Result.createdOk("Create course-group success, please pay attention to the LOCATION in headers",
         courseGroup));
+  }
+
+  @ApiOperation(value = "divide course-groups",
+    notes = "admin users is unrestricted;\n" +
+      "teacher can can update the course's grouping method and grouop size;\n" +
+      "If the method is AVERAGE, response the divide result.")
+  @PostMapping(value = "/divide", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasAnyAuthority('admin','teacher')")
+  public ResponseEntity<Result<List<CompleteGroup>>> divideGroup(@PathVariable @NotNull Integer courseId,
+                                                                 @Validated @RequestBody DivideGroupRequest divideGroupRequest) {
+    final List<CompleteGroup> result = courseGroupService.divideGroups(courseId, divideGroupRequest.getGroupingMethod(),
+      divideGroupRequest.getExpectedGroupSize());
+
+    return result.isEmpty() ? ResponseEntity.ok()
+      .body(Result.createdOk("Divide group evenly success", result)) :
+      ResponseEntity.ok().body(Result.normalOk("Update course's grouping info success", result));
   }
 
   @ApiOperation(value = "update course-group",

@@ -32,6 +32,7 @@ public class CourseStudent {
   public static final String COL_UPDATE_TIME = "update_time";
   public static final String COL_STUDENT_ID = "student_id";
   public static final String COL_STUDENT_NAME = "student_name";
+  public static final String COL_STUDENT_NUMBER = "student_number";
   public static final String COL_COURSE_ID = "course_id";
   public static final String COL_GROUP_ID = "group_id";
   public static final String COL_TOTAL_SCORE = "total_score";
@@ -51,9 +52,13 @@ public class CourseStudent {
   @NotNull
   private Integer studentId;
   @TableField(value = "student_name")
-  @ApiModelProperty(required = true)
+  @ApiModelProperty(notes = "SET BY SERVER")
   @NotNull
   private String studentName;
+  @TableField(value = "student_number")
+  @ApiModelProperty(notes = "SET BY SERVER")
+  @NotNull
+  private String studentNumber;
   @TableField(value = "course_id")
   @ApiModelProperty(required = true)
   @NotNull

@@ -87,6 +87,7 @@ class CourseStudentServiceImplTest {
     .teacherId(teacher.getId())
     .term("course-mock")
     .groupingMethod(GroupingMethodEnum.FREE)
+    .groupSize(1)
     .scoreStructure(List.of(ScoreItem.builder()
         .weight(0.5)
         .name("attendance")
@@ -401,6 +402,62 @@ class CourseStudentServiceImplTest {
     assertTrue(mockCourseStudent.getDetailScore().isEmpty());
     // reset
     mockCourseStudent.setTotalScore(null).setDetailScore(null);
+  }
+
+  @Transactional
+  @Test
+  void updateByIdWithStudentContextForGroup() {
+    mockCourseStudent.setGroupId(null);
+    given(courseMapper.selectById(eq(mockCourse.getId()))).willReturn(mockCourse);
+    given(pourrfotUserMapper.selectById(eq(student.getId()))).willReturn(student);
+    given(courseGroupMapper.selectById(eq(mockCourseGroup.getId()))).willReturn(mockCourseGroup);
+    assertTrue(courseStudentService.save(mockCourseStudent));
+
+    mockStudentAuthenticationToken.setDetails(studentDetail);
+    SecurityContextHolder.getContext().setAuthentication(mockStudentAuthenticationToken);
+    assertTrue(courseStudentService.updateById(mockCourseStudent.setGroupId(mockCourseGroup.getId())));
+    // reset
+    mockCourseStudent.setTotalScore(null).setDetailScore(null).setGroupId(mockCourseGroup.getId());
+  }
+
+  @Transactional
+  @Test
+  void updateByIdWithStudentContextForGroupFailedBecauseCourseIsNotGrouping() {
+    mockCourseStudent.setGroupId(null);
+    mockCourse.setGroupingMethod(GroupingMethodEnum.NOT_GROUPING);
+    given(courseMapper.selectById(eq(mockCourse.getId()))).willReturn(mockCourse);
+    given(pourrfotUserMapper.selectById(eq(student.getId()))).willReturn(student);
+    given(courseGroupMapper.selectById(eq(mockCourseGroup.getId()))).willReturn(mockCourseGroup);
+    assertTrue(courseStudentService.save(mockCourseStudent));
+
+    mockStudentAuthenticationToken.setDetails(studentDetail);
+    SecurityContextHolder.getContext().setAuthentication(mockStudentAuthenticationToken);
+    assertThrows(IllegalCRUDOperationException.class, () -> courseStudentService.updateById(mockCourseStudent
+        .setGroupId(mockCourseGroup.getId())),
+      "Student can't join any group by own because the course is not free for grouping");
+    // reset
+    mockCourse.setGroupingMethod(GroupingMethodEnum.FREE);
+    mockCourseStudent.setTotalScore(null).setDetailScore(null).setGroupId(mockCourseGroup.getId());
+  }
+
+  @Transactional
+  @Test
+  void updateByIdWithStudentContextForGroupFailedBecauseNoRemaining() {
+    mockCourseStudent.setGroupId(null);
+    mockCourse.setGroupSize(0);
+    given(courseMapper.selectById(eq(mockCourse.getId()))).willReturn(mockCourse);
+    given(pourrfotUserMapper.selectById(eq(student.getId()))).willReturn(student);
+    given(courseGroupMapper.selectById(eq(mockCourseGroup.getId()))).willReturn(mockCourseGroup);
+    assertTrue(courseStudentService.save(mockCourseStudent));
+
+    mockStudentAuthenticationToken.setDetails(studentDetail);
+    SecurityContextHolder.getContext().setAuthentication(mockStudentAuthenticationToken);
+    assertThrows(IllegalCRUDOperationException.class, () -> courseStudentService.updateById(mockCourseStudent
+        .setGroupId(mockCourseGroup.getId())),
+      "The group is full, please contact the teacher if you want to join");
+    // reset
+    mockCourse.setGroupSize(1);
+    mockCourseStudent.setTotalScore(null).setDetailScore(null).setGroupId(mockCourseGroup.getId());
   }
 
   @Transactional
