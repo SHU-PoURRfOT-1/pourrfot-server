@@ -202,7 +202,13 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
     }
     final List<Map<String, Object>> users = pourrfotUserMapper.selectMaps(new QueryWrapper<>(new PourrfotUser())
       .eq(PourrfotUser.COL_ID, ownerId));
-    return CollectionUtils.isNotEmpty(users) ? users.get(0) : null;
+    if (CollectionUtils.isNotEmpty(users)) {
+      final Map<String, Object> user = users.get(0);
+      user.put("password", "******");
+      return user;
+    } else {
+      return null;
+    }
   }
 
   private Map<String, Object> getOssFileAssociatedResource(ResourceTypeEnum resourceType, Integer resourceId) {
