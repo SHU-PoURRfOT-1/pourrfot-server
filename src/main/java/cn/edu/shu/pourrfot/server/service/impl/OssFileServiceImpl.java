@@ -1,6 +1,7 @@
 package cn.edu.shu.pourrfot.server.service.impl;
 
 import cn.edu.shu.pourrfot.server.enums.ResourceTypeEnum;
+import cn.edu.shu.pourrfot.server.enums.RoleEnum;
 import cn.edu.shu.pourrfot.server.exception.NotFoundException;
 import cn.edu.shu.pourrfot.server.exception.OssFileServiceException;
 import cn.edu.shu.pourrfot.server.model.*;
@@ -50,19 +51,80 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
   private MessageMapper messageMapper;
   @Autowired
   private PourrfotUserMapper pourrfotUserMapper;
+  @Autowired
+  private ProjectMemberMapper projectMemberMapper;
+  @Autowired
+  private CourseStudentMapper courseStudentMapper;
   @Value("${server.servlet.contextPath}")
   private String contextPath;
 
   @Override
   public Page<CompleteOssFile> page(Page<OssFile> page, Wrapper<OssFile> queryWrapper) {
     final Page<OssFile> result = super.page(page, queryWrapper);
-    return new Page<CompleteOssFile>(result.getCurrent(), result.getSize(), result.getTotal())
-      .setRecords(result.getRecords()
-        .stream()
-        .map(ossFile -> CompleteOssFile.of(ossFile, getOssFileAssociatedUser(ossFile.getOwnerId()),
-          getOssFileAssociatedResource(ossFile.getResourceType(), ossFile.getResourceId())
-          , setupDownloadUrl(ossFile.getId())))
-        .collect(Collectors.toList()));
+    final List<CompleteOssFile> filteredRecords = result.getRecords()
+      .stream()
+      .filter(this::isAccessibleForCurrentUser)
+      .map(ossFile -> CompleteOssFile.of(ossFile, getOssFileAssociatedUser(ossFile.getOwnerId()),
+        getOssFileAssociatedResourceMap(ossFile.getResourceType(), ossFile.getResourceId())
+        , setupDownloadUrl(ossFile.getId())))
+      .collect(Collectors.toList());
+    return new Page<CompleteOssFile>(result.getCurrent(), result.getSize(),
+      filteredRecords.isEmpty() ? 0 : result.getTotal()).setRecords(filteredRecords);
+  }
+
+  @Override
+  public boolean isAccessibleForCurrentUser(OssFile ossFile) {
+    final SimpleUser user = SimpleUser.of(SecurityContextHolder.getContext().getAuthentication());
+    if (user == null || user.getRole().equals(RoleEnum.admin)) {
+      return true;
+    }
+    final Object resource = ensureAssociatedResourceExisted("useless", ossFile.getResourceId(),
+      ossFile.getResourceType());
+    if (resource instanceof PourrfotTransaction) {
+      return ((PourrfotTransaction) resource).getSender().equals(user.getId()) ||
+        ((PourrfotTransaction) resource).getReceiver().equals(user.getId());
+    } else if (resource instanceof Message) {
+      return ((Message) resource).getSender().equals(user.getId()) ||
+        ((Message) resource).getReceiver().equals(user.getId());
+    } else if (resource instanceof Course) {
+      if (user.getRole().equals(RoleEnum.teacher)) {
+        return ((Course) resource).getTeacherId().equals(user.getId());
+      } else if (user.getRole().equals(RoleEnum.student)) {
+        final List<Course> studentCourses = courseMapper.selectByStudentId(user.getId());
+        if (CollectionUtils.isEmpty(studentCourses)) {
+          return false;
+        }
+        return studentCourses.stream()
+          .map(Course::getId)
+          .anyMatch(id -> id.equals(((Course) resource).getId()));
+      }
+    } else if (resource instanceof CourseGroup) {
+      if (user.getRole().equals(RoleEnum.teacher)) {
+        final Course course = courseMapper.selectById(((CourseGroup) resource).getCourseId());
+        if (course == null) {
+          return false;
+        }
+        return course.getTeacherId().equals(user.getId());
+      } else if (user.getRole().equals(RoleEnum.student)) {
+        final List<CourseStudent> studentGroups = courseStudentMapper.selectList(new QueryWrapper<>(new CourseStudent())
+          .eq(CourseStudent.COL_STUDENT_ID, user.getId())
+          .eq(CourseStudent.COL_GROUP_ID, ((CourseGroup) resource).getId()));
+        if (CollectionUtils.isEmpty(studentGroups)) {
+          return false;
+        }
+        return studentGroups.stream()
+          .map(CourseStudent::getGroupId)
+          .anyMatch(id -> id.equals(((CourseGroup) resource).getId()));
+      }
+    } else if (resource instanceof Project) {
+      if (((Project) resource).getOwnerId().equals(user.getId())) {
+        return true;
+      }
+      return projectMemberMapper.selectCount(new QueryWrapper<>(new ProjectMember())
+        .eq(ProjectMember.COL_USER_ID, user.getId())
+        .eq(ProjectMember.COL_PROJECT_ID, ((Project) resource).getId())) > 0;
+    }
+    return true;
   }
 
   @Override
@@ -72,7 +134,7 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
       return null;
     }
     return CompleteOssFile.of(found, getOssFileAssociatedUser(found.getOwnerId()),
-      getOssFileAssociatedResource(found.getResourceType(), found.getResourceId()),
+      getOssFileAssociatedResourceMap(found.getResourceType(), found.getResourceId()),
       setupDownloadUrl(found.getId()));
   }
 
@@ -96,7 +158,7 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
       entity.setOwnerId(user.getId());
     }
     // 1. check OssFile#resourceType/resourceId in DB
-    checkAssociatedResourceExisted(entity.getName(), entity.getResourceId(), entity.getResourceType());
+    ensureAssociatedResourceExisted(entity.getName(), entity.getResourceId(), entity.getResourceType());
     // 2. check the cache file defined by oss url exist in OSS
     final String key = StringUtils.isNotBlank(entity.getOriginOssUrl()) ?
       OssService.getKeyFromOssUrl(entity.getOriginOssUrl()) : entity.getOssKey();
@@ -113,48 +175,53 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
       .setUpdateTime(new Date(System.currentTimeMillis()))) == 1;
   }
 
-  private void checkAssociatedResourceExisted(String name, int resourceId, ResourceTypeEnum resourceType) {
+  private Object ensureAssociatedResourceExisted(String name, int resourceId, ResourceTypeEnum resourceType) {
     switch (resourceType) {
       case courses:
-        if (courseMapper.selectById(resourceId) == null) {
+        final Course course = courseMapper.selectById(resourceId);
+        if (course == null) {
           final String message = String.format("Not found the course: %s associated with the oss-file: %s",
             resourceId, name);
           log.error(message);
           throw new NotFoundException(message);
         }
-        break;
+        return course;
       case groups:
-        if (courseGroupMapper.selectById(resourceId) == null) {
+        final CourseGroup courseGroup = courseGroupMapper.selectById(resourceId);
+        if (courseGroup == null) {
           final String message = String.format("Not found the course-group: %s associated with the oss-file: %s",
             resourceId, name);
           log.error(message);
           throw new NotFoundException(message);
         }
-        break;
+        return courseGroup;
       case projects:
-        if (projectMapper.selectById(resourceId) == null) {
+        final Project project = projectMapper.selectById(resourceId);
+        if (project == null) {
           final String message = String.format("Not found the project: %s associated with the oss-file: %s",
             resourceId, name);
           log.error(message);
           throw new NotFoundException(message);
         }
-        break;
+        return project;
       case transactions:
-        if (pourrfotTransactionMapper.selectById(resourceId) == null) {
+        final PourrfotTransaction pourrfotTransaction = pourrfotTransactionMapper.selectById(resourceId);
+        if (pourrfotTransaction == null) {
           final String message = String.format("Not found the student-transaction: %s associated with the oss-file: %s",
             resourceId, name);
           log.error(message);
           throw new NotFoundException(message);
         }
-        break;
+        return pourrfotTransaction;
       case messages:
-        if (messageMapper.selectById(resourceId) == null) {
+        final Message messageEntity = messageMapper.selectById(resourceId);
+        if (messageEntity == null) {
           final String message = String.format("Not found the message: %s associated with the oss-file: %s",
             resourceId, name);
           log.error(message);
           throw new NotFoundException(message);
         }
-        break;
+        return messageEntity;
       default:
         throw new IllegalArgumentException("Not Support oss-file resource type");
     }
@@ -205,7 +272,7 @@ public class OssFileServiceImpl extends ServiceImpl<OssFileMapper, OssFile> impl
     return CollectionUtils.isNotEmpty(users) ? users.get(0) : null;
   }
 
-  private Map<String, Object> getOssFileAssociatedResource(ResourceTypeEnum resourceType, Integer resourceId) {
+  private Map<String, Object> getOssFileAssociatedResourceMap(ResourceTypeEnum resourceType, Integer resourceId) {
     Map<String, Object> resource = Collections.emptyMap();
     if (resourceType == null || resourceId == null) {
       return resource;

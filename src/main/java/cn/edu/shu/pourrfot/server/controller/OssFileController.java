@@ -64,8 +64,10 @@ public class OssFileController {
     QueryWrapper<OssFile> query = Wrappers.query(new OssFile());
     if (resourceType != null && resourceId != null) {
       query = query.eq(OssFile.COL_RESOURCE_TYPE, resourceType).eq(OssFile.COL_RESOURCE_ID, resourceId);
+      query.getEntity().setResourceType(resourceType).setResourceId(resourceId);
     } else if (resourceType != null) {
       query = query.eq(OssFile.COL_RESOURCE_TYPE, resourceType);
+      query.getEntity().setResourceType(resourceType);
     }
     if (StringUtils.isNotBlank(name)) {
       query = query.like(OssFile.COL_NAME, name.trim());
@@ -75,6 +77,7 @@ public class OssFileController {
     }
     if (ownerId != null) {
       query = query.eq(OssFile.COL_OWNER_ID, ownerId);
+      query.getEntity().setOwnerId(ownerId);
     }
     return ResponseEntity.ok(Result.normalOk("Get oss-files page success",
       ossFileService.page(new Page<>(current, size), query)));

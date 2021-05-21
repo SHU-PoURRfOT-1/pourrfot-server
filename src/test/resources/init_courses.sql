@@ -354,3 +354,21 @@ INSERT INTO pourrfot.project_member (id, create_time, update_time, project_id, u
 VALUES (8, '2021-05-16 23:30:10', '2021-05-16 23:30:10', 3, 3, 'member');
 INSERT INTO pourrfot.project_member (id, create_time, update_time, project_id, user_id, role_name)
 VALUES (9, '2021-05-16 23:30:10', '2021-05-16 23:30:10', 4, 5, 'member');
+INSERT INTO `oss_file` (`id`, `create_time`, `update_time`, `name`, `metadata`, `resource_type`, `resource_id`,
+                        `directory`, `oss_key`, `oss_url`, `origin_oss_url`, `owner_id`)
+VALUES (1, '2021-05-20 12:40:32', '2021-05-20 12:40:32', 'carbon.png', '[
+    {
+        "type": "danger",
+        "label": "加急"
+    }
+]', 'courses', 1, '/courses/1', 'courses/1/carbon.png', 'oss://pourrfot/courses/1/carbon.png',
+        'oss://pourrfot/caches/carbon.png', 1);
+INSERT INTO `oss_file` (`id`, `create_time`, `update_time`, `name`, `metadata`, `resource_type`, `resource_id`,
+                        `directory`, `oss_key`, `oss_url`, `origin_oss_url`, `owner_id`)
+VALUES (2, '2021-05-20 05:33:30', '2021-05-20 05:33:30', '第一组-合同-签字版.pdf', '[
+    {
+        "type": "warning",
+        "label": "需要批阅"
+    }
+]', 'courses', 1, '/courses/1', 'courses/1/第一组-合同-签字版.pdf', 'oss://pourrfot/courses/1/第一组-合同-签字版.pdf',
+        'oss://pourrfot/caches/第一组-合同-签字版.pdf', 3);

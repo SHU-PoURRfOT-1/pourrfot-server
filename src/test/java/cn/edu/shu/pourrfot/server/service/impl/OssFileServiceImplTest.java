@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 
@@ -103,6 +104,14 @@ class OssFileServiceImplTest {
       .originOssUrl("mock")
       .build()));
   }
+
+  @Test
+  void isAccessibleForCurrentUserWithoutUserContext() {
+    assertTrue(ossFileService.isAccessibleForCurrentUser(OssFile.builder()
+      .name("mock.txt")
+      .build()));
+  }
+
 
   @TestConfiguration
   public static class TestConfig {
