@@ -15,7 +15,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author spencercjh
@@ -54,18 +53,18 @@ public class OssFile {
   @ApiModelProperty(example = "test.txt", required = true)
   @NotBlank
   private String name;
-  @ApiModelProperty(example = "[{\\\"type\\\":\\\"danger\\\",\\\"label\\\":\\\"加急\\\"},{\\\"type\\\":\\\"success\\\",\\\"label\\\":\\\"success\\\"},{\\\"type\\\":\\\"warning\\\",\\\"label\\\":\\\"需要批阅\\\"}]")
+  @ApiModelProperty(example = "[{\"type\":\"danger\",\"label\":\"加急\"},{\"type\":\"success\",\"label\":\"success\"},{\"type\":\"warning\",\"label\":\"需要批阅\"}]")
   @TableField(value = "metadata", typeHandler = JacksonTypeHandler.class)
   private List<?> metadata;
   @TableField(value = "resource_type")
-  @ApiModelProperty(required = true)
+  @ApiModelProperty()
   @NotNull
   private ResourceTypeEnum resourceType;
   /**
    * course/project/transaction/message id
    */
   @TableField(value = "resource_id")
-  @ApiModelProperty(value = "course/project/transaction/message id", required = true)
+  @ApiModelProperty(value = "course/project/transaction/message id")
   @NotNull
   private Integer resourceId;
   /**
