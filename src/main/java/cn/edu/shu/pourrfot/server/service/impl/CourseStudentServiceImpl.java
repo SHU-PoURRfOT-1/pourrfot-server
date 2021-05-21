@@ -115,7 +115,7 @@ public class CourseStudentServiceImpl extends ServiceImpl<CourseStudentMapper, C
   @Transactional(rollbackFor = Exception.class)
   @Override
   public boolean save(CourseStudent courseStudent) {
-    checkResource(courseStudent);
+    final AssociatedResource associatedResource = checkResource(courseStudent);
     // ensure unique
     if (baseMapper.selectCount(new QueryWrapper<>(new CourseStudent()
       .setCourseId(courseStudent.getCourseId())
@@ -125,7 +125,9 @@ public class CourseStudentServiceImpl extends ServiceImpl<CourseStudentMapper, C
     }
     final boolean result = baseMapper.insert(courseStudent
       .setCreateTime(new Date(System.currentTimeMillis()))
-      .setUpdateTime(new Date(System.currentTimeMillis()))) == 1;
+      .setUpdateTime(new Date(System.currentTimeMillis()))
+      .setStudentName(associatedResource.student.getNickname())
+      .setStudentNumber(associatedResource.student.getUsername())) == 1;
     final SimpleUser user = SimpleUser.of(SecurityContextHolder.getContext().getAuthentication());
     log.info("User: {} create a course-student: {}", user != null ? user : "null", courseStudent);
     return result;
@@ -141,6 +143,7 @@ public class CourseStudentServiceImpl extends ServiceImpl<CourseStudentMapper, C
       throw e;
     }
     if (!found.getCourseId().equals(courseStudent.getCourseId()) ||
+      !found.getStudentNumber().equals(courseStudent.getStudentNumber()) ||
       !found.getStudentName().equals(courseStudent.getStudentName()) ||
       !found.getStudentId().equals(courseStudent.getStudentId())) {
       final IllegalCRUDOperationException e = new IllegalCRUDOperationException("Can't update a course-student's immutable fields");
@@ -149,46 +152,19 @@ public class CourseStudentServiceImpl extends ServiceImpl<CourseStudentMapper, C
     }
     final AssociatedResource associatedResource = checkResource(courseStudent);
     final SimpleUser user = SimpleUser.of(SecurityContextHolder.getContext().getAuthentication());
-    if (user != null && (user.getRole().equals(RoleEnum.teacher) || user.getRole().equals(RoleEnum.admin))) {
+    final boolean notStudent = user != null && (user.getRole().equals(RoleEnum.teacher) || user.getRole().equals(RoleEnum.admin));
+    if (notStudent) {
       if (!courseStudent.getDetailScore().equals(found.getDetailScore()) &&
         !courseStudent.getDetailScore().isEmpty()) {
-        final Map<String, ScoreItem> courseScoreStructure = associatedResource.course.getScoreStructure()
-          .stream()
-          .map(o -> {
-            if (o instanceof ScoreItem) {
-              return ((ScoreItem) o);
-            }
-            @SuppressWarnings("unchecked") final Map<String, Object> map = (Map<String, Object>) o;
-            return getScoreItem(map);
-          })
-          .collect(Collectors.toMap(ScoreItem::getName, Function.identity()));
-        double total = 0;
-        for (Object o : courseStudent.getDetailScore()) {
-          ScoreItem scoreItem;
-          if (o instanceof ScoreItem) {
-            scoreItem = (ScoreItem) o;
-          } else {
-            @SuppressWarnings("unchecked") final Map<String, Object> map = (Map<String, Object>) o;
-            scoreItem = getScoreItem(map);
-          }
-          if (!courseScoreStructure.containsKey(scoreItem.getName())) {
-            log.warn("Teacher: {} update student: {} 's score with not-existed score item: {}", user, courseStudent,
-              scoreItem);
-            throw new NotFoundException("Not existed score item");
-          }
-          total += scoreItem.getScore() * scoreItem.getWeight();
-        }
-        final NumberFormat numberFormat = NumberFormat.getInstance();
-        numberFormat.setMaximumFractionDigits(2);
-        total = Double.parseDouble(numberFormat.format(total));
-        courseStudent.setTotalScore(((long) (total * 100L)));
+        courseStudent.setTotalScore(calculateScore(courseStudent, associatedResource.course, user));
       }
+      // Unrestricted group modification for non-student users
     }
     if (user != null && user.getRole().equals(RoleEnum.student)) {
       courseStudent.setTotalScore(found.getTotalScore()).setDetailScore(found.getDetailScore());
       if (!courseStudent.getGroupId().equals(found.getGroupId())) {
-        // TODO group restrictions for student users
-        log.debug("Going to divide group");
+        // check group restrictions
+        checkGroupRestrictions(associatedResource.course, associatedResource.group, user);
       }
     }
     final boolean result = baseMapper.updateById(courseStudent
@@ -196,6 +172,54 @@ public class CourseStudentServiceImpl extends ServiceImpl<CourseStudentMapper, C
       .setUpdateTime(found.getUpdateTime())) == 1;
     log.info("User: {} update a course-student: {}", user != null ? user : "null", courseStudent);
     return result;
+  }
+
+  private void checkGroupRestrictions(Course course, CourseGroup group, SimpleUser user) {
+    if (!course.getGroupingMethod().equals(GroupingMethodEnum.FREE)) {
+      log.warn("Student: {} can't join any group by own because the course is not free for grouping: {}", user,
+        course.getGroupingMethod());
+      throw new IllegalCRUDOperationException("Student can't join any group by own because the course is not free for grouping");
+    }
+    final int groupStudentCount = baseMapper.selectCount(new QueryWrapper<>(new CourseStudent())
+      .eq(CourseStudent.COL_GROUP_ID, group.getId()));
+    if (course.getGroupSize() - groupStudentCount <= 0) {
+      log.warn("Student: {} is joining a full(max: {}) group: {} with size: {}", user, course.getGroupSize(),
+        group, groupStudentCount);
+      throw new IllegalCRUDOperationException("The group is full, please contact the teacher if you want to join");
+    }
+  }
+
+  private long calculateScore(CourseStudent courseStudent, Course course, SimpleUser user) {
+    final Map<String, ScoreItem> courseScoreStructure = course.getScoreStructure()
+      .stream()
+      .map(o -> {
+        if (o instanceof ScoreItem) {
+          return ((ScoreItem) o);
+        }
+        @SuppressWarnings("unchecked") final Map<String, Object> map = (Map<String, Object>) o;
+        return getScoreItem(map);
+      })
+      .collect(Collectors.toMap(ScoreItem::getName, Function.identity()));
+    double total = 0;
+    for (Object o : courseStudent.getDetailScore()) {
+      ScoreItem scoreItem;
+      if (o instanceof ScoreItem) {
+        scoreItem = (ScoreItem) o;
+      } else {
+        @SuppressWarnings("unchecked") final Map<String, Object> map = (Map<String, Object>) o;
+        scoreItem = getScoreItem(map);
+      }
+      if (!courseScoreStructure.containsKey(scoreItem.getName())) {
+        log.warn("Teacher: {} update student: {} 's score with not-existed score item: {}", user, courseStudent,
+          scoreItem);
+        throw new NotFoundException("Not existed score item");
+      }
+      total += scoreItem.getScore() * scoreItem.getWeight();
+    }
+    final NumberFormat numberFormat = NumberFormat.getInstance();
+    numberFormat.setMaximumFractionDigits(2);
+    total = Double.parseDouble(numberFormat.format(total));
+    return (long) (total * 100L);
   }
 
   private ScoreItem getScoreItem(Map<String, Object> map) {

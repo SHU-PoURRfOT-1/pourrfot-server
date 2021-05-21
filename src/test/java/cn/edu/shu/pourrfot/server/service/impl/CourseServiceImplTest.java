@@ -207,6 +207,7 @@ class CourseServiceImplTest {
         courseStudentMapper.insert(CourseStudent.builder()
           .studentId(mockStudent.getId())
           .studentName(mockStudent.getNickname())
+          .studentNumber(mockStudent.getUsername())
           .courseId(toCreateCourse.getId())
           .build());
       }
@@ -265,6 +266,7 @@ class CourseServiceImplTest {
     assertEquals(1, courseStudentMapper.insert(CourseStudent.builder()
       .courseId(mockCourse.getId())
       .studentName("mock")
+      .studentNumber("mock")
       .studentId(student.getId())
       .build()));
     UsernamePasswordAuthenticationToken mockStudentAuthenticationToken = new UsernamePasswordAuthenticationToken(

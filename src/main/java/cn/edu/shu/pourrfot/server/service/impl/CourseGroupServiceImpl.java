@@ -18,6 +18,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -170,6 +171,7 @@ public class CourseGroupServiceImpl extends ServiceImpl<CourseGroupMapper, Cours
           .groupId(courseGroup.getId())
           .studentId(user.getId())
           .studentName(user.getNickname())
+          .studentNumber(user.getUsername())
           .build();
         updateCourseStudentResult = courseStudentMapper.insert(newCourseStudent) == 1;
         log.info("User: {} create a course-student: {}", user, newCourseStudent);
@@ -277,6 +279,50 @@ public class CourseGroupServiceImpl extends ServiceImpl<CourseGroupMapper, Cours
         throw new IllegalStateException("Update course-student relationship failed anomalously, please retry");
       }
       log.info("User: {} update a course-student: {}", user, foundCourseStudent);
+    }
+    return result;
+  }
+
+  @Transactional(rollbackFor = Exception.class)
+  @Override
+  public List<CompleteGroup> divideGroups(int courseId, GroupingMethodEnum groupingMethod, int expectGroupSize) {
+    final Course course = courseMapper.selectById(courseId);
+    if (course == null) {
+      log.error("Can't divide groups for non-exited course");
+      throw new NotFoundException("Can't divide groups for non-exited course");
+    }
+    final SimpleUser user = SimpleUser.of(SecurityContextHolder.getContext().getAuthentication());
+    if (user != null && user.getRole().equals(RoleEnum.teacher)) {
+      if (!course.getTeacherId().equals(user.getId())) {
+        log.warn("Teacher: {} can't divide groups for not-own course: {}", user, course);
+        throw new IllegalCRUDOperationException("Teacher can't divide groups for not-own course");
+      }
+    }
+    courseMapper.updateById(course.setGroupSize(expectGroupSize).setGroupingMethod(groupingMethod));
+    if (groupingMethod.equals(GroupingMethodEnum.AVERAGE)) {
+      return averageGroupingAccordingToStudentNumber(course);
+    }
+    return Collections.emptyList();
+  }
+
+  List<CompleteGroup> averageGroupingAccordingToStudentNumber(Course course) {
+    final List<CourseStudent> courseStudents = courseStudentMapper.selectList(new QueryWrapper<>(new CourseStudent())
+      .eq(CourseStudent.COL_COURSE_ID, course.getId())
+      .orderBy(true, true, CourseStudent.COL_STUDENT_NUMBER));
+    final List<List<CourseStudent>> partitionStudents = ListUtils.partition(courseStudents, course.getGroupSize());
+    final List<CompleteGroup> result = new ArrayList<>(course.getGroupSize());
+    for (int i = 0; i < partitionStudents.size(); i++) {
+      final CourseGroup group = CourseGroup.builder()
+        .groupName(String.format("%s-第%d小组", course.getCourseName(), i))
+        .courseId(course.getId())
+        .createTime(new Date())
+        .updateTime(new Date())
+        .build();
+      baseMapper.insert(group);
+      partitionStudents.get(i).forEach(student -> courseStudentMapper.updateById(student
+        .setUpdateTime(new Date())
+        .setGroupId(group.getId())));
+      result.add(new CompleteGroup(group, partitionStudents.get(i)));
     }
     return result;
   }

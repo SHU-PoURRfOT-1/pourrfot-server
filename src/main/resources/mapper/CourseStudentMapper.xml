@@ -9,6 +9,7 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="student_id" jdbcType="INTEGER" property="studentId"/>
         <result column="student_name" jdbcType="VARCHAR" property="studentName"/>
+        <result column="student_number" jdbcType="VARCHAR" property="studentNumber"/>
         <result column="course_id" jdbcType="INTEGER" property="courseId"/>
         <result column="group_id" jdbcType="INTEGER" property="groupId"/>
         <result column="total_score" jdbcType="DECIMAL" property="totalScore"/>
@@ -18,7 +19,7 @@
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
         course_student.id, course_student.create_time, course_student.update_time, course_student.student_id,
-        course_student.student_name, course_student.course_id, course_student.group_id, course_student.total_score,
-        course_student.detail_score
+        course_student.student_name, course_student.student_number, course_student.course_id, course_student.group_id,
+        course_student.total_score, course_student.detail_score
     </sql>
 </mapper>

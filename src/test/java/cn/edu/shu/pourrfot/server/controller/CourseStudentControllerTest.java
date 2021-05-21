@@ -117,13 +117,11 @@ class CourseStudentControllerTest {
   private final CourseStudent[] courseStudents = new CourseStudent[]{
     CourseStudent.builder()
       .studentId(9999)
-      .studentName("MOCK1")
       .courseId(9999)
       .groupId(9999)
       .build(),
     CourseStudent.builder()
       .studentId(9999)
-      .studentName("MOCK2")
       .courseId(9999)
       .groupId(9999)
       .build()
@@ -152,10 +150,14 @@ class CourseStudentControllerTest {
       courseStudents[i]
         .setCourseId(course.getId())
         .setGroupId(courseGroups[i].getId())
-        .setStudentId(students[i].getId());
+        .setStudentId(students[i].getId())
+        .setStudentName(students[i].getNickname())
+        .setStudentNumber(students[i].getUsername());
       assertNotNull(courseStudents[i].getCourseId());
       assertNotNull(courseStudents[i].getStudentId());
       assertNotNull(courseStudents[i].getGroupId());
+      assertNotNull(courseStudents[i].getStudentName());
+      assertNotNull(courseStudents[i].getStudentNumber());
     }
     final UsernamePasswordAuthenticationToken mockAdminAuthenticationToken = new UsernamePasswordAuthenticationToken(
       "mock", "mock", List.of(new JwtAuthorizationFilter.SimpleGrantedAuthority(RoleEnum.admin)));

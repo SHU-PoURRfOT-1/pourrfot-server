@@ -38,6 +38,8 @@ public class Course {
   public static final String COL_TERM = "term";
   public static final String COL_PROFILE_PHOTO = "profile_photo";
   public static final String COL_GROUPING_METHOD = "grouping_method";
+  public static final String COL_GROUP_SIZE = "group_size";
+
   @TableId(value = "id", type = IdType.AUTO)
   @ApiModelProperty()
   private Integer id;
@@ -75,6 +77,9 @@ public class Course {
   @TableField(value = "grouping_method")
   @ApiModelProperty(example = "NOT_GROUPING")
   private GroupingMethodEnum groupingMethod;
+  @TableField(value = "group_size")
+  @ApiModelProperty(example = "0")
+  private Integer groupSize;
   @TableField(value = "score_structure", typeHandler = JacksonTypeHandler.class)
   @ApiModelProperty
   private List<?> scoreStructure;

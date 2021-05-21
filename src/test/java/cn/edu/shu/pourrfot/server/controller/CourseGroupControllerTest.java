@@ -6,7 +6,10 @@ import cn.edu.shu.pourrfot.server.enums.RoleEnum;
 import cn.edu.shu.pourrfot.server.filter.JwtAuthorizationFilter;
 import cn.edu.shu.pourrfot.server.model.Course;
 import cn.edu.shu.pourrfot.server.model.CourseGroup;
+import cn.edu.shu.pourrfot.server.model.CourseStudent;
+import cn.edu.shu.pourrfot.server.model.vo.DivideGroupRequest;
 import cn.edu.shu.pourrfot.server.repository.CourseMapper;
+import cn.edu.shu.pourrfot.server.repository.CourseStudentMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matchers;
@@ -24,10 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -48,6 +48,8 @@ class CourseGroupControllerTest {
   @Autowired
   private CourseMapper courseMapper;
   private Course course;
+  @Autowired
+  private CourseStudentMapper courseStudentMapper;
 
   @BeforeEach
   void prepare() {
@@ -66,6 +68,45 @@ class CourseGroupControllerTest {
     mockAdminAuthenticationToken.setDetails(Map.<String, Object>of("id", 100L, "username", "mock",
       "role", "admin"));
     SecurityContextHolder.getContext().setAuthentication(mockAdminAuthenticationToken);
+  }
+
+  @Transactional
+  @Test
+  void divide1() throws Exception {
+    final int studentAmount = 40;
+    for (int i = 0; i < studentAmount; i++) {
+      assertEquals(1, courseStudentMapper.insert(CourseStudent.builder()
+        .courseId(course.getId())
+        .studentId(i)
+        .studentName("mock-" + i)
+        .studentNumber(String.valueOf(i))
+        .createTime(new Date())
+        .updateTime(new Date())
+        .build()));
+    }
+    final int expectedGroupSize = 7;
+    mockMvc.perform(post(String.format("/courses/%d/groups/divide", course.getId()))
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(objectMapper.writeValueAsString(new DivideGroupRequest(GroupingMethodEnum.AVERAGE, expectedGroupSize)))
+      .accept(MediaType.APPLICATION_JSON)
+    )
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.data").isArray())
+      .andExpect(jsonPath("$.data", Matchers.hasSize(40 / 7 + 1)))
+      .andDo(result -> log.info("Divide result: {}", result.getResponse().getContentAsString()));
+  }
+
+  @Transactional
+  @Test
+  void divide2() throws Exception {
+    mockMvc.perform(post(String.format("/courses/%d/groups/divide", course.getId()))
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(objectMapper.writeValueAsString(new DivideGroupRequest(GroupingMethodEnum.NOT_GROUPING, 0)))
+      .accept(MediaType.APPLICATION_JSON)
+    )
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.data").isEmpty())
+      .andDo(result -> log.info("Divide result: {}", result.getResponse().getContentAsString()));
   }
 
   @Transactional
