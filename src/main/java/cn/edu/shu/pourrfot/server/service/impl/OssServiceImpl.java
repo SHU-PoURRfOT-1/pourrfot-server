@@ -37,6 +37,7 @@ public class OssServiceImpl implements OssService {
 
   @Override
   public String uploadFileWithKey(MultipartFile file, String key) {
+    key = key.replace(" ", "_");
     try {
       ossClient.putObject(ossBucket, key, file.getInputStream());
     } catch (Exception e) {
