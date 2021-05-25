@@ -9,6 +9,7 @@ import cn.edu.shu.pourrfot.server.model.CourseGroup;
 import cn.edu.shu.pourrfot.server.model.CourseStudent;
 import cn.edu.shu.pourrfot.server.model.PourrfotUser;
 import cn.edu.shu.pourrfot.server.model.dto.SimpleUser;
+import cn.edu.shu.pourrfot.server.model.dto.StudentCourse;
 import cn.edu.shu.pourrfot.server.repository.CourseGroupMapper;
 import cn.edu.shu.pourrfot.server.repository.CourseMapper;
 import cn.edu.shu.pourrfot.server.repository.CourseStudentMapper;
@@ -17,6 +18,7 @@ import cn.edu.shu.pourrfot.server.service.CourseService;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +72,27 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     } else {
       return super.page(page, wrapper);
     }
+  }
+
+  @Override
+  public Page<StudentCourse> studentCoursePage(Page<Course> page, Wrapper<Course> wrapper) {
+    final SimpleUser user = SimpleUser.of(SecurityContextHolder.getContext().getAuthentication());
+    if (user == null || !user.getRole().equals(RoleEnum.student)) {
+      throw new IllegalCRUDOperationException("Can't access a specific student course info with wrong user info");
+    }
+    final Page<Course> studentCoursePage = page(page, wrapper);
+    return new Page<StudentCourse>(studentCoursePage.getCurrent(), studentCoursePage.getSize(), studentCoursePage.getTotal())
+      .setRecords(studentCoursePage.getRecords()
+        .stream()
+        .map(course -> {
+          final CourseStudent courseStudent = courseStudentMapper.selectOne(new QueryWrapper<>(new CourseStudent())
+            .eq(CourseStudent.COL_STUDENT_ID, user.getId()).eq(CourseStudent.COL_COURSE_ID, course.getId()));
+          final CourseGroup courseGroup = courseStudent != null ? courseGroupMapper.selectById(courseStudent.getGroupId()) : null;
+          final PourrfotUser teacher = pourrfotUserMapper.selectById(course.getTeacherId());
+          return StudentCourse.of(course, courseStudent, courseGroup, teacher != null ? teacher.setPassword("******") : null
+          );
+        })
+        .collect(Collectors.toList()));
   }
 
   @Override
