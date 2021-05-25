@@ -1,43 +1,56 @@
 INSERT INTO pourrfot.course (id, create_time, update_time, teacher_id, course_code, course_name, class_time,
-                             class_location, term, profile_photo)
+                             class_location, term, profile_photo, grouping_method, score_structure, group_size)
 VALUES (1, '2021-04-14 12:25:09', '2021-04-14 12:25:09', 1, '4ZS081001', '软件项目管理', '三[6-9](1-10周)', '嘉定校区1-331',
-        '202003', '');
+        '202003', '', 'FREE', '[
+        {
+            "name": "attendance",
+            "score": "0.0",
+            "weight": "0.5",
+            "description": "出勤"
+        },
+        {
+            "name": "final",
+            "score": "0.0",
+            "weight": "0.5",
+            "description": "期末"
+        }
+    ]', 10);
 INSERT INTO pourrfot.course (id, create_time, update_time, teacher_id, course_code, course_name, class_time,
-                             class_location, term, profile_photo)
+                             class_location, term, profile_photo, grouping_method, score_structure, group_size)
 VALUES (2, '2021-04-14 12:25:48', '2021-04-14 12:25:48', 2, '4ZS081002', '软件项目管理', '四[6-9](1-10周)', '嘉定校区1-331',
-        '202003', '');
+        '202003', '', 'NOT_GROUPING', '[]', 0);
 INSERT INTO pourrfot.course (id, create_time, update_time, teacher_id, course_code, course_name, class_time,
-                             class_location, term, profile_photo)
+                             class_location, term, profile_photo, grouping_method, score_structure, group_size)
 VALUES (3, '2021-04-15 15:27:31', '2021-04-15 15:27:31', 1, '3ZS081002', '软件测试技术及应用', '一[6-9](1-10周)\\', '嘉定校区1-209
-', '202003', '');
+', '202003', '', 'NOT_GROUPING', '[]', 0);
 INSERT INTO pourrfot.course (id, create_time, update_time, teacher_id, course_code, course_name, class_time,
-                             class_location, term, profile_photo)
+                             class_location, term, profile_photo, grouping_method, score_structure, group_size)
 VALUES (4, '2021-04-15 15:27:31', '2021-04-15 15:27:31', 2, '3ZS081004', '软件测试技术及应用', '二[6-9](1-10周)\\', '嘉定校区1-209
-', '202003', '');
+', '202003', '', 'NOT_GROUPING', '[]', 0);
 INSERT INTO pourrfot.course (id, create_time, update_time, teacher_id, course_code, course_name, class_time,
-                             class_location, term, profile_photo)
+                             class_location, term, profile_photo, grouping_method, score_structure, group_size)
 VALUES (5, '2021-04-15 15:27:31', '2021-04-15 15:27:31', 1, '2ZS081003', '软件体系结构', '一[6-9](1-10周)', '嘉定校区1-233',
-        '202002', '');
+        '202002', '', 'NOT_GROUPING', '[]', 0);
 INSERT INTO pourrfot.course (id, create_time, update_time, teacher_id, course_code, course_name, class_time,
-                             class_location, term, profile_photo)
+                             class_location, term, profile_photo, grouping_method, score_structure, group_size)
 VALUES (6, '2021-04-15 15:27:31', '2021-04-15 15:27:31', 2, '2ZS081004', '软件体系结构', '二[6-9](1-10周)', '嘉定校区1-233',
-        '202002', '');
+        '202002', '', 'NOT_GROUPING', '[]', 0);
 INSERT INTO pourrfot.course (id, create_time, update_time, teacher_id, course_code, course_name, class_time,
-                             class_location, term, profile_photo)
+                             class_location, term, profile_photo, grouping_method, score_structure, group_size)
 VALUES (7, '2021-04-15 15:27:31', '2021-04-15 15:27:31', 1, '3ZS081003', '企业级应用开发技术', '五[7-10](1-10周)', '嘉定校区1-231',
-        '202001', '');
+        '202001', '', 'NOT_GROUPING', '[]', 0);
 INSERT INTO pourrfot.course (id, create_time, update_time, teacher_id, course_code, course_name, class_time,
-                             class_location, term, profile_photo)
+                             class_location, term, profile_photo, grouping_method, score_structure, group_size)
 VALUES (8, '2021-04-15 15:29:38', '2021-04-15 15:29:38', 2, '3ZS081001', '软件建模方法', '三[6-9](1-10周)', '嘉定校区1-207',
-        '202002', '');
+        '202002', '', 'NOT_GROUPING', '[]', 0);
 INSERT INTO pourrfot.course (id, create_time, update_time, teacher_id, course_code, course_name, class_time,
-                             class_location, term, profile_photo)
+                             class_location, term, profile_photo, grouping_method, score_structure, group_size)
 VALUES (9, '2021-04-15 15:29:38', '2021-04-15 15:29:38', 1, '2ZS081002', '软件形式方法基础', '五[1-4](1-10周)', '嘉定校区1-233',
-        '202002', '');
+        '202002', '', 'NOT_GROUPING', '[]', 0);
 INSERT INTO pourrfot.course (id, create_time, update_time, teacher_id, course_code, course_name, class_time,
-                             class_location, term, profile_photo)
+                             class_location, term, profile_photo, grouping_method, score_structure, group_size)
 VALUES (10, '2021-04-15 15:32:24', '2021-04-15 15:32:24', 2, '3ZSL08401', '操作系统结构与分析', '二[7-10](1-10周)', '嘉定校区1-411',
-        '202002', '');
+        '202002', '', 'NOT_GROUPING', '[]', 0);
 INSERT INTO pourrfot.pourrfot_user (id, create_time, update_time, username, nickname, profile_photo, birth, sex, role,
                                     email, telephone, password)
 VALUES (1, '2021-04-16 09:15:51', '2021-04-16 09:15:51', 'caomin', '曹旻', '', '1970-01-01', 'female', 'teacher', '', '',
@@ -218,7 +231,20 @@ INSERT INTO pourrfot.course_group (id, create_time, update_time, course_id, grou
 VALUES (23, '2021-05-18 22:38:41', '2021-05-18 22:38:41', 1, '软件项目管理-第14小组', '');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
                                      group_id, total_score, detail_score)
-VALUES (1, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 3, '20721599', '蔡佳昊', 1, 1, 0, '[]');
+VALUES (1, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 3, '20721599', '蔡佳昊', 1, 1, 8725, '[
+    {
+        "name": "attendance",
+        "score": "91.5",
+        "weight": "0.5",
+        "description": "出勤"
+    },
+    {
+        "name": "final",
+        "score": "83",
+        "weight": "0.5",
+        "description": "期末"
+    }
+]');
 INSERT INTO pourrfot.course_student (id, create_time, update_time, student_id, student_number, student_name, course_id,
                                      group_id, total_score, detail_score)
 VALUES (2, '2021-05-14 01:16:11', '2021-05-14 01:16:11', 5, '20721601', 'student-test', 2, 2, 0, '[]');

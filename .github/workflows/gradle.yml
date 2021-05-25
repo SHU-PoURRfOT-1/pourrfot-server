@@ -26,13 +26,13 @@ jobs:
         run: chmod +x gradlew
       - name: Gradle Check
         run:  ./gradlew check
-      - name: Report Codecov
-        uses: codecov/codecov-action@v1.4.1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./build/reports/jacoco/test/jacocoTestReport.xml
-          fail_ci_if_error: true
-          verbose: true
+#      - name: Report Codecov
+#        uses: codecov/codecov-action@v1.4.1
+#        with:
+#          token: ${{ secrets.CODECOV_TOKEN }}
+#          files: ./build/reports/jacoco/test/jacocoTestReport.xml
+#          fail_ci_if_error: false
+#          verbose: true
       - name: Build with Gradle
         run: ./gradlew build --exclude-task test
       - name: Build And Push Docker Image
